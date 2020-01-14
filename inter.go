@@ -68,6 +68,7 @@ func Get(json []byte, path ... string) ([]byte, error){
 						// Assign offset to brace index.
 						offset = i
 						// Break the array search scope.
+						done = true
 						break
 					}
 					// Open square brace
@@ -81,10 +82,12 @@ func Get(json []byte, path ... string) ([]byte, error){
 						// Searching for zeroth index is conflicts with searching zeroth array or arrays zeroth element.
 						offset = i + 1
 						// Break the array search scope.
+						done = true
 						break
 					}
 					// Doesn't have to always find a brace. It can be a value.
 					if !space(curr){
+						done = true
 						break
 					}
 				}
@@ -172,9 +175,9 @@ func Get(json []byte, path ... string) ([]byte, error){
 				}
 				// Check true for column char again for keep same with first declaration.
 				isJsonChar[58] = true
-				if !done {
-					return nil, errors.New("Error: Index out of range")
-				}
+			}
+			if !done {
+				return nil, errors.New("Error: Index out of range")
 			}
 		}else{
 			// KEY SEACH SCOPE
