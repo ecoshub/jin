@@ -23,11 +23,13 @@ func Get(json []byte, path ... string) ([]byte, error){
 	// 123 = {
 	// 125 = }
 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
+	// creating a bool array fill with false
 	isJsonChar := make([]bool, 256)
+	// only interested chars is true
 	for _,v := range chars {
 		isJsonChar[v] = true
 	}
-	// trim start spaces
+	// trim spaces of start
 	for space(json[offset]) {
 		offset++
 	}
@@ -38,15 +40,15 @@ func Get(json []byte, path ... string) ([]byte, error){
 		// 91 = [, begining of an array search
 		if braceType == 91 {
 			// path value cast to integer for determine index.
-			arrayNumber, err := strconv.Atoi(currentPath)
+			arrayIndex, err := strconv.Atoi(currentPath)
 			if err != nil {
 				// braceType and current path type is confilicts.
-				return nil, errors.New("Error: Index Expected.")
+				return nil, errors.New("Error: Index Expected, got string.")
 			}
 			// is this search has found something.
-			done := false
+			// done := false
 			// zeroth index search.
-			if arrayNumber == 0 {
+			if arrayIndex == 0 {
 				// increment offset for not catch current brace.
 				offset++
 				// inner iteration for brace search.
@@ -64,7 +66,7 @@ func Get(json []byte, path ... string) ([]byte, error){
 						// assign offset to brace index.
 						offset = i
 						// found it.
-						done = true
+						// done = true
 						// break the array search scope.
 						break
 					}
@@ -76,54 +78,63 @@ func Get(json []byte, path ... string) ([]byte, error){
 							// if its not last path than change currentPath to next path.
 							currentPath = path[k + 1]
 						}
-						// if first path is '0' and searching for zeroth index is conflicts with searching zeroth array or arrays zeroth element.
-						// if k == 0 {
-							// offset = i
-						// }else{
-							offset = i + 1
-						// }
+						// searching for zeroth index is conflicts with searching zeroth array or arrays zeroth element.
+						offset = i + 1
 						// found it.
-						done = true
+						// done = true
 						// break the array search scope.
 						break
 					}
-					// unnecassary code block it will delete after one commit.
-					// kept for be sure it's absolutely unnecessary. 
+					// doesnt have to always find a brace. it can be a value.
 					if !space(curr){
-						// offset = i
-						done = true
+						// done = true
 						break
 					}
 				}
+				// if offset == 1 {
+				// 	return nil, errors.New("Error: Bad format")
+				// }
 			}else{
+				// brace level every brace increments the level
 				level := 0
+				// main in quote flag for determine what is in quote and what is not
 				inQuote := false
+				// index found flag.
 				found := false
+				// index count of current element.
 				indexCount := 0
-				// not interested with column to this level
+				// not interested with column char in this search
 				isJsonChar[58] = false
 				for i := offset ; i < len(json) ; i ++ {
+					// curr is current byte of reading.
 					curr := json[i]
+					// just interesting with json chars. other wise continue.
 					if !isJsonChar[curr]{
 						continue
 					}
+					// if current byte is quote
 					if curr == 34 {
+						// check befour char it might be escape char.
 						if json[i - 1] == 92 {
 							continue
 						}
+						// change inQuote flag to opposite.
 						inQuote = !inQuote
 						continue
 					}
 					if inQuote {
 						continue
 					}else{
+						// open braces
 						if curr == 91 || curr == 123{
+							// if found befour done with this search
+							// break array search scope
 							if found {
 								level++
 								braceType = curr
 								currentPath = path[k + 1]
 								found = false
-								done = true
+								// done = true
 								break
 							}
 							level++
@@ -131,22 +142,28 @@ func Get(json []byte, path ... string) ([]byte, error){
 						}
 						if curr == 93 || curr == 125 {
 							level--
+							// if level is less than 1 it mean index not in this array. 
 							if level < 1 {
-								done = false
-								break
+								return nil, errors.New("Error: Index out of range")
 							}
 							continue
 						}
+						// not found befour
 						if !found {
+							// same level with path
 							if level == 1 {
+								// curren byte is comma
 								if curr == 44 {
+									// inc index
 									indexCount++
-									if indexCount == arrayNumber {
+									if indexCount == arrayIndex {
 										offset = i + 1
 										if k == len(path) - 1{
-											done = true
+											// last path and found than break
+											// done = true
 											break
 										}
+										// not last path keep going. for find next brace Type.
 										found = true
 										continue
 									}
@@ -159,11 +176,8 @@ func Get(json []byte, path ... string) ([]byte, error){
 						continue
 					}
 				}
-				// interested with column to this level
+				// check true for column char again for keep same with first decleration.
 				isJsonChar[58] = true
-			}
-			if !done {
-				return nil, errors.New("Error: Index out of range")
 			}
 		}else{
 			inQuote := false
