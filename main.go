@@ -7,58 +7,92 @@ import (
 )
 
 func Get(json []byte, path ... string) ([]byte, error){
+	// path null control.
 	if len(path) == 0 {
 		return nil, errors.New("Error: Path can not be null.")
 	}
+	// main offset track of this search.
 	offset := 0
 	currentPath := path[0]
+	// important chars for json.
+	// 34 = "
+	// 44 = ,
+	// 58 = :
+	// 91 = [
+	// 93 = ]
+	// 123 = {
+	// 125 = }
 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
 	isJsonChar := make([]bool, 256)
 	for _,v := range chars {
 		isJsonChar[v] = true
 	}
+	// trim start spaces
 	for space(json[offset]) {
 		offset++
 	}
+	// braceType determine whether or not search will be a json search or array search
 	braceType := json[offset]
-
+	// main iteration off all bytes.
 	for k := 0 ; k < len(path) ; k ++ {
+		// 91 = [, begining of an array search
 		if braceType == 91 {
+			// path value cast to integer for determine index.
 			arrayNumber, err := strconv.Atoi(currentPath)
 			if err != nil {
+				// braceType and current path type is confilicts.
 				return nil, errors.New("Error: Index Expected.")
 			}
+			// is this search has found something.
 			done := false
+			// zeroth index search.
 			if arrayNumber == 0 {
+				// increment offset for not catch current brace.
 				offset++
+				// inner iteration for brace search.
 				for i := offset; i < len(json) ; i ++ {
+					// curr is current byte of reading.
 					curr := json[i]
+					// open curly brace
 					if curr == 123 {
+						// change brace type of next search.
 						braceType = curr
 						if k != len(path) - 1{
+							// if its not last path than change currentPath to next path.
 							currentPath = path[k + 1]
 						}
+						// assign offset to brace index.
 						offset = i
+						// found it.
 						done = true
+						// break the array search scope.
 						break
 					}
+					// open square brace
 					if curr == 91 {
+						// change brace type of next search.
 						braceType = curr
 						if k != len(path) - 1{
+							// if its not last path than change currentPath to next path.
 							currentPath = path[k + 1]
 						}
+						// if first path is '0' and searching for zeroth index is conflicts with searching zeroth array or arrays zeroth element.
 						if k == 0 {
 							offset = i
 						}else{
 							offset = i + 1
 						}
+						// found it.
 						done = true
+						// break the array search scope.
 						break
 					}
-					if !space(curr){
-						done = true
-						break
-					}
+					// unnecassary code block it will delete after one commit.
+					// kept for be sure it's absolutely unnecessary. 
+					// if !space(curr){
+					// 	done = true
+					// 	break
+					// }
 				}
 			}else{
 				level := 0
