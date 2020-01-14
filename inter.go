@@ -47,6 +47,8 @@ func Get(json []byte, path ... string) ([]byte, error){
 				// braceType and current path type is conflicts.
 				return nil, errors.New("Error: Index Expected, got string.")
 			}
+			// main done flag
+			done := false
 			// zeroth index search.
 			if arrayIndex == 0 {
 				// Increment offset for not catch current brace.
@@ -126,6 +128,7 @@ func Get(json []byte, path ... string) ([]byte, error){
 								braceType = curr
 								currentPath = path[k + 1]
 								found = false
+								done = true
 								break
 							}
 							level++
@@ -135,7 +138,7 @@ func Get(json []byte, path ... string) ([]byte, error){
 							level--
 							// if level is less than 1 it mean index not in this array. 
 							if level < 1 {
-								return nil, errors.New("Error: Index out of range")
+								done = false
 							}
 							continue
 						}
@@ -150,7 +153,8 @@ func Get(json []byte, path ... string) ([]byte, error){
 									if indexCount == arrayIndex {
 										offset = i + 1
 										if k == len(path) - 1{
-											// last path and found than break
+											// last path found, break
+											done = true
 											break
 										}
 										// not last path keep going. For find next brace Type.
@@ -168,6 +172,9 @@ func Get(json []byte, path ... string) ([]byte, error){
 				}
 				// Check true for column char again for keep same with first declaration.
 				isJsonChar[58] = true
+			}
+			if !done {
+				return nil, errors.New("Error: Index out of range")
 			}
 		}else{
 			// KEY SEACH SCOPE
@@ -282,7 +289,7 @@ func Get(json []byte, path ... string) ([]byte, error){
 								}
 								// Quote
 								if curr == 34 {
-									// just interested with json chars. Other wise continue.
+									// check before char it might be escape char.
 									if json[j - 1] == 92 {
 										continue
 									}

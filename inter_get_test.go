@@ -4,7 +4,6 @@ import (
 	"testing"
 )
 
-
 func TestGet(t *testing.T){
 	for i, p := range paths {
 		value, done := Get(mixedDummyTestCase, p...)
