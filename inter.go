@@ -39,14 +39,13 @@ func Get(json []byte, path ... string) ([]byte, error){
 	for k := 0 ; k < len(path) ; k ++ {
 		// 91 = [, begining of an array search
 		if braceType == 91 {
+			// ARRAY SEACH SCOPE
 			// path value cast to integer for determine index.
 			arrayIndex, err := strconv.Atoi(currentPath)
 			if err != nil {
 				// braceType and current path type is confilicts.
 				return nil, errors.New("Error: Index Expected, got string.")
 			}
-			// is this search has found something.
-			// done := false
 			// zeroth index search.
 			if arrayIndex == 0 {
 				// increment offset for not catch current brace.
@@ -65,8 +64,6 @@ func Get(json []byte, path ... string) ([]byte, error){
 						}
 						// assign offset to brace index.
 						offset = i
-						// found it.
-						// done = true
 						// break the array search scope.
 						break
 					}
@@ -80,20 +77,14 @@ func Get(json []byte, path ... string) ([]byte, error){
 						}
 						// searching for zeroth index is conflicts with searching zeroth array or arrays zeroth element.
 						offset = i + 1
-						// found it.
-						// done = true
 						// break the array search scope.
 						break
 					}
 					// doesnt have to always find a brace. it can be a value.
 					if !space(curr){
-						// done = true
 						break
 					}
 				}
-				// if offset == 1 {
-				// 	return nil, errors.New("Error: Bad format")
-				// }
 			}else{
 				// brace level every brace increments the level
 				level := 0
@@ -108,7 +99,7 @@ func Get(json []byte, path ... string) ([]byte, error){
 				for i := offset ; i < len(json) ; i ++ {
 					// curr is current byte of reading.
 					curr := json[i]
-					// just interesting with json chars. other wise continue.
+					// just interested with json chars. other wise continue.
 					if !isJsonChar[curr]{
 						continue
 					}
@@ -134,7 +125,6 @@ func Get(json []byte, path ... string) ([]byte, error){
 								braceType = curr
 								currentPath = path[k + 1]
 								found = false
-								// done = true
 								break
 							}
 							level++
@@ -160,7 +150,6 @@ func Get(json []byte, path ... string) ([]byte, error){
 										offset = i + 1
 										if k == len(path) - 1{
 											// last path and found than break
-											// done = true
 											break
 										}
 										// not last path keep going. for find next brace Type.
@@ -180,37 +169,55 @@ func Get(json []byte, path ... string) ([]byte, error){
 				isJsonChar[58] = true
 			}
 		}else{
+			// KEY SEACH SCOPE
+			// main in quote flag for determine what is in quote and what is not.
 			inQuote := false
+			// key found flag.
 			found := false
+			// key start index.
 			start := 0
+			// key end index.
 			end := 0
+			// current level.
 			level := k
-			// not interested with comma to this level
+			// not interested with comma in this search
 			isJsonChar[44] = false
 			for i := offset ; i < len(json) ; i ++ {
+				// curr is current byte of reading.
 				curr := json[i]
+				// just interested with json chars. other wise continue.
 				if !isJsonChar[curr]{
 					continue
 				}
+				// if current byte is quote
 				if curr == 34 {
+					// change inQuote flag to opposite.
 					inQuote = !inQuote
+					// if key found no need to determine start and end points.
 					if found {
 						continue
 					}
+					// if level not same as path level no need to determine start and end points.
 					if level != k + 1 {
 						continue
 					}
+					// if starting new quote that means key starts here
 					if inQuote {
 						start = i + 1
 						continue
 					}
+					// if quote ends that means key ends here
 					end = i
 					continue
 				}
 				if inQuote {
 					continue
 				}else{
+					// open square brace
 					if curr == 91 {
+						// if found and new brace is square brace than 
+						// next search is array search break loop and
+						// update the current path 
 						if found {
 							braceType = curr
 							currentPath = path[k + 1]
@@ -220,6 +227,10 @@ func Get(json []byte, path ... string) ([]byte, error){
 						continue
 					}
 					if curr == 123 {
+						// if found and new brace is curly brace than 
+						// next search is key search continue with this loop and
+						// update the current path 
+						// close found flag for next search.
 						if found {
 							k++
 							level++
@@ -235,12 +246,16 @@ func Get(json []byte, path ... string) ([]byte, error){
 						level--
 						continue
 					}
-					// column
+					// same level with path
 					if level == k + 1 {
+						// column
 						if curr == 58 {
+							// compre key to current path 
 							if compare(json, start, end, currentPath) {
 								offset = i + 1
 								found = true
+								// if it is the last path element break
+								// and include comma element to json chars.
 								if k == len(path) - 1{
 									isJsonChar[44] = true
 									break
@@ -248,27 +263,37 @@ func Get(json []byte, path ... string) ([]byte, error){
 									continue
 								}
 							}
-							// interested with comma to this level
+							// include comma element to json chars for jump function
 							isJsonChar[44] = true
-							// not interested with column to this level
+							// exclude column element to json chars for jump function
 							isJsonChar[58] = false
-							// little jump alogirthm :{} -> ,
+							// jump function start :{} -> ,
+							// it is fast travel from column to comma
+							// first we need keys 
+							// for this purpose skipping values. 
+							// only need value if key is corrent
 							for j := i ;  j < len(json) ; j ++ {
+								// curr is current byte of reading.
 								curr := json[j]
+								// just interested with json chars. other wise continue.
 								if !isJsonChar[curr]{
 									continue
 								}
 								// quote
 								if curr == 34 {
+									// just interested with json chars. other wise continue.
 									if json[j - 1] == 92 {
 										continue
 									}
+									// change inQuote flag to opposite.
 									inQuote = !inQuote
 									continue
 								}
 								if inQuote {
 									continue
 								}else{
+									// this brace conditions for level trace
+									// it is necassary to keep level value corrent
 									if curr == 91 || curr == 123 {
 										level++
 										continue
@@ -279,7 +304,9 @@ func Get(json []byte, path ... string) ([]byte, error){
 									}
 									// comma
 									if curr == 44 {
+										// level same with path
 										if level == k + 1 {
+											// jump i to j
 											i = j
 											break
 										}
@@ -289,9 +316,9 @@ func Get(json []byte, path ... string) ([]byte, error){
 								}
 
 							}
-							// not interested with comma to this level
+							// exclude comma element to json chars, jump func is ending.
 							isJsonChar[44] = false
-							// interested with column to this level
+							// include column element to json chars, jump func is ending.
 							isJsonChar[58] = true
 							continue
 						}
@@ -299,7 +326,9 @@ func Get(json []byte, path ... string) ([]byte, error){
 					}
 				}
 			}
+			// include comma element to json chars to restore original.
 			isJsonChar[44] = true
+			// not found any return error
 			if !found {
 				return nil, errors.New("Error: Last key not found.")
 			}
