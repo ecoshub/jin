@@ -172,9 +172,9 @@ func Get(json []byte, path ... string) ([]byte, error){
 				}
 				// Check true for column char again for keep same with first declaration.
 				isJsonChar[58] = true
-			}
-			if !done {
-				return nil, errors.New("Error: Index out of range")
+				if !done {
+					return nil, errors.New("Error: Index out of range")
+				}
 			}
 		}else{
 			// KEY SEACH SCOPE
