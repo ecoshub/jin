@@ -7,7 +7,7 @@ import (
 )
 
 func Get(json []byte, path ... string) ([]byte, error){
-	// path null control.
+	// path null.
 	if len(path) == 0 {
 		return nil, errors.New("Error: Path can not be null.")
 	}
@@ -77,11 +77,11 @@ func Get(json []byte, path ... string) ([]byte, error){
 							currentPath = path[k + 1]
 						}
 						// if first path is '0' and searching for zeroth index is conflicts with searching zeroth array or arrays zeroth element.
-						if k == 0 {
-							offset = i
-						}else{
+						// if k == 0 {
+							// offset = i
+						// }else{
 							offset = i + 1
-						}
+						// }
 						// found it.
 						done = true
 						// break the array search scope.
@@ -89,10 +89,11 @@ func Get(json []byte, path ... string) ([]byte, error){
 					}
 					// unnecassary code block it will delete after one commit.
 					// kept for be sure it's absolutely unnecessary. 
-					// if !space(curr){
-					// 	done = true
-					// 	break
-					// }
+					if !space(curr){
+						// offset = i
+						done = true
+						break
+					}
 				}
 			}else{
 				level := 0
