@@ -23,3 +23,5 @@ func CAST_STRING_ARRAY_ERROR() 	error {return errors.New("Cast Error: Cast to []
 func CAST_INT_ARRAY_ERROR() 	error {return errors.New("Cast Error: Cast to []int error. ERROR_CODE:15")}
 func CAST_FLOAT_ARRAY_ERROR() 	error {return errors.New("Cast Error: Cast to []float error. ERROR_CODE:16")}
 func CAST_BOOL_ARRAY_ERROR() 	error {return errors.New("Cast Error: Cast to []bool error. ERROR_CODE:17")}
+
+func EMPTY_ARRAY_ERROR() 				error {return errors.New("Error: Array is empty. ERROR_CODE:18")}
