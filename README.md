@@ -2,7 +2,7 @@
 fast JSON interperter lib for golang
 ## UNDER DEVELOPMENT
 + (+) Basic get & set fucntions
-+ (-) Add & remove functions
++ (+) Add & remove functions
 + (-) Iteration functions, array & object
 + (p) Unit tests
 + (p) Benchmarks
