@@ -4,19 +4,65 @@ import (
 	"testing"
 )
 
-func TestGet(t *testing.T){
-	for i, p := range paths {
-		value, done := Get(mixedDummyTestCase, p...)
+func TestGetMixed(t *testing.T){
+	for i, p := range mixedDummyPaths {
+		value, done := Get(mixedDummyTest, p...)
 		if done != nil {
 			t.Errorf("Total Fail, path:%v\n", p)
 		}
-		if string(value) != results[i] {
-			t.Errorf("Fail, not same answer path:%v, got:%v, expected:%v", p, string(value), results[i])
+		if string(value) != mixedDummyTestResult[i] {
+			t.Errorf("Fail, not same answer path:%v, got:%v, expected:%v", p, string(value), mixedDummyTestResult[i])
 		}
 	}
 }
 
-var mixedDummyTestCase []byte = []byte(` 
+func TestGetArray(t *testing.T){
+  for i, p := range ArrayTestPaths {
+    value, done := Get(ArrayTest, p...)
+    if done != nil {
+      t.Errorf("Total Fail, path:%v\n", p)
+    }
+    if string(value) != ArrayTestResult[i] {
+      t.Errorf("Fail, not same answer path:%v, got:%v, expected:%v", p, string(value), ArrayTestResult[i])
+    }
+  }
+}
+
+var ArrayTest []byte = []byte(`[[[[1,[31,62,69],5,[12,13,14,15]],"test-string",[40,41,42]]]]`)
+
+var ArrayTestPaths [][]string = [][]string{
+   []string{"0", "0"},
+   []string{"0", "0", "0"},
+   []string{"0", "0", "0", "0"},
+   []string{"0", "0", "0", "1"},
+   []string{"0", "0", "0", "1", "0"},
+   []string{"0", "0", "0", "1", "1"},
+   []string{"0", "0", "0", "1", "2"},
+   []string{"0", "0", "0", "2"},
+   []string{"0", "0", "0", "3"},
+   []string{"0", "0", "0", "3", "0"},
+   []string{"0", "0", "0", "3", "1"},
+   []string{"0", "0", "0", "3", "2"},
+   []string{"0", "0", "0", "3", "3"},
+   []string{"0", "0", "1"}}
+
+var ArrayTestResult  []string = []string{
+`[[1,[31,62,69],5,[12,13,14,15]],"test-string",[40,41,42]]`,
+`[1,[31,62,69],5,[12,13,14,15]]`,
+`1`,
+`[31,62,69]`,
+`31`,
+`62`,
+`69`,
+`5`,
+`[12,13,14,15]`,
+`12`,
+`13`,
+`14`,
+`15`,
+`test-string`}
+
+var mixedDummyTest []byte = []byte(` 
    [ 
     {
   "event":"save",
@@ -68,7 +114,7 @@ var mixedDummyTestCase []byte = []byte(`
 [[1,[31,62,69],5,[12,13,14,15]],"test-string",[40,41,42]]
 ]`)
 
-var results  []string = []string{`{
+var mixedDummyTestResult  []string = []string{`{
   "event":"save",
   "mac":"bc:ae:c5:13:84:f9",
   "username":"eco",
@@ -240,7 +286,7 @@ var results  []string = []string{`{
 `15`,
 `test-string`}
 
-var paths [][]string = [][]string{
+var mixedDummyPaths [][]string = [][]string{
    []string{ "0"},
    []string{"0", "event"},
    []string{"0", "mac"},
