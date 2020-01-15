@@ -1011,3 +1011,25 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 	}
 	return json, errors.New("Error: Something went wrong... not sure, maybe bad JSON format...")
 }
+
+func InsertValueString(json []byte, value string, index int, path ... string) ([]byte, error){
+	if value[0] != 34 && value[len(value) - 1] != 34 {
+		return InsertValue(json, []byte(`"` + value + `"`), index, path...)
+	}
+	return InsertValue(json, []byte(value), index, path...)
+}
+
+func InsertValueInt(json []byte, value int, index int, path ... string) ([]byte, error){
+	return InsertValue(json, []byte(strconv.Itoa(value)), index, path...)
+}
+
+func InsertValueFloat(json []byte, value float64, index int, path ... string) ([]byte, error){
+	return InsertValue(json, []byte(strconv.FormatFloat(value, 'e', -1, 64)), index, path...)
+}
+
+func InsertValueBool(json []byte, value bool, index int, path ... string) ([]byte, error){
+	if value {
+		return InsertValue(json, []byte("true"), index, path...)
+	}
+	return InsertValue(json, []byte("false"), index, path...)
+}
