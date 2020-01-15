@@ -1,12 +1,8 @@
 package jsoninterpreter
 
 import (
-	"fmt"
 	"strconv"
-	"errors"
 )
-
-func dummy(){fmt.Println()}
 
 func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte, error){
 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
@@ -31,13 +27,13 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 					if curr == 125 {
 						return replace(json, []byte(`,"` + key + `":` + string(value)),lenj - i - 1,lenj - i - 1), nil
 					}else{
-						return json, errors.New("Error: Bad JSON format")
+						return json, BAD_JSON_ERROR()
 					}
 					continue
 				}
 			}
 		}else{
-			return json, errors.New("Error: Last path must be pointed at an object.")
+			return json, OBJECT_EXPECTED_ERROR()
 		}
 	}
 	path = append(path, key)
@@ -48,7 +44,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 		if braceType == 91 {
 			arrayIndex, err := strconv.Atoi(currentPath)
 			if err != nil {
-				return json, errors.New("Error: Index Expected, got string.")
+				return json, INDEX_EXPECTED_ERROR()
 			}
 			done := false
 			if arrayIndex == 0 {
@@ -60,8 +56,6 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 						if k != len(path) - 1{
 							currentPath = path[k + 1]
 							lastOffset = offset
-						}else{
-							return json, errors.New("Error: last path must be pointed at an object not to an array")
 						}
 						offset = i
 						done = true
@@ -73,7 +67,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 							currentPath = path[k + 1]
 							lastOffset = offset
 						}else{
-							return json, errors.New("Error: last path must be pointed at an object nto ot an array")
+							return json, OBJECT_EXPECTED_ERROR()
 						}
 						offset = i + 1
 						done = true
@@ -131,7 +125,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 									if indexCount == arrayIndex {
 										offset = i + 1
 										if k == len(path) - 1{
-											return json, errors.New("Error: last path must be pointed at an object not to an array")
+											return json, OBJECT_EXPECTED_ERROR()
 										}
 										lastOffset = offset
 										found = true
@@ -149,7 +143,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 				isJsonChar[58] = true
 			}
 			if !done {
-				return json, errors.New("Error: Index out of range")
+				return json, INDEX_OUT_OF_RANGE_ERROR()
 			}
 		}else{
 			inQuote := false
@@ -265,17 +259,17 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 			isJsonChar[44] = true
 			if k == len(path) - 1 {
 				if found {
-					return json, errors.New("Error: key already exist")
+					return json, KEY_ALREADY_EXIST()
 				}
 			}else{
 				if !found {
-					return json, errors.New("Error: key not found.")
+					return json, KEY_NOT_FOUND_ERROR()
 				}
 			}
 		}
 	}
 	if lastOffset == 0 {
-		return json, errors.New("Error: Something went wrong... not sure, maybe bad JSON format...")
+		return json, BAD_JSON_ERROR()
 	}
 	for space(json[lastOffset]) {
 		lastOffset++
@@ -314,9 +308,9 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 			continue
 		}
 	}else{
-		return json, errors.New("Error: last path must be pointed at an object not to an array")
+		return json, OBJECT_EXPECTED_ERROR()
 	}
-	return json, errors.New("Error: Something went wrong... not sure, maybe bad JSON format...")
+	return json, BAD_JSON_ERROR()
 }
 
 func AddKeyValueString(json []byte, key, value string, path ... string) ([]byte, error){
@@ -363,13 +357,13 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 					if curr == 93 {
 						return replace(json, []byte("," + string(value)),lenj - i - 1,lenj - i - 1), nil
 					}else{
-						return json, errors.New("Error: Bad JSON format")
+						return json, BAD_JSON_ERROR()
 					}
 					continue
 				}
 			}
 		}else{
-			return json, errors.New("Error: Last path must be pointed at an array.")
+			return json, ARRAY_EXPECTED_ERROR()
 		}
 	}
 	currentPath := path[0]
@@ -378,7 +372,7 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 	if braceType == 91 {
 			arrayIndex, err := strconv.Atoi(currentPath)
 			if err != nil {
-				return json, errors.New("Error: Index Expected, got string.")
+				return json, INDEX_EXPECTED_ERROR()
 			}
 			done := false
 			if arrayIndex == 0 {
@@ -473,7 +467,7 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 				isJsonChar[58] = true
 			}
 			if !done {
-				return json, errors.New("Error: Index out of range")
+				return json, INDEX_OUT_OF_RANGE_ERROR()
 			}
 		}else{
 			inQuote := false
@@ -587,12 +581,12 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 			}
 			isJsonChar[44] = true
 			if !found {
-				return json, errors.New("Error: key not found.")
+				return json, KEY_NOT_FOUND_ERROR()
 			}
 		}
 	}
 	if offset == 0 {
-		return json, errors.New("Error: Something went wrong... not sure, maybe bad JSON format...")
+		return json, BAD_JSON_ERROR()
 	}
 	for space(json[offset]) {
 		offset++
@@ -631,9 +625,9 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 			continue
 		}
 	}else{
-		return json, errors.New("Error: Last path must be pointed at an array.")
+		return json, ARRAY_EXPECTED_ERROR()
 	}
-	return json, errors.New("Error: Something went wrong... not sure, maybe bad JSON format...")
+	return json, BAD_JSON_ERROR()
 }
 
 func AddValueString(json []byte, value string, path ... string) ([]byte, error){
@@ -720,11 +714,11 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 				}
 				isJsonChar[58] = true
 				if !done {
-					return json, errors.New("Error: Index out of range")
+					return json, INDEX_OUT_OF_RANGE_ERROR()
 				}
 			}
 		}else{
-			return json, errors.New("Error: Last path must be pointed at an array.")
+			return json, ARRAY_EXPECTED_ERROR()
 		}
 	}
 	currentPath := path[0]
@@ -733,7 +727,7 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 	if braceType == 91 {
 			arrayIndex, err := strconv.Atoi(currentPath)
 			if err != nil {
-				return json, errors.New("Error: Index Expected, got string.")
+				return json, INDEX_EXPECTED_ERROR()
 			}
 			done := false
 			if arrayIndex == 0 {
@@ -828,7 +822,7 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 				isJsonChar[58] = true
 			}
 			if !done {
-				return json, errors.New("Error: Index out of range")
+				return json, INDEX_OUT_OF_RANGE_ERROR()
 			}
 		}else{
 			inQuote := false
@@ -942,12 +936,12 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 			}
 			isJsonChar[44] = true
 			if !found {
-				return json, errors.New("Error: key not found.")
+				return json, KEY_NOT_FOUND_ERROR()
 			}
 		}
 	}
 	if offset == 0 {
-		return json, errors.New("Error: Something went wrong... not sure, maybe bad JSON format...")
+		return json, BAD_JSON_ERROR()
 	}
 	for space(json[offset]) {
 		offset++
@@ -983,7 +977,7 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 					if curr == 93 || curr == 125 {
 						level--
 						if level < 1 {
-							return json, errors.New("Error: Index out of range")
+							return json, INDEX_OUT_OF_RANGE_ERROR()
 						}
 						continue
 					}
@@ -1003,13 +997,13 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 			}
 			// isJsonChar[58] = true
 			if !done {
-				return json, errors.New("Error: Index out of range")
+				return json, INDEX_OUT_OF_RANGE_ERROR()
 			}
 		}
 	}else{
-		return json, errors.New("Error: Last path must be pointed at an array.")
+		return json, ARRAY_EXPECTED_ERROR()
 	}
-	return json, errors.New("Error: Something went wrong... not sure, maybe bad JSON format...")
+	return json, BAD_JSON_ERROR()
 }
 
 func InsertValueString(json []byte, value string, index int, path ... string) ([]byte, error){
