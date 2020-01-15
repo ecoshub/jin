@@ -6,6 +6,8 @@ import (
 	"errors"
 )
 
+func dummy(){fmt.Println()}
+
 func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte, error){
 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
 	isJsonChar := make([]bool, 256)
@@ -376,7 +378,7 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 	if braceType == 91 {
 			arrayIndex, err := strconv.Atoi(currentPath)
 			if err != nil {
-				return nil, errors.New("Error: Index Expected, got string.")
+				return json, errors.New("Error: Index Expected, got string.")
 			}
 			done := false
 			if arrayIndex == 0 {
@@ -471,7 +473,7 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 				isJsonChar[58] = true
 			}
 			if !done {
-				return nil, errors.New("Error: Index out of range")
+				return json, errors.New("Error: Index out of range")
 			}
 		}else{
 			inQuote := false
@@ -667,22 +669,58 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 		offset++
 	}
 	if len(path) == 0 {
-		fmt.Println("here")
 		if json[offset] == 91 {
-			lenj := len(json)
-			for i := offset ; i < lenj; i ++ {
-				curr := json[lenj - i - 1]
-				fmt.Println(string(curr))
-				if !isJsonChar[curr]{
-					continue
-				}
-				if !space(curr){
-					if curr == 93 {
-						return replace(json, []byte("," + string(value)),i,i), nil
-					}else{
-						fmt.Println("PROBLEM")
+			done := false
+			if index == 0 {
+				return replace(json, []byte(string(value) + ","),offset + 1,offset + 1), nil
+			}else{
+				level := 0
+				inQuote := false
+				indexCount := 0
+				isJsonChar[58] = false
+				for i := offset ; i < len(json) ; i ++ {
+					curr := json[i]
+					if !isJsonChar[curr]{
+						continue
 					}
-					continue
+					if curr == 34 {
+						if json[i - 1] == 92 {
+							continue
+						}
+						inQuote = !inQuote
+						continue
+					}
+					if inQuote {
+						continue
+					}else{
+						if curr == 91 || curr == 123{
+							level++
+							continue
+						}
+						if curr == 93 || curr == 125 {
+							level--
+							if level < 1 {
+								done = false
+							}
+							continue
+						}
+						if level == 1 {
+							if curr == 44 {
+								indexCount++
+								if indexCount == index {
+									offset = i + 1
+									return replace(json, []byte("," + string(value)),i,i), nil
+								}
+								continue
+							}
+							continue
+						}
+						continue
+					}
+				}
+				isJsonChar[58] = true
+				if !done {
+					return json, errors.New("Error: Index out of range")
 				}
 			}
 		}else{
@@ -695,7 +733,7 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 	if braceType == 91 {
 			arrayIndex, err := strconv.Atoi(currentPath)
 			if err != nil {
-				return nil, errors.New("Error: Index Expected, got string.")
+				return json, errors.New("Error: Index Expected, got string.")
 			}
 			done := false
 			if arrayIndex == 0 {
@@ -790,7 +828,7 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 				isJsonChar[58] = true
 			}
 			if !done {
-				return nil, errors.New("Error: Index out of range")
+				return json, errors.New("Error: Index out of range")
 			}
 		}else{
 			inQuote := false
@@ -908,47 +946,68 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 			}
 		}
 	}
-	// if offset == 0 {
-	// 	return json, errors.New("Error: Something went wrong... not sure, maybe bad JSON format...")
-	// }
-	// for space(json[offset]) {
-	// 	offset++
-	// }
-	// if json[offset] == 91 {
-	// 	level := 0
-	// 	inQuote := false
-	// 	for i := offset ; i < len(json) ; i ++ {
-	// 		curr := json[i]
-	// 		if !isJsonChar[curr]{
-	// 			continue
-	// 		}
-	// 		if curr == 34 {
-	// 			if json[i - 1] == 92 {
-	// 				continue
-	// 			}
-	// 			inQuote = !inQuote
-	// 			continue
-	// 		}
-	// 		if inQuote {
-	// 			continue
-	// 		}else{
-	// 			if curr == 91 || curr == 123 {
-	// 				level++
-	// 			}
-	// 			if curr == 93 || curr == 125 {
-	// 				level--
-	// 				if level == 0 {
-	// 					// control for comma maybe needed.
-	// 					return replace(json, []byte("," + string(value)),i,i), nil
-	// 				}
-	// 				continue
-	// 			}
-	// 			continue
-	// 		}
-	// 		continue
-	// 	}
-	// }else{
-	// 	return json, errors.New("Error: Last path must be pointed at an array.")
-	// }
+	if offset == 0 {
+		return json, errors.New("Error: Something went wrong... not sure, maybe bad JSON format...")
+	}
+	for space(json[offset]) {
+		offset++
+	}
+	if json[offset] == 91 {
+		if index == 0 {
+			return replace(json, []byte(string(value) + ","),offset + 1,offset + 1), nil
+		}else{
+			done := false
+			level := 0
+			inQuote := false
+			indexCount := 0
+			isJsonChar[58] = false
+			for i := offset ; i < len(json) ; i ++ {
+				curr := json[i]
+				if !isJsonChar[curr]{
+					continue
+				}
+				if curr == 34 {
+					if json[i - 1] == 92 {
+						continue
+					}
+					inQuote = !inQuote
+					continue
+				}
+				if inQuote {
+					continue
+				}else{
+					if curr == 91 || curr == 123{
+						level++
+						continue
+					}
+					if curr == 93 || curr == 125 {
+						level--
+						if level < 1 {
+							return json, errors.New("Error: Index out of range")
+						}
+						continue
+					}
+					if level == 1 {
+						if curr == 44 {
+							indexCount++
+							if indexCount == index {
+								offset = i + 1
+								return replace(json, []byte("," + string(value)),i,i), nil
+							}
+							continue
+						}
+						continue
+					}
+					continue
+				}
+			}
+			// isJsonChar[58] = true
+			if !done {
+				return json, errors.New("Error: Index out of range")
+			}
+		}
+	}else{
+		return json, errors.New("Error: Last path must be pointed at an array.")
+	}
 	return json, errors.New("Error: Something went wrong... not sure, maybe bad JSON format...")
 }
