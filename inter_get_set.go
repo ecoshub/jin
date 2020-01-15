@@ -676,7 +676,7 @@ func GetBoolArray(json []byte, path ... string) ([]bool, error){
 }
 
 
-func SetValue(json []byte, newValue []byte, path ... string) ([]byte, error){
+func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 	if len(path) == 0 {
 		return nil, errors.New("Error: Path can not be null.")
 	}
@@ -978,7 +978,7 @@ func SetValue(json []byte, newValue []byte, path ... string) ([]byte, error){
 						continue
 					}
 					if inQuote {
-						return replace(json, newValue, offset + 1, i), nil
+						return replace(json, newValue, offset, i + 1), nil
 					}
 					inQuote = !inQuote
 					continue
@@ -996,23 +996,26 @@ func SetValue(json []byte, newValue []byte, path ... string) ([]byte, error){
 	return nil, errors.New("Error: Non 2")
 }
 
-func SetStringValue(json []byte, newValue string, path ... string) ([]byte, error){
-	return SetValue(json, []byte(newValue), path...)
-}
-
-func SetIntValue(json []byte, newValue int, path ... string) ([]byte, error){
-	return SetValue(json, []byte(strconv.Itoa(newValue)), path...)
-}
-
-func SetFloatValue(json []byte, newValue float64, path ... string) ([]byte, error){
-	return SetValue(json, []byte(strconv.FormatFloat(newValue, 'e', -1, 64)), path...)
-}
-
-func SetBoolValue(json []byte, newValue bool, path ... string) ([]byte, error){
-	if newValue {
-		return SetValue(json, []byte("true"), path...)
+func SetString(json []byte, newValue string, path ... string) ([]byte, error){
+	if newValue[0] != 34 && newValue[len(newValue) - 1] != 34 {
+		return Set(json, []byte(`"` + newValue + `"`), path...)
 	}
-	return SetValue(json, []byte("false"), path...)
+	return Set(json, []byte(newValue), path...)
+}
+
+func SetInt(json []byte, newValue int, path ... string) ([]byte, error){
+	return Set(json, []byte(strconv.Itoa(newValue)), path...)
+}
+
+func SetFloat(json []byte, newValue float64, path ... string) ([]byte, error){
+	return Set(json, []byte(strconv.FormatFloat(newValue, 'e', -1, 64)), path...)
+}
+
+func SetBool(json []byte, newValue bool, path ... string) ([]byte, error){
+	if newValue {
+		return Set(json, []byte("true"), path...)
+	}
+	return Set(json, []byte("false"), path...)
 }
 
 
@@ -1310,11 +1313,11 @@ func compare(json []byte, start, end int , key string) bool{
 }
 
 func space(curr byte) bool{
-// space
+	// space
 	if curr == 32 {
 		return true
 	}
-// tab
+	// tab
 	if curr == 9 {
 		return true
 	}
