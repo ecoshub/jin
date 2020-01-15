@@ -314,6 +314,10 @@ func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 			// starts without quote
 			for i := offset ;  i < len(json) ; i ++ {
 				if isJsonChar[json[i]] {
+					// strip others and return value.
+					if offset == i {
+						return json[offset:i], EMPTY_ARRAY_ERROR()
+					}
 					return replace(json, newValue, offset, i), nil
 				}
 			}
