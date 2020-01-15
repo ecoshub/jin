@@ -1,16 +1,14 @@
 package jsoninterpreter
 
 import (
-	"fmt"
 	"strconv"
-	"errors"
 )
 
 // Only this function commented, other Get() and Set() functions based on same logic. 
 func Get(json []byte, path ... string) ([]byte, error){
 	// path null.
 	if len(path) == 0 {
-		return nil, errors.New("Error: Path can not be null.")
+		return nil, getError("NULL_PATH_ERROR")
 	}
 	// main offset track of this search.
 	offset := 0
@@ -45,7 +43,7 @@ func Get(json []byte, path ... string) ([]byte, error){
 			arrayIndex, err := strconv.Atoi(currentPath)
 			if err != nil {
 				// braceType and current path type is conflicts.
-				return nil, errors.New("Error: Index Expected, got string.")
+				return nil, getError("INDEX_EXPECTED_ERROR")
 			}
 			// main done flag
 			done := false
@@ -177,7 +175,7 @@ func Get(json []byte, path ... string) ([]byte, error){
 				isJsonChar[58] = true
 			}
 			if !done {
-				return nil, errors.New("Error: Index out of range")
+				return nil, getError("INDEX_OUT_OF_RANGE_ERROR")
 			}
 		}else{
 			// KEY SEACH SCOPE
@@ -341,14 +339,14 @@ func Get(json []byte, path ... string) ([]byte, error){
 			isJsonChar[44] = true
 			// Not found any return error
 			if !found {
-				return nil, errors.New("Error: Last key not found.")
+				return nil, getError("KEY_NOT_FOUND_ERROR")
 			}
 		}
 	}
 	// this means not search operation has take place
 	// it must be some kinda error or bad format
 	if offset == 0 {
-		return nil, errors.New("Error: Something went wrong... not sure, maybe bad JSON format...")
+		return nil, getError("BAD_JSON_ERROR")
 	}
 	// skip spaces from top.
 	for space(json[offset]) {
@@ -428,7 +426,7 @@ func Get(json []byte, path ... string) ([]byte, error){
 	// This means not search operation has take place
 	// not any formatting operation has take place
 	// it must be some kinda error or bad format
-	return nil, errors.New("Error: Something went wrong... not sure, maybe bad JSON format...")
+	return nil, getError("BAD_JSON_ERROR")
 }
 
 func GetString(json []byte, path ... string) (string, error){
@@ -443,7 +441,7 @@ func GetInt(json []byte, path ... string) (int, error){
 	}
 	intVal, err := strconv.Atoi(val)
 	if err != nil {
-		return -1, fmt.Errorf("Cast Error: value '%v' can not cast to int.", val)
+		return -1, getError("CAST_INT_ERROR")
 	}
 	return intVal, nil
 }
@@ -455,7 +453,7 @@ func GetFloat(json []byte, path ... string) (float64, error){
 	}
 	floatVal, err := strconv.ParseFloat(val, 64)
 	if err != nil {
-		return -1, fmt.Errorf("Cast Error: value '%v' can not cast to float64.", val)
+		return -1, getError("CAST_FLOAT_ERROR")
 	}
 	return floatVal, nil
 }
@@ -471,7 +469,7 @@ func GetBool(json []byte, path ... string) (bool, error){
 	if val == "false" {
 		return false, nil
 	}
-	return false, fmt.Errorf("Cast Error: value '%v' can not cast to bool.", val)
+	return false, getError("CAST_BOOL_ERROR")
 }
 
 func GetStringArray(json []byte, path ... string) ([]string, error){
@@ -481,7 +479,7 @@ func GetStringArray(json []byte, path ... string) ([]string, error){
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, fmt.Errorf("Cast Error: value '%v' can not cast to []string.", val)
+		return nil, getError("CAST_STRING_ARRAY_ERROR")
 	}
 	if val[0] == '[' && val[lena - 1] == ']' {
 		newArray := make([]string, 0, 16)
@@ -511,7 +509,7 @@ func GetStringArray(json []byte, path ... string) ([]string, error){
 		newArray = append(newArray, trimSpace(val, start, lena - 2))
 		return newArray, nil
 	}else{
-		return nil, fmt.Errorf("Cast Error: value '%v' can not cast to []string.", val)
+		return nil, getError("CAST_STRING_ARRAY_ERROR")
 	}
 }
 
@@ -522,7 +520,7 @@ func GetIntArray(json []byte, path ... string) ([]int, error){
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, fmt.Errorf("Cast Error: value '%v' can not cast to []int.", val)
+		return nil, getError("CAST_INT_ARRAY_ERROR")
 	}
 	if val[0] == '[' && val[lena - 1] == ']' {
 		newArray := make([]int, 0, 16)
@@ -545,7 +543,7 @@ func GetIntArray(json []byte, path ... string) ([]int, error){
 					if curr == 44 {
 						num, err := strconv.Atoi(trimSpace(val, start, i))
 						if err != nil {
-							return nil,  fmt.Errorf("Cast Error: value '%v' can not cast to int.", trimSpace(val, start, i))
+							return nil,  getError("CAST_INT_ERROR")
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -556,12 +554,12 @@ func GetIntArray(json []byte, path ... string) ([]int, error){
 
 		num, err := strconv.Atoi(trimSpace(val, start, lena - 2))
 		if err != nil {
-			return nil,  fmt.Errorf("Cast Error: value '%v' can not cast to int.", trimSpace(val, start, lena - 2))
+			return nil, getError("CAST_INT_ERROR")
 		}
 		newArray = append(newArray, num)
 		return newArray, nil
 	}else{
-		return nil, fmt.Errorf("Cast Error: value '%v' can not cast to []int.", val)
+		return nil, getError("CAST_INT_ARRAY_ERROR")
 	}
 }
 
@@ -572,7 +570,7 @@ func GetFloatArray(json []byte, path ... string) ([]float64, error){
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, fmt.Errorf("Cast Error: value '%v' can not cast to []float64.", val)
+		return nil, getError("CAST_FLOAT_ARRAY_ERROR")
 	}
 	if val[0] == '[' && val[lena - 1] == ']' {
 		newArray := make([]float64, 0, 16)
@@ -595,7 +593,7 @@ func GetFloatArray(json []byte, path ... string) ([]float64, error){
 					if curr == 44 {
 						num, err := strconv.ParseFloat(trimSpace(val, start, i), 64)
 						if err != nil {
-							return nil,  fmt.Errorf("Cast Error: value '%v' can not cast to float64.", trimSpace(val, start, i))
+							return nil,  getError("CAST_FLOAT_ERROR")
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -606,12 +604,12 @@ func GetFloatArray(json []byte, path ... string) ([]float64, error){
 
 		num, err := strconv.ParseFloat(trimSpace(val, start, lena - 2), 64)
 		if err != nil {
-			return nil,  fmt.Errorf("Cast Error: value '%v' can not cast to float64.", trimSpace(val, start, lena - 2))
+			return nil,  getError("CAST_FLOAT_ERROR")
 		}
 		newArray = append(newArray, num)
 		return newArray, nil
 	}else{
-		return nil, fmt.Errorf("Cast Error: value '%v' can not cast to []float64.", val)
+		return nil, getError("CAST_FLOAT_ARRAY_ERROR")
 	}
 }
 
@@ -622,7 +620,7 @@ func GetBoolArray(json []byte, path ... string) ([]bool, error){
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, fmt.Errorf("Cast Error: value '%v' can not cast to []bool.", val)
+		return nil, getError("CAST_BOOL_ARRAY_ERROR")
 	}
 	if val[0] == '[' && val[lena - 1] == ']' {
 		newArray := make([]bool, 0, 16)
@@ -653,7 +651,7 @@ func GetBoolArray(json []byte, path ... string) ([]bool, error){
 								start = i + 1
 							}
 						}else{
-							return nil,  fmt.Errorf("Cast Error: value '%v' can not cast to bool.", val)
+							return nil, getError("CAST_BOOL_ERROR")
 						}
 					}
 				}
@@ -667,21 +665,21 @@ func GetBoolArray(json []byte, path ... string) ([]bool, error){
 				newArray = append(newArray, false)
 			}
 		}else{
-			return nil,  fmt.Errorf("Cast Error: value '%v' can not cast to bool.", val)
+			return nil, getError("CAST_BOOL_ERROR")
 		}
 		return newArray, nil
 	}else{
-		return nil, fmt.Errorf("Cast Error: value '%v' can not cast to []bool.", val)
+		return nil, getError("CAST_BOOL_ARRAY_ERROR")
 	}
 }
 
 
 func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 	if len(path) == 0 {
-		return nil, errors.New("Error: Path can not be null.")
+		return nil, getError("NULL_PATH_ERROR")
 	}
 	if len(newValue) == 0 {
-		return nil, errors.New("Error: New Value can not be null.")
+		return nil, getError("NULL_NEW_VALUE_ERROR")
 	}
 	offset := 0
 	currentPath := path[0]
@@ -699,7 +697,7 @@ func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 		if braceType == 91 {
 			arrayNumber, err := strconv.Atoi(currentPath)
 			if err != nil {
-				return json, errors.New("Error: Index Expected.")
+				return json, getError("INDEX_EXPECTED_ERROR")
 			}
 			done := false
 			if arrayNumber == 0 {
@@ -797,7 +795,7 @@ func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 				isJsonChar[58] = true
 			}
 			if !done {
-				return json, errors.New("Error: Index out of range")
+				return json, getError("INDEX_OUT_OF_RANGE_ERROR")
 			}
 		}else{
 			inQuote := false
@@ -921,12 +919,12 @@ func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 			}
 			isJsonChar[44] = true
 			if !found {
-				return json, errors.New("Error: Last key not found.")
+				return json,getError("KEY_NOT_FOUND_ERROR")
 			}
 		}
 	}
 	if offset == 0 {
-		return json, errors.New("Error: Non")
+		return json, getError("BAD_JSON_ERROR")
 	}
 	for space(json[offset]) {
 		offset++
@@ -993,7 +991,7 @@ func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 			}
 		}
 	}
-	return nil, errors.New("Error: Non 2")
+	return nil, getError("BAD_JSON_ERROR")
 }
 
 func SetString(json []byte, newValue string, path ... string) ([]byte, error){
@@ -1021,14 +1019,14 @@ func SetBool(json []byte, newValue bool, path ... string) ([]byte, error){
 
 func SetKey(json []byte, newValue []byte, path ... string) ([]byte, error){
 	if len(path) == 0 {
-		return json, errors.New("Error: Path can not be null.")
+		return json, getError("NULL_PATH_ERROR")
 	}
 	if len(newValue) == 0 {
-		return json, errors.New("Error: New Value can not be null.")
+		return json, getError("NULL_NEW_VALUE_ERROR")
 	}
 	for _, v := range newValue {
 		if v  == 34 {
-			return json, errors.New("Error: Key can not contain quote symbol.")
+			return json, getError("BAD_KEY_ERROR")
 		}
 	}
 	offset := 0
@@ -1047,7 +1045,7 @@ func SetKey(json []byte, newValue []byte, path ... string) ([]byte, error){
 		if braceType == 91 {
 			arrayNumber, err := strconv.Atoi(currentPath)
 			if err != nil {
-				return json, errors.New("Error: Index Expected.")
+				return json, getError("INDEX_EXPECTED_ERROR")
 			}
 			done := false
 			if arrayNumber == 0 {
@@ -1127,7 +1125,7 @@ func SetKey(json []byte, newValue []byte, path ... string) ([]byte, error){
 										offset = i + 1
 										if k == len(path) - 1{
 											done = true
-											return json, errors.New("Error: Last value must be a key value,  not an array index.")
+											return json, getError("KEY_EXPECTED_ERROR")
 										}
 										found = true
 										continue
@@ -1145,7 +1143,7 @@ func SetKey(json []byte, newValue []byte, path ... string) ([]byte, error){
 				isJsonChar[58] = true
 			}
 			if !done {
-				return json, errors.New("Error: Index out of range")
+				return json, getError("INDEX_OUT_OF_RANGE_ERROR")
 			}
 		}else{
 			inQuote := false
@@ -1270,11 +1268,11 @@ func SetKey(json []byte, newValue []byte, path ... string) ([]byte, error){
 			}
 			isJsonChar[44] = true
 			if !found {
-				return json, errors.New("Error: Last key not found.")
+				return json, getError("KEY_NOT_FOUND_ERROR")
 			}
 		}
 	}
-	return json, errors.New("Error: Something went wrong... not sure.")
+	return json, getError("BAD_JSON_ERROR")
 }
 
 func SetStringKey(json []byte, newValue string, path ... string) ([]byte, error){
