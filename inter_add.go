@@ -69,7 +69,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 						}else{
 							return json, OBJECT_EXPECTED_ERROR()
 						}
-						offset = i + 1
+						offset = i
 						done = true
 						break
 					}
@@ -102,6 +102,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 						if curr == 91 || curr == 123{
 							if found {
 								level++
+								offset = i
 								braceType = curr
 								currentPath = path[k + 1]
 								found = false
@@ -379,21 +380,12 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 				offset++
 				for i := offset; i < len(json) ; i ++ {
 					curr := json[i]
-					if curr == 123 {
+					if curr == 123 || curr == 91{
 						braceType = curr
 						if k != len(path) - 1{
 							currentPath = path[k + 1]
 						}
 						offset = i
-						done = true
-						break
-					}
-					if curr == 91 {
-						braceType = curr
-						if k != len(path) - 1{
-							currentPath = path[k + 1]
-						}
-						offset = i + 1
 						done = true
 						break
 					}
@@ -425,6 +417,7 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 					}else{
 						if curr == 91 || curr == 123{
 							if found {
+								offset = i
 								level++
 								braceType = curr
 								currentPath = path[k + 1]
@@ -734,21 +727,12 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 				offset++
 				for i := offset; i < len(json) ; i ++ {
 					curr := json[i]
-					if curr == 123 {
+					if curr == 123 || curr == 91{
 						braceType = curr
 						if k != len(path) - 1{
 							currentPath = path[k + 1]
 						}
 						offset = i
-						done = true
-						break
-					}
-					if curr == 91 {
-						braceType = curr
-						if k != len(path) - 1{
-							currentPath = path[k + 1]
-						}
-						offset = i + 1
 						done = true
 						break
 					}
@@ -780,6 +764,7 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 					}else{
 						if curr == 91 || curr == 123{
 							if found {
+								offset = i
 								level++
 								braceType = curr
 								currentPath = path[k + 1]
