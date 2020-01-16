@@ -27,31 +27,19 @@ func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 			if err != nil {
 				return json, INDEX_EXPECTED_ERROR()
 			}
-			done := false
 			if arrayNumber == 0 {
 				offset++
 				for i := offset; i < len(json) ; i ++ {
 					curr := json[i]
-					if curr == 123 {
+					if curr == 123 || curr == 91{
 						braceType = curr
 						if k != len(path) - 1{
 							currentPath = path[k + 1]
 						}
 						offset = i
-						done = true
-						break
-					}
-					if curr == 91 {
-						braceType = curr
-						if k != len(path) - 1{
-							currentPath = path[k + 1]
-						}
-						offset = i + 1
-						done = true
 						break
 					}
 					if !space(curr){
-						done = true
 						break
 					}
 				}
@@ -79,11 +67,11 @@ func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 					}else{
 						if curr == 91 || curr == 123{
 							if found {
+								offset = i
 								level++
 								braceType = curr
 								currentPath = path[k + 1]
 								found = false
-								done = true
 								break
 							}
 							level++
@@ -92,8 +80,7 @@ func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 						if curr == 93 || curr == 125 {
 							level--
 							if level < 1 {
-								done = false
-								break
+								return nil, INDEX_OUT_OF_RANGE_ERROR()
 							}
 							continue
 						}
@@ -104,7 +91,6 @@ func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 									if indexCount == arrayNumber {
 										offset = i + 1
 										if k == len(path) - 1{
-											done = true
 											break
 										}
 										found = true
@@ -121,9 +107,6 @@ func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 				}
 				// interested with column to this level
 				isJsonChar[58] = true
-			}
-			if !done {
-				return json, INDEX_OUT_OF_RANGE_ERROR()
 			}
 		}else{
 			inQuote := false
