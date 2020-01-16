@@ -44,7 +44,11 @@ var ArrayTestPaths [][]string = [][]string{
    []string{"0", "0", "0", "3", "1"},
    []string{"0", "0", "0", "3", "2"},
    []string{"0", "0", "0", "3", "3"},
-   []string{"0", "0", "1"}}
+   []string{"0", "0", "1"},
+   []string{"0", "0", "2"},
+   []string{"0", "0", "2", "0"},
+   []string{"0", "0", "2", "1"},
+   []string{"0", "0", "2", "2"}}
 
 var ArrayTestResult  []string = []string{
 `[[1,[31,62,69],5,[12,13,14,15]],"test-string",[40,41,42]]`,
@@ -60,7 +64,11 @@ var ArrayTestResult  []string = []string{
 `13`,
 `14`,
 `15`,
-`test-string`}
+`test-string`,
+`[40,41,42]`,
+`40`,
+`41`,
+`42`}
 
 var mixedDummyTest []byte = []byte(` 
    [ 
