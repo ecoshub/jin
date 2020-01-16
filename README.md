@@ -11,3 +11,4 @@ fast JSON interperter lib for golang
 + (p) Comment and explanation
 + (-) Validation tool
 + (-) Flatten & Format tools
++ (-) JSON builder
