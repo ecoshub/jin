@@ -396,9 +396,10 @@ func Get(json []byte, path ... string) ([]byte, error){
 		}else{
 			for i := offset ;  i < len(json) ; i ++ {
 				curr := json[i]
+				// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
 				if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 					if offset == i {
-						return json[offset:i], EMPTY_ARRAY_ERROR()
+						return nil, EMPTY_ARRAY_ERROR()
 					}
 					return json[offset:i], nil
 				}
