@@ -2,7 +2,10 @@ package jsoninterpreter
 
 import (
 	"strconv"
+	"fmt"
 )
+
+func fmtDummy(){fmt.Println()}
 
 func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte, error){
 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
@@ -14,7 +17,6 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 	for space(json[offset]) {
 		offset++
 	}
-
 	if len(path) == 0 {
 		if json[offset] == 123 {
 			lenj := len(json)
@@ -348,6 +350,18 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 	}
 	if len(path) == 0 {
 		if json[offset] == 91 {
+			// is it empty array
+			for i := offset + 1; i < len(json) ; i ++ {
+				curr := json[i]
+				if !space(curr) {
+					if curr == 93 {
+						// empty
+						return replace(json, []byte(string(value)), i, i), nil
+					}else{
+						break
+					}
+				}
+			}
 			lenj := len(json)
 			for i := offset ; i < lenj; i ++ {
 				curr := json[lenj - i - 1]
@@ -375,10 +389,9 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 			if err != nil {
 				return json, INDEX_EXPECTED_ERROR()
 			}
-			done := false
 			if arrayIndex == 0 {
 				offset++
-				for i := offset; i < len(json) ; i ++ {
+				for i := offset + 1; i < len(json) ; i ++ {
 					curr := json[i]
 					if curr == 123 || curr == 91{
 						braceType = curr
@@ -386,11 +399,9 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 							currentPath = path[k + 1]
 						}
 						offset = i
-						done = true
 						break
 					}
 					if !space(curr){
-						done = true
 						break
 					}
 				}
@@ -422,7 +433,6 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 								braceType = curr
 								currentPath = path[k + 1]
 								found = false
-								done = true
 								break
 							}
 							level++
@@ -431,7 +441,7 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 						if curr == 93 || curr == 125 {
 							level--
 							if level < 1 {
-								done = false
+								return nil, INDEX_OUT_OF_RANGE_ERROR()
 							}
 							continue
 						}
@@ -442,7 +452,6 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 									if indexCount == arrayIndex {
 										offset = i + 1
 										if k == len(path) - 1{
-											done = true
 											break
 										}
 										found = true
@@ -458,9 +467,6 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 					}
 				}
 				isJsonChar[58] = true
-			}
-			if !done {
-				return json, INDEX_OUT_OF_RANGE_ERROR()
 			}
 		}else{
 			inQuote := false
@@ -585,6 +591,18 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 		offset++
 	}
 	if json[offset] == 91 {
+		// is it empty array
+		for i := offset + 1 ; i < len(json) ; i ++ {
+			curr := json[i]
+			if !space(curr) {
+				if curr == 93 {
+					// empty
+					return replace(json, []byte(string(value)), i, i), nil
+				}else{
+					break
+				}
+			}
+		}
 		level := 0
 		inQuote := false
 		for i := offset ; i < len(json) ; i ++ {
@@ -655,9 +673,21 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 	for space(json[offset]) {
 		offset++
 	}
+
 	if len(path) == 0 {
 		if json[offset] == 91 {
-			done := false
+			// is it empty array
+			for i := offset + 1; i < len(json) ; i ++ {
+				curr := json[i]
+				if !space(curr) {
+					if curr == 93 {
+						// empty
+						return replace(json, []byte(string(value)), i, i), nil
+					}else{
+						break
+					}
+				}
+			}
 			if index == 0 {
 				return replace(json, []byte(string(value) + ","),offset + 1,offset + 1), nil
 			}else{
@@ -687,7 +717,7 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 						if curr == 93 || curr == 125 {
 							level--
 							if level < 1 {
-								done = false
+								return json, INDEX_OUT_OF_RANGE_ERROR()
 							}
 							continue
 						}
@@ -706,9 +736,6 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 					}
 				}
 				isJsonChar[58] = true
-				if !done {
-					return json, INDEX_OUT_OF_RANGE_ERROR()
-				}
 			}
 		}else{
 			return json, ARRAY_EXPECTED_ERROR()
@@ -722,7 +749,6 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 			if err != nil {
 				return json, INDEX_EXPECTED_ERROR()
 			}
-			done := false
 			if arrayIndex == 0 {
 				offset++
 				for i := offset; i < len(json) ; i ++ {
@@ -733,11 +759,9 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 							currentPath = path[k + 1]
 						}
 						offset = i
-						done = true
 						break
 					}
 					if !space(curr){
-						done = true
 						break
 					}
 				}
@@ -769,7 +793,6 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 								braceType = curr
 								currentPath = path[k + 1]
 								found = false
-								done = true
 								break
 							}
 							level++
@@ -778,7 +801,7 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 						if curr == 93 || curr == 125 {
 							level--
 							if level < 1 {
-								done = false
+								return json, INDEX_OUT_OF_RANGE_ERROR()
 							}
 							continue
 						}
@@ -789,7 +812,6 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 									if indexCount == arrayIndex {
 										offset = i + 1
 										if k == len(path) - 1{
-											done = true
 											break
 										}
 										found = true
@@ -805,9 +827,6 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 					}
 				}
 				isJsonChar[58] = true
-			}
-			if !done {
-				return json, INDEX_OUT_OF_RANGE_ERROR()
 			}
 		}else{
 			inQuote := false
@@ -932,10 +951,21 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 		offset++
 	}
 	if json[offset] == 91 {
+		// is it empty array
+		for i := offset + 1; i < len(json) ; i ++ {
+			curr := json[i]
+			if !space(curr) {
+				if curr == 93 {
+					// empty
+					return replace(json, []byte(string(value)), i, i), nil
+				}else{
+					break
+				}
+			}
+		}
 		if index == 0 {
 			return replace(json, []byte(string(value) + ","),offset + 1,offset + 1), nil
 		}else{
-			done := false
 			level := 0
 			inQuote := false
 			indexCount := 0
@@ -979,10 +1009,6 @@ func InsertValue(json []byte, value []byte, index int, path ... string) ([]byte,
 					}
 					continue
 				}
-			}
-			// isJsonChar[58] = true
-			if !done {
-				return json, INDEX_OUT_OF_RANGE_ERROR()
 			}
 		}
 	}else{
