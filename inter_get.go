@@ -394,10 +394,9 @@ func Get(json []byte, path ... string) ([]byte, error){
 				}
 			}
 		}else{
-			// If value starts without quote
 			for i := offset ;  i < len(json) ; i ++ {
-				if isJsonChar[json[i]] {
-					// strip others and return value.
+				curr := json[i]
+				if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 					if offset == i {
 						return json[offset:i], EMPTY_ARRAY_ERROR()
 					}
