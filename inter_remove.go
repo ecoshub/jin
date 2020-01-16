@@ -32,7 +32,6 @@ func DeleteValue(json []byte, path ... string) ([]byte, error){
 			if err != nil {
 				return json, INDEX_EXPECTED_ERROR()
 			}
-			done := false
 			if arrayIndex == 0 {
 				offset++
 				for i := offset; i < len(json) ; i ++ {
@@ -43,11 +42,9 @@ func DeleteValue(json []byte, path ... string) ([]byte, error){
 							currentPath = path[k + 1]
 						}
 						offset = i
-						done = true
 						break
 					}
 					if !space(curr){
-						done = true
 						break
 					}
 				}
@@ -79,7 +76,6 @@ func DeleteValue(json []byte, path ... string) ([]byte, error){
 								braceType = curr
 								currentPath = path[k + 1]
 								found = false
-								done = true
 								break
 							}
 							level++
@@ -88,7 +84,7 @@ func DeleteValue(json []byte, path ... string) ([]byte, error){
 						if curr == 93 || curr == 125 {
 							level--
 							if level < 1 {
-								done = false
+								return nil, INDEX_OUT_OF_RANGE_ERROR()
 							}
 							continue
 						}
@@ -99,7 +95,6 @@ func DeleteValue(json []byte, path ... string) ([]byte, error){
 									if indexCount == arrayIndex {
 										offset = i + 1
 										if k == len(path) - 1{
-											done = true
 											break
 										}
 										found = true
@@ -115,9 +110,6 @@ func DeleteValue(json []byte, path ... string) ([]byte, error){
 					}
 				}
 				isJsonChar[58] = true
-			}
-			if !done {
-				return json, INDEX_OUT_OF_RANGE_ERROR()
 			}
 		}else{
 			inQuote := false
@@ -239,7 +231,7 @@ func DeleteValue(json []byte, path ... string) ([]byte, error){
 	}
 	level := 0
 	inQuote := false
-	arrayIndex, err := strconv.Atoi(currentPath)
+	num, err := strconv.Atoi(currentPath)
 	if err != nil {
 		return json, BAD_JSON_ERROR()
 	}
@@ -264,21 +256,26 @@ func DeleteValue(json []byte, path ... string) ([]byte, error){
 			}
 			if curr == 93 || curr == 125 {
 				if level == 0 {
-					if arrayIndex == 0 {
-						if offset == i {
-							return json, EMPTY_ARRAY_ERROR()
-						}
+					if offset == i {
+						return json, EMPTY_ARRAY_ERROR()
+					}
+					if num == 0 {
+						fmt.Println("asd")
 						json = replace(json, []byte{}, offset, i)
 						return json, nil
+					}else{
+						json = replace(json, []byte{}, offset - 1, i)
+						return json, nil
 					}
-					json = replace(json, []byte{}, offset - 1, i)
-					return json, nil
 				}
 				level--
 				continue
 			}
 			if curr == 44 {
 				if level == 0 {
+					if offset == i {
+						return json, EMPTY_ARRAY_ERROR()
+					}
 					json = replace(json, []byte{}, offset, i + 1)
 					return json, nil
 				}
