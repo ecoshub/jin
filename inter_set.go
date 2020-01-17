@@ -2,6 +2,7 @@ package jsoninterpreter
 
 import "strconv"
 
+
 func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 	_, start, end, err := Core(json, path...)
 	if err != nil {

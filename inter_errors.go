@@ -1,5 +1,5 @@
 package jsoninterpreter
-
+ 
 import "errors"
 
 func NULL_PATH_ERROR() 			error {return errors.New("ERROR_CODE:00 Error: Path can't be null. ")}
