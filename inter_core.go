@@ -5,9 +5,9 @@ import "strconv"
 // Only this function commented, other Get() and Set() functions based on same logic. 
 func Core(json []byte, path ... string) (int, int, int, error){
 	// null path control.
-	if len(path) == 0 {
-		return -1, -1, -1, NULL_PATH_ERROR()
-	}
+	// if len(path) == 0 {
+	// 	return -1, -1, -1, NULL_PATH_ERROR()
+	// }
 	// null json control.
 	if len(json) == 0 {
 		return -1, -1, -1, BAD_JSON_ERROR() 
@@ -118,7 +118,6 @@ func Core(json []byte, path ... string) (int, int, int, error){
 								offset = i
 								braceType = curr
 								currentPath = path[k + 1]
-								found = false
 								break
 							}
 							level++
@@ -128,7 +127,6 @@ func Core(json []byte, path ... string) (int, int, int, error){
 							// if level is less than 1 it mean index not in this array. 
 							if level < 0 {
 								return -1, -1, -1, INDEX_OUT_OF_RANGE_ERROR()
-								// done = false
 							}
 							level--
 							continue
@@ -142,13 +140,13 @@ func Core(json []byte, path ... string) (int, int, int, error){
 									// Inc index
 									indexCount++
 									if indexCount == arrayIndex {
+										found = true
 										if k == len(path) - 1{
 											// last path found, break
 											offset = i + 1
 											break
 										}
-										// not last path keep going. For find next brace Type.
-										found = true
+										// keep going for find next brace Type.
 										continue
 									}
 									continue
@@ -159,6 +157,9 @@ func Core(json []byte, path ... string) (int, int, int, error){
 						}
 						continue
 					}
+				}
+				if !found {
+					return -1, -1, -1, INDEX_OUT_OF_RANGE_ERROR()
 				}
 				// Check true for column char again for keep same with first declaration.
 				isJsonChar[58] = true
