@@ -34,22 +34,29 @@ func SetBool(json []byte, newValue bool, path ... string) ([]byte, error){
 }
 
 func SetKey(json []byte, newKey string, path ... string) ([]byte, error){
+	if len(newKey) < 1 {
+		return json, NULL_NEW_VALUE_ERROR()
+	}
 	newPath := make([]string, len(path))
-	copy(newPath, path[:len(path) - 1])
-	newPath[len(newPath) - 1] = newKey
-	_, _, _, err := Core(json, newPath...)
-	if err != nil {
-		// key exist error code is 07
-		if err.Error()[11:13] == "07" {
-			keyStart, _, _, err := Core(json, path...)
-			if err != nil {
-				return json, err
-			}
-			if keyStart != -1 {
-				for i := keyStart ; i < len(json) ; i++ {
-					curr := json[i]
-					if curr == 34 {
-						return replace(json, []byte(newKey), keyStart, i), nil
+	if len(path) == 0 {
+		newPath = []string{newKey}
+	}else{
+		copy(newPath, path[:len(path) - 1])
+		newPath[len(newPath) - 1] = newKey
+		keyStart, _, _, err := Core(json, path...)
+		if err != nil {
+			return json, err
+		}
+		_, _, _, err = Core(json, newPath...)
+		if err != nil {
+			// key exist error code is 08
+			if err.Error() == KEY_NOT_FOUND_ERROR().Error() {
+				if keyStart != -1 {
+					for i := keyStart ; i < len(json) ; i++ {
+						curr := json[i]
+						if curr == 34 {
+							return replace(json, []byte(newKey), keyStart, i), nil
+						}
 					}
 				}
 			}
