@@ -1,4 +1,4 @@
-package jsoninterpreter
+package jint
 
 
 func replace(json, newValue []byte, start, end int) []byte {

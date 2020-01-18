@@ -1,9 +1,6 @@
-package jsoninterpreter
+package jint
 
 import "strconv"
-import "fmt"
-
-func qweqweqwe(){fmt.Println()}
 
 func IterateKeyValue(json []byte, callback func([]byte, []byte, error), path ... string) {
 	if len(json) == 0 {

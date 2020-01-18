@@ -1,4 +1,4 @@
-package jsoninterpreter
+package jint
 
 import "strconv"
 
