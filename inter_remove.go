@@ -1,11 +1,6 @@
 package jsoninterpreter
 
-import (
-	"fmt"
-	"strconv"
-)
-
-func dummy(){fmt.Println()}
+import "strconv"
 
 func DeleteKey(json []byte, path ... string) ([]byte, error){
 	if len(path) == 0 {
@@ -582,7 +577,6 @@ func DeleteValue(json []byte, path ... string) ([]byte, error){
 						return json, EMPTY_ARRAY_ERROR()
 					}
 					if num == 0 {
-						fmt.Println("asd")
 						json = replace(json, []byte{}, offset, i)
 						return json, nil
 					}else{
