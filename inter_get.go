@@ -1,4 +1,4 @@
-package jsoninterpreter
+package jint
 
 import (
 	"strconv"
@@ -24,7 +24,7 @@ func GetInt(json []byte, path ... string) (int, error){
 	}
 	intVal, err := strconv.Atoi(val)
 	if err != nil {
-		return -1, CAST_INT_ERROR()
+		return -1, PARSE_INT_ERROR(val)
 	}
 	return intVal, nil
 }
@@ -36,7 +36,7 @@ func GetFloat(json []byte, path ... string) (float64, error){
 	}
 	floatVal, err := strconv.ParseFloat(val, 64)
 	if err != nil {
-		return -1, CAST_FLOAT_ERROR()
+		return -1, PARSE_FLOAT_ERROR(val)
 	}
 	return floatVal, nil
 }
@@ -52,7 +52,7 @@ func GetBool(json []byte, path ... string) (bool, error){
 	if val == "false" {
 		return false, nil
 	}
-	return false, CAST_BOOL_ERROR()
+	return false, PARSE_BOOL_ERROR(val)
 }
 
 func GetStringArray(json []byte, path ... string) ([]string, error){
@@ -62,7 +62,7 @@ func GetStringArray(json []byte, path ... string) ([]string, error){
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, CAST_STRING_ARRAY_ERROR()
+		return nil, PARSE_STRING_ARRAY_ERROR(val)
 	}
 	if val[0] == '[' && val[lena - 1] == ']' {
 		newArray := make([]string, 0, 16)
@@ -89,10 +89,10 @@ func GetStringArray(json []byte, path ... string) ([]string, error){
 				}
 			}
 		}
-		newArray = append(newArray, trimSpace(val, start, lena - 2))
+		newArray = append(newArray, trimSpace(val, start, lena - 1))
 		return newArray, nil
 	}else{
-		return nil, CAST_STRING_ARRAY_ERROR()
+		return nil, PARSE_STRING_ARRAY_ERROR(val)
 	}
 }
 
@@ -103,7 +103,7 @@ func GetIntArray(json []byte, path ... string) ([]int, error){
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, CAST_INT_ARRAY_ERROR()
+		return nil, PARSE_INT_ARRAY_ERROR(val)
 	}
 	if val[0] == '[' && val[lena - 1] == ']' {
 		newArray := make([]int, 0, 16)
@@ -126,7 +126,7 @@ func GetIntArray(json []byte, path ... string) ([]int, error){
 					if curr == 44 {
 						num, err := strconv.Atoi(trimSpace(val, start, i))
 						if err != nil {
-							return nil,  CAST_INT_ERROR()
+							return nil,  PARSE_INT_ERROR(trimSpace(val, start, i))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -135,14 +135,14 @@ func GetIntArray(json []byte, path ... string) ([]int, error){
 			}
 		}
 
-		num, err := strconv.Atoi(trimSpace(val, start, lena - 2))
+		num, err := strconv.Atoi(trimSpace(val, start, lena - 1))
 		if err != nil {
-			return nil, CAST_INT_ERROR()
+			return nil, PARSE_INT_ERROR(trimSpace(val, start, lena - 1))
 		}
 		newArray = append(newArray, num)
 		return newArray, nil
 	}else{
-		return nil, CAST_INT_ARRAY_ERROR()
+		return nil, PARSE_INT_ARRAY_ERROR(val)
 	}
 }
 
@@ -153,7 +153,7 @@ func GetFloatArray(json []byte, path ... string) ([]float64, error){
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, CAST_FLOAT_ARRAY_ERROR()
+		return nil, PARSE_FLOAT_ARRAY_ERROR(val)
 	}
 	if val[0] == '[' && val[lena - 1] == ']' {
 		newArray := make([]float64, 0, 16)
@@ -176,7 +176,7 @@ func GetFloatArray(json []byte, path ... string) ([]float64, error){
 					if curr == 44 {
 						num, err := strconv.ParseFloat(trimSpace(val, start, i), 64)
 						if err != nil {
-							return nil,  CAST_FLOAT_ERROR()
+							return nil,  PARSE_FLOAT_ERROR(trimSpace(val, start, i))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -185,14 +185,14 @@ func GetFloatArray(json []byte, path ... string) ([]float64, error){
 			}
 		}
 
-		num, err := strconv.ParseFloat(trimSpace(val, start, lena - 2), 64)
+		num, err := strconv.ParseFloat(trimSpace(val, start, lena - 1), 64)
 		if err != nil {
-			return nil,  CAST_FLOAT_ERROR()
+			return nil,  PARSE_FLOAT_ERROR(trimSpace(val, start, lena - 1))
 		}
 		newArray = append(newArray, num)
 		return newArray, nil
 	}else{
-		return nil, CAST_FLOAT_ARRAY_ERROR()
+		return nil, PARSE_FLOAT_ARRAY_ERROR(val)
 	}
 }
 
@@ -203,7 +203,7 @@ func GetBoolArray(json []byte, path ... string) ([]bool, error){
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, CAST_BOOL_ARRAY_ERROR()
+		return nil, PARSE_BOOL_ARRAY_ERROR(val)
 	}
 	if val[0] == '[' && val[lena - 1] == ']' {
 		newArray := make([]bool, 0, 16)
@@ -234,7 +234,7 @@ func GetBoolArray(json []byte, path ... string) ([]bool, error){
 								start = i + 1
 							}
 						}else{
-							return nil, CAST_BOOL_ERROR()
+							return nil, PARSE_BOOL_ERROR(val)
 						}
 					}
 				}
@@ -248,10 +248,10 @@ func GetBoolArray(json []byte, path ... string) ([]bool, error){
 				newArray = append(newArray, false)
 			}
 		}else{
-			return nil, CAST_BOOL_ERROR()
+			return nil, PARSE_BOOL_ERROR(val)
 		}
 		return newArray, nil
 	}else{
-		return nil, CAST_BOOL_ARRAY_ERROR()
+		return nil, PARSE_BOOL_ARRAY_ERROR(val)
 	}
 }
