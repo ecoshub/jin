@@ -11,4 +11,5 @@ fast JSON interperter lib for golang
 + (p) Comment and explanation
 + (-) Validation tool
 + (-) Flatten & Format tools
-+ (-) JSON builder
++ (-) JSON builder 'String[]s to json string & array to string functions'
++ (-) unsafe interperter ( without any error imp for light speed )
