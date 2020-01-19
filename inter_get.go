@@ -1,10 +1,11 @@
 package jint
 
-import (
-	"strconv"
-)
+import "strconv"
 
 func Get(json []byte, path ... string) ([]byte, error){
+	if len(path) == 0 {
+		return nil, NULL_PATH_ERROR()
+	}
 	_, start, end, err := Core(json, path...)
 	if err != nil {
 		return nil, err
