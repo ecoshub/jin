@@ -22,4 +22,4 @@ func PARSE_STRING_ARRAY_ERROR(val string) 	error {return errors.New(fmt.Sprintf(
 func PARSE_INT_ARRAY_ERROR(val string) 		error {return errors.New(fmt.Sprintf("ERROR_CODE:16 Parse Error: '%v' Cannot be converted to []int.", val))}
 func PARSE_FLOAT_ARRAY_ERROR(val string) 	error {return errors.New(fmt.Sprintf("ERROR_CODE:17 Parse Error: '%v' Cannot be converted to []float.", val))}
 func PARSE_BOOL_ARRAY_ERROR(val string) 	error {return errors.New(fmt.Sprintf("ERROR_CODE:18 Parse Error: '%v' Cannot be converted to []bool.", val))}
-// func INSERT_POINT_ERROR() 					error {return errors.New("ERROR_CODE:04 Error: Insert must be pointed at index of a value, not to an array or object.")}
+func END_OF_ITERATION() 					error {return errors.New("ERROR_CODE:19 Iteration Ended. If you want to restart the iteration use Reset() function.")}
