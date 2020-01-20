@@ -24,38 +24,42 @@ func Delete(json []byte, path ... string) ([]byte, error) {
 		currBrace = json[offset]
 	}
 	var start int
-	var valueEnd int
+	var end int
 	var err error
 	if currBrace == 91 {
-		_, start, valueEnd, err = Core(json, path...)
+		_, start, end, err = Core(json, path...)
 		if err != nil {
 			return json, err
+		}
+		if json[end] == 34 {
+			end++
+			start--
 		}
 	}
 	if currBrace == 123 {
-		start, _, valueEnd, err = Core(json, path...)
+		start, _, end, err = Core(json, path...)
 		if err != nil {
 			return json, err
 		}
+		if json[end] == 34 {
+			end++
+		}
 		start--
 	}
-	if json[valueEnd] == 34 {
-		valueEnd++
-		start--
-	}
-	for i := valueEnd; i < len(json) ; i++ {
+	for i := end; i < len(json) ; i++ {
 		curr := json[i]
 		if !space(curr){
 			if curr == currBrace + 2 {
-				// back comma search
 				for j := start - 1; j > -1 ; j -- {
 					curr = json[j]
 					if !space(curr){
-						if json[j] == 44 {
-							return replace(json, []byte{}, j, valueEnd), nil
-						}else{
-							return json, BAD_JSON_ERROR()
+						if curr == 44 {
+							return replace(json, []byte{}, j, end), nil
 						}
+						if curr == currBrace {
+							return replace(json, []byte{}, j + 1, end), nil
+						}
+						break
 					}
 				}
 				break
@@ -63,8 +67,8 @@ func Delete(json []byte, path ... string) ([]byte, error) {
 			if curr == 44 {
 				return replace(json, []byte{}, start, i + 1), nil
 			}
-			return json, BAD_JSON_ERROR()
+			break
 		}
 	}
-	return nil, BAD_JSON_ERROR() 
+	return json, BAD_JSON_ERROR() 
 }
