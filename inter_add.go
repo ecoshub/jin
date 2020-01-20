@@ -1,35 +1,140 @@
 package jint
 
 import "strconv"
+// import "fmt"
 
-func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte, error){
-	_, _, valueEnd , err := Core(json, path...)
-	if err != nil {
-		return json, err
+func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte, error){	
+	if len(json) < 2 {
+		return json, BAD_JSON_ERROR()
 	}
-	// close curly brace
-	if json[valueEnd - 1] == 125 {
-		val := []byte(`,"` + key + `":` + string(value))
-		json = replace(json, val, valueEnd - 1, valueEnd - 1)
-		return json, nil
+	var start int
+	var end int
+	var err error
+	if len(path) == 0 {
+		for i := 0 ; i < len(json) ; i ++ {
+			if !space(json[i]) {
+				if json[i] == 123 {
+					start = i
+					if i == len(json) - 1 {
+						return json, BAD_JSON_ERROR()
+					}
+					break
+				}else{
+					return json,  ARRAY_EXPECTED_ERROR()
+				}
+			}
+		}
+		for i := len(json) - 1 ; i > -1 ; i-- {
+			if !space(json[i]) {
+				if json[i] == 125 {
+					end = i + 1
+					if i == 0 {
+						return json, BAD_JSON_ERROR()
+					}
+					break
+				}else{
+					return json,  ARRAY_EXPECTED_ERROR()
+				}
+			}
+		}
+	}else{
+		_, start, end , err = Core(json, path...)
+		if err != nil {
+			return json, err
+		}
 	}
-	return json, OBJECT_EXPECTED_ERROR()
+	if json[start] == 123 && json[end - 1] == 125 {
+		empty := true
+		for i := start + 1; i < end - 1; i ++ {
+			if !space(json[i]){
+				empty = false
+			}
+		}
+		if empty {
+			val := []byte(`"` + key + `":` + string(value))
+			json = replace(json, val, end - 1, end - 1)
+			return json, nil
+		}else{
+			path = append(path, key)
+			// key already exist control
+			_, _, _ , err = Core(json, path...)
+			if err != nil {
+				if err.Error() == KEY_NOT_FOUND_ERROR().Error() {
+					val := []byte(`,"` + key + `":` + string(value))
+					json = replace(json, val, end - 1, end - 1)
+					return json, nil
+				}
+				return json, err
+			}
+			return json, KEY_ALREADY_EXIST_ERROR()
+		}
+	}else{
+		return json,  OBJECT_EXPECTED_ERROR()
+	}
+	return json, BAD_JSON_ERROR()
 }
 
 func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
-	_, _, valueEnd , err := Core(json, path...)
-	if err != nil {
-		return json, err
+	var start int
+	var end int
+	var err error
+	if len(json) < 2 {
+		return json, BAD_JSON_ERROR()
 	}
-	// close square brace
-	if json[valueEnd - 1] == 93 {
-		val := make([]byte, len(value) + 1)
-		val[0] = 44
-		copy(val[1:], value)
-		json = replace(json, val, valueEnd - 1, valueEnd - 1)
-		return json, nil
+	if len(path) == 0 {
+		for i := 0 ; i < len(json) ; i ++ {
+			if !space(json[i]) {
+				if json[i] == 91 {
+					start = i
+					if i == len(json) - 1 {
+						return json, BAD_JSON_ERROR()
+					}
+					break
+				}else{
+					return json,  ARRAY_EXPECTED_ERROR()
+				}
+			}
+		}
+		for i := len(json) - 1 ; i > -1 ; i-- {
+			if !space(json[i]) {
+				if json[i] == 93 {
+					end = i + 1
+					if i == 0 {
+						return json, BAD_JSON_ERROR()
+					}
+					break
+				}else{
+					return json,  ARRAY_EXPECTED_ERROR()
+				}
+			}
+		}
+	}else{
+		_, start, end , err = Core(json, path...)
+		if err != nil {
+			return json, err
+		}
 	}
-	return json, OBJECT_EXPECTED_ERROR()
+	if json[start] == 91 && json[end - 1] == 93 {
+		empty := true
+		for i := start + 1; i < end - 1; i ++ {
+			if !space(json[i]){
+				empty = false
+			}
+		}
+		if empty {
+			json = replace(json, value, end - 1, end - 1)
+			return json, nil
+		}else{
+			val := make([]byte, len(value) + 1)
+			val[0] = 44
+			copy(val[1:], value)
+			json = replace(json, val, end - 1, end - 1)
+			return json, nil
+		}
+	}else{
+		return json,  ARRAY_EXPECTED_ERROR()
+	}
+	return json, BAD_JSON_ERROR()
 }
 
 func AddKeyValueString(json []byte, key, value string, path ... string) ([]byte, error){
@@ -77,6 +182,7 @@ func AddValueBool(json []byte, value bool, path ... string) ([]byte, error){
 }
 
 func InsertValue(json []byte, index int, value []byte, path ... string) ([]byte, error){
+	// lenpath == 0 and empty array control needed
 	_, valueStart, _, err := Core(json, path...)
 	if err != nil {
 		return json, err
