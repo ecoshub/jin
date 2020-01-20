@@ -2,13 +2,12 @@ package jint
 
 import "strconv"
 
-
 func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 	_, start, end, err := Core(json, path...)
 	if err != nil {
 		return json, err
 	}
-	return replace(json, newValue, start, end), nil
+	return replace(json, newValue, start - 1, end + 1), nil
 }
 
 func SetString(json []byte, newValue string, path ... string) ([]byte, error){
