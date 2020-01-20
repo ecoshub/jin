@@ -34,15 +34,3 @@ func ExecuteNode() (string, error){
 		return out.String(), nil
 	}
 }
-
-func Execute(process string,params...string) (string, error){
-	cmd := exec.Command(process, params...)	
-	var out bytes.Buffer
-	cmd.Stdout = &out
-	err := cmd.Run()
-	if err != nil {
-		return "", err
-	}else{
-		return out.String(), nil
-	}
-}
