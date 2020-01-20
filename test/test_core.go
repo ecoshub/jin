@@ -23,8 +23,8 @@ func ReadFile(dir string) []byte{
 	return buff
 }
 
-func ExecuteNode() (string, error){
-	cmd := exec.Command("node", "test/test-case-creator.js")	
+func ExecuteNode(par string) (string, error){
+	cmd := exec.Command("node", "test/test-case-creator.js", par)	
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()

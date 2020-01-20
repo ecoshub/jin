@@ -6,15 +6,6 @@ let jsonFile  = 'test/test-json.json';
 let pathFile  = 'test/test-json-paths.json';
 let valueFile = 'test/test-json-values.json';
 
-// clearing files
-fs.writeFileSync(pathFile, "");
-fs.writeFileSync(valueFile, "");
-
-// console.log(process.argv[2])
-
-var mainArray = JSON.parse(fs.readFileSync(jsonFile));
-// console.log(mainArray)
-
 const pathToString = (arr) => {
 	var result = "["
 	arr.forEach((e) => {
@@ -67,5 +58,29 @@ function setValues(obj, val) {
 	return obj
 }
 
-createPaths(mainArray, [])
-createValues(mainArray, [])
+if (process.argv.length == 3) {
+	
+	if (process.argv[2] == "get"){
+		// clearing files
+		fs.writeFileSync(pathFile, "");
+		fs.writeFileSync(valueFile, "");
+
+		var mainArray = JSON.parse(fs.readFileSync(jsonFile));
+
+		createPaths(mainArray, [])
+		createValues(mainArray, [])
+	}
+	if (process.argv[2] == "set"){
+		// clearing files
+		fs.writeFileSync(pathFile, "");
+		fs.writeFileSync(valueFile, "");
+
+		var mainArray = JSON.parse(fs.readFileSync(jsonFile));
+		mainArray = setValues(mainArray, "test-string")
+
+		createPaths(mainArray, [])
+		createValues(mainArray, [])
+	}
+
+}
+
