@@ -70,11 +70,14 @@ func Flatten(json []byte) []byte{
 	inQuote := false
 	for i := 0 ; i < len(json) ; i ++ {
 		curr := json[i]
+		if curr == 92 {
+			newJson = append(newJson, curr)
+			newJson = append(newJson, json[i + 1])
+			i++
+			continue
+		}
 		if curr == 34 {
 			newJson = append(newJson, curr)
-			if json[i - 1] == 92 {
-				continue
-			}
 			inQuote = !inQuote
 			continue
 		}
@@ -344,11 +347,11 @@ func ParseArray(arr string) []string {
 		inQuote := false
 		for i := 1 ; i < len(arr); i ++ {
 			curr := arr[i]
+			if curr == 92 {
+				i++
+				continue
+			}
 			if curr == 34 {
-				// escape character control
-				if arr[i - 1] == 92 {
-					continue
-				}
 				inQuote = !inQuote
 				continue
 			}
