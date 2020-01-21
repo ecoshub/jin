@@ -5,7 +5,7 @@ import "strconv"
 
 func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte, error){	
 	if len(json) < 2 {
-		return json, BAD_JSON_ERROR()
+		return json, BAD_JSON_ERROR(0)
 	}
 	var start int
 	var end int
@@ -16,7 +16,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 				if json[i] == 123 {
 					start = i
 					if i == len(json) - 1 {
-						return json, BAD_JSON_ERROR()
+						return json, BAD_JSON_ERROR(i)
 					}
 					break
 				}else{
@@ -29,7 +29,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 				if json[i] == 125 {
 					end = i + 1
 					if i == 0 {
-						return json, BAD_JSON_ERROR()
+						return json, BAD_JSON_ERROR(i)
 					}
 					break
 				}else{
@@ -71,7 +71,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 	}else{
 		return json,  OBJECT_EXPECTED_ERROR()
 	}
-	return json, BAD_JSON_ERROR()
+	return json, BAD_JSON_ERROR(-1)
 }
 
 func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
@@ -79,7 +79,7 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 	var end int
 	var err error
 	if len(json) < 2 {
-		return json, BAD_JSON_ERROR()
+		return json, BAD_JSON_ERROR(0)
 	}
 	if len(path) == 0 {
 		for i := 0 ; i < len(json) ; i ++ {
@@ -87,7 +87,7 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 				if json[i] == 91 {
 					start = i
 					if i == len(json) - 1 {
-						return json, BAD_JSON_ERROR()
+						return json, BAD_JSON_ERROR(i)
 					}
 					break
 				}else{
@@ -100,7 +100,7 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 				if json[i] == 93 {
 					end = i + 1
 					if i == 0 {
-						return json, BAD_JSON_ERROR()
+						return json, BAD_JSON_ERROR(i)
 					}
 					break
 				}else{
@@ -134,7 +134,7 @@ func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
 	}else{
 		return json,  ARRAY_EXPECTED_ERROR()
 	}
-	return json, BAD_JSON_ERROR()
+	return json, BAD_JSON_ERROR(-1)
 }
 
 func AddKeyValueString(json []byte, key, value string, path ... string) ([]byte, error){

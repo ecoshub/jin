@@ -3,6 +3,9 @@ package jint
 import "strconv"
 
 func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
+	if len(path) == 0 {
+		return json, NULL_PATH_ERROR()
+	}
 	_, start, end, err := Core(json, path...)
 	if err != nil {
 		return json, err
@@ -10,7 +13,7 @@ func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 	if json[start - 1] == 34 && json[end] == 34 {
 		return replace(json, newValue, start - 1, end + 1), nil
 	}
-	return replace(json, newValue, start - 1, end), nil
+	return replace(json, newValue, start, end), nil
 }
 
 func SetString(json []byte, newValue string, path ... string) ([]byte, error){
@@ -36,33 +39,39 @@ func SetBool(json []byte, newValue bool, path ... string) ([]byte, error){
 }
 
 func SetKey(json []byte, newKey string, path ... string) ([]byte, error){
-	if len(newKey) < 1 {
+	if len(newKey) == 0 {
 		return json, NULL_NEW_VALUE_ERROR()
 	}
-	newPath := make([]string, len(path))
 	if len(path) == 0 {
-		newPath = []string{newKey}
+		return json, NULL_PATH_ERROR()
 	}else{
+		var err error
+		var keyStart int
+		var start int
+		newPath := make([]string, len(path))
 		copy(newPath, path[:len(path) - 1])
 		newPath[len(newPath) - 1] = newKey
-		keyStart, _, _, err := Core(json, path...)
-		if err != nil {
-			return json, err
-		}
 		_, _, _, err = Core(json, newPath...)
 		if err != nil {
-			// key exist error code is 08
 			if err.Error() == KEY_NOT_FOUND_ERROR().Error() {
-				if keyStart != -1 {
-					for i := keyStart ; i < len(json) ; i++ {
-						curr := json[i]
-						if curr == 34 {
-							return replace(json, []byte(newKey), keyStart, i), nil
-						}
+				keyStart, start, _, err = Core(json, path...)
+				if err != nil {
+					return json, err
+				}
+				for i := keyStart ; i < start ; i++ {
+					curr := json[i]
+					if curr == 92 {
+						i++
+					}
+					if curr == 34 {
+						return replace(json, []byte(newKey), keyStart, i), nil
 					}
 				}
+				return json, BAD_JSON_ERROR(keyStart)
 			}
+			return json, KEY_EXPECTED_ERROR()
 		}
+		return json, KEY_ALREADY_EXIST_ERROR()
 	}
-	return json, KEY_ALREADY_EXIST_ERROR()
+	return json, BAD_JSON_ERROR(-1)
 }

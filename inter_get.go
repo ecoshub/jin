@@ -19,13 +19,16 @@ func GetString(json []byte, path ... string) (string, error){
 }
 
 func GetInt(json []byte, path ... string) (int, error){
-	val, err := GetString(json, path...)
+	if len(path) == 0 {
+		return -1, NULL_PATH_ERROR()
+	}
+	_, start, end, err := Core(json, path...)
 	if err != nil {
 		return -1, err
 	}
-	intVal, err := strconv.Atoi(val)
+	intVal, err := strconv.Atoi(string(json[start:end]))
 	if err != nil {
-		return -1, PARSE_INT_ERROR(val)
+		return -1, PARSE_INT_ERROR(string(json[start:end]))
 	}
 	return intVal, nil
 }
@@ -55,6 +58,8 @@ func GetBool(json []byte, path ... string) (bool, error){
 	}
 	return false, PARSE_BOOL_ERROR(val)
 }
+
+// get array functions not safe in random json files.
 
 func GetStringArray(json []byte, path ... string) ([]string, error){
 	val, err := GetString(json, path...)

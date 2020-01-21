@@ -12,7 +12,7 @@ func OBJECT_EXPECTED_ERROR()                error {return errors.New("ERROR_CODE
 func ARRAY_EXPECTED_ERROR()                 error {return errors.New("ERROR_CODE:06 Error: Last path must be pointed at an array.")}
 func INDEX_OUT_OF_RANGE_ERROR()             error {return errors.New("ERROR_CODE:07 Error: Index out of range.")}
 func KEY_NOT_FOUND_ERROR()                  error {return errors.New("ERROR_CODE:08 Error: Key not found.")}
-func BAD_JSON_ERROR()                       error {return errors.New("ERROR_CODE:09 Error: Bad JSON format.")}
+func BAD_JSON_ERROR(index int)              error {return errors.New(fmt.Sprintf("ERROR_CODE:09 Error: Bad JSON format. at:%v", index))}
 func BAD_KEY_ERROR()                        error {return errors.New("ERROR_CODE:10 Error: Key value cannot contain quote symbol.")}
 func KEY_ALREADY_EXIST_ERROR()              error {return errors.New("ERROR_CODE:11 Error: Key already exist.")}
 func PARSE_INT_ERROR(val string)            error {return errors.New(fmt.Sprintf("ERROR_CODE:12 Parse Error: '%v' Cannot be converted to int.", val))}

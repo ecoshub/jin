@@ -4,8 +4,8 @@ import "strconv"
 
 func IterateArray(json []byte, callback func([]byte, error) bool, path ... string) error{
 	if len(json) == 0 {
-		callback(nil, BAD_JSON_ERROR())
-		return BAD_JSON_ERROR()
+		callback(nil, BAD_JSON_ERROR(0))
+		return BAD_JSON_ERROR(0)
 	}
 	offset := 0
 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
@@ -15,8 +15,8 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 	}
 	for space(json[offset]) {
 		if offset > len(json) - 1{
-			callback(nil, BAD_JSON_ERROR())
-			return BAD_JSON_ERROR()
+			callback(nil, BAD_JSON_ERROR(offset))
+			return BAD_JSON_ERROR(offset)
 		}
 		offset++
 	}
@@ -50,8 +50,8 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 							// trim spaces from beginning 
 							for space(json[start]) {
 								if start > len(json) - 1{
-									callback(nil, BAD_JSON_ERROR())
-									return BAD_JSON_ERROR()
+									callback(nil, BAD_JSON_ERROR(start))
+									return BAD_JSON_ERROR(start)
 								}
 								start++
 							}
@@ -81,8 +81,8 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 										// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
 										if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 											if offset == j {
-												callback(nil, BAD_JSON_ERROR())
-												return BAD_JSON_ERROR()
+												callback(nil, BAD_JSON_ERROR(j))
+												return BAD_JSON_ERROR(j)
 											}
 											end = j
 											break
@@ -98,8 +98,8 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 								// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
 								if curr == 93 || curr == 125 {
 									if offset == j {
-										callback(nil, BAD_JSON_ERROR())
-										return BAD_JSON_ERROR()
+										callback(nil, BAD_JSON_ERROR(j))
+										return BAD_JSON_ERROR(j)
 									}
 									end = j + 1
 									break
@@ -116,8 +116,8 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 							// trim spaces from beginning 
 							for space(json[start]) {
 								if start > len(json) - 1{
-									callback(nil, BAD_JSON_ERROR())
-									return BAD_JSON_ERROR()
+									callback(nil, BAD_JSON_ERROR(start))
+									return BAD_JSON_ERROR(start)
 								}
 								start++
 							}
@@ -150,7 +150,7 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 										// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
 										if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 											if offset == j {
-												if !callback(nil, BAD_JSON_ERROR()) {
+												if !callback(nil, BAD_JSON_ERROR(j)) {
 													return nil
 												}
 											}
@@ -171,7 +171,7 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 								// if curreny byte is one of close braces this means end of the value is i
 								if curr == 93 || curr == 125 {
 									if offset == j {
-										if !callback(nil, BAD_JSON_ERROR()) {
+										if !callback(nil, BAD_JSON_ERROR(j)) {
 											return nil
 										}
 									}
@@ -190,8 +190,8 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 					continue
 				}
 			}
-			callback(nil, BAD_JSON_ERROR())
-			return BAD_JSON_ERROR()
+			callback(nil, BAD_JSON_ERROR(offset))
+			return BAD_JSON_ERROR(offset)
 		}else{
 			callback(nil, ARRAY_EXPECTED_ERROR())
 			return ARRAY_EXPECTED_ERROR()
@@ -415,13 +415,13 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 		}
 	}
 	if offset == 0 {
-		callback(nil, BAD_JSON_ERROR())
-		return BAD_JSON_ERROR()
+		callback(nil, BAD_JSON_ERROR(0))
+		return BAD_JSON_ERROR(0)
 	}
 	for space(json[offset]) {
 		if offset > len(json) - 1{
-			callback(nil, BAD_JSON_ERROR())
-			return BAD_JSON_ERROR()
+			callback(nil, BAD_JSON_ERROR(offset))
+			return BAD_JSON_ERROR(offset)
 		}
 		offset++
 	}
@@ -454,8 +454,8 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 						// trim spaces from beginning 
 						for space(json[start]) {
 							if start > len(json) - 1{
-								callback(nil, BAD_JSON_ERROR())
-								return BAD_JSON_ERROR()
+								callback(nil, BAD_JSON_ERROR(start))
+								return BAD_JSON_ERROR(start)
 							}
 							start++
 						}
@@ -485,8 +485,8 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 									// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
 									if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 										if offset == j {
-											callback(nil, BAD_JSON_ERROR())
-											return BAD_JSON_ERROR()
+											callback(nil, BAD_JSON_ERROR(j))
+											return BAD_JSON_ERROR(j)
 										}
 										end = j
 										break
@@ -502,8 +502,8 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 							// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
 							if curr == 93 || curr == 125 {
 								if offset == j {
-									callback(nil, BAD_JSON_ERROR())
-									return BAD_JSON_ERROR()
+									callback(nil, BAD_JSON_ERROR(j))
+									return BAD_JSON_ERROR(j)
 								}
 								end = j + 1
 								break
@@ -520,8 +520,8 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 						// trim spaces from beginning 
 						for space(json[start]) {
 							if start > len(json) - 1{
-								callback(nil, BAD_JSON_ERROR())
-								return BAD_JSON_ERROR()
+								callback(nil, BAD_JSON_ERROR(start))
+								return BAD_JSON_ERROR(start)
 							}
 							start++
 						}
@@ -554,7 +554,7 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 									// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
 									if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 										if offset == j {
-											if !callback(nil, BAD_JSON_ERROR()) {
+											if !callback(nil, BAD_JSON_ERROR(j)) {
 												return nil
 											}
 										}
@@ -575,7 +575,7 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 							// if curreny byte is one of close braces this means end of the value is i
 							if curr == 93 || curr == 125 {
 								if offset == j {
-									if !callback(nil, BAD_JSON_ERROR()) {
+									if !callback(nil, BAD_JSON_ERROR(j)) {
 										return nil
 									}
 								}
@@ -599,14 +599,14 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 		callback(nil, OBJECT_EXPECTED_ERROR())
 		return OBJECT_EXPECTED_ERROR()
 	}
-	callback(nil, BAD_JSON_ERROR())
-	return BAD_JSON_ERROR()
+	callback(nil, BAD_JSON_ERROR(-1))
+	return BAD_JSON_ERROR(-1)
 }
 
 func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, path ... string) error{
 	if len(json) == 0 {
-		callback(nil, nil, BAD_JSON_ERROR())
-		return BAD_JSON_ERROR()
+		callback(nil, nil, BAD_JSON_ERROR(0))
+		return BAD_JSON_ERROR(0)
 	}
 	offset := 0
 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
@@ -616,8 +616,8 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 	}
 	for space(json[offset]) {
 		if offset > len(json) - 1{
-			callback(nil, nil, BAD_JSON_ERROR())
-			return BAD_JSON_ERROR()
+			callback(nil, nil, BAD_JSON_ERROR(offset))
+			return BAD_JSON_ERROR(offset)
 		}
 		offset++
 	}
@@ -659,8 +659,8 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 							// trim spaces from beginning 
 							for space(json[valueStart]) {
 								if valueStart > len(json) - 1{
-									callback(nil, nil, BAD_JSON_ERROR())
-									return BAD_JSON_ERROR()
+									callback(nil, nil, BAD_JSON_ERROR(valueStart))
+									return BAD_JSON_ERROR(valueStart)
 								}
 								valueStart++
 							}
@@ -671,7 +671,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 									// if curreny byte is one of close braces this means end of the value is i
 									if curr == 93 || curr == 125 {
 										if offset == j {
-											callback(nil, nil, BAD_JSON_ERROR())
+											callback(nil, nil, BAD_JSON_ERROR(j))
 										}
 										end = j + 1
 										break
@@ -705,7 +705,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 									// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
 									if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 										if offset == j {
-											callback(nil, nil, BAD_JSON_ERROR())
+											callback(nil, nil, BAD_JSON_ERROR(j))
 										}
 										end = j
 										break
@@ -722,9 +722,8 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 							// trim spaces from beginning 
 							for space(json[valueStart]) {
 								if valueStart > len(json) - 1{
-									// callback(nil, BAD_JSON_ERROR())
-									callback(nil, nil, BAD_JSON_ERROR())
-									return BAD_JSON_ERROR()
+									callback(nil, nil, BAD_JSON_ERROR(valueStart))
+									return BAD_JSON_ERROR(valueStart)
 								}
 								valueStart++
 							}
@@ -735,7 +734,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 									// if curreny byte is one of close braces this means end of the value is i
 									if curr == 93 || curr == 125 {
 										if offset == j {
-											if !callback(nil, nil, BAD_JSON_ERROR()) {
+											if !callback(nil, nil, BAD_JSON_ERROR(j)) {
 												return nil
 											}
 										}
@@ -775,7 +774,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 									// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
 									if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 										if offset == j {
-											callback(nil, nil, BAD_JSON_ERROR())
+											callback(nil, nil, BAD_JSON_ERROR(j))
 										}
 										end = j
 										break
@@ -796,8 +795,8 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 					}
 				}
 			}
-			callback(nil, nil, BAD_JSON_ERROR())
-			return BAD_JSON_ERROR()
+			callback(nil, nil, BAD_JSON_ERROR(offset))
+			return BAD_JSON_ERROR(offset)
 		}else{
 			callback(nil, nil, OBJECT_EXPECTED_ERROR())
 			return OBJECT_EXPECTED_ERROR()
@@ -1020,11 +1019,11 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 		}
 	}
 	if offset == 0 {
-		return BAD_JSON_ERROR()
+		return BAD_JSON_ERROR(0)
 	}
 	for space(json[offset]) {
 		if offset > len(json) - 1{
-			return BAD_JSON_ERROR()
+			return BAD_JSON_ERROR(offset)
 		}
 		offset++
 	}
@@ -1065,8 +1064,8 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 						// trim spaces from beginning 
 						for space(json[valueStart]) {
 							if valueStart > len(json) - 1{
-								callback(nil, nil, BAD_JSON_ERROR())
-								return BAD_JSON_ERROR()
+								callback(nil, nil, BAD_JSON_ERROR(valueStart))
+								return BAD_JSON_ERROR(valueStart)
 							}
 							valueStart++
 						}
@@ -1076,8 +1075,8 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 								// if curreny byte is one of close braces this means end of the value is i
 								if curr == 93 || curr == 125 {
 									if offset == j {
-										callback(nil, nil, BAD_JSON_ERROR())
-										return BAD_JSON_ERROR()
+										callback(nil, nil, BAD_JSON_ERROR(j))
+										return BAD_JSON_ERROR(j)
 									}
 									callback(key, json[valueStart:j + 1], nil)
 									return nil
@@ -1105,8 +1104,8 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 								// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
 								if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 									if offset == j {
-										callback(nil, nil, BAD_JSON_ERROR())
-										return BAD_JSON_ERROR()
+										callback(nil, nil, BAD_JSON_ERROR(j))
+										return BAD_JSON_ERROR(j)
 									}
 									callback(key, json[valueStart:j], nil)
 									return  nil
@@ -1122,8 +1121,8 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 						// trim spaces from beginning 
 						for space(json[valueStart]) {
 							if valueStart > len(json) - 1{
-								callback(nil, nil, BAD_JSON_ERROR())
-								return BAD_JSON_ERROR()
+								callback(nil, nil, BAD_JSON_ERROR(valueStart))
+								return BAD_JSON_ERROR(valueStart)
 							}
 							valueStart++
 						}
@@ -1134,7 +1133,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 								// if curreny byte is one of close braces this means end of the value is i
 								if curr == 93 || curr == 125 {
 									if offset == j {
-										if !callback(nil, nil, BAD_JSON_ERROR()) {
+										if !callback(nil, nil, BAD_JSON_ERROR(j)) {
 											return nil
 										}
 									}
@@ -1174,7 +1173,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 								// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
 								if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 									if offset == j {
-										if !callback(nil, nil, BAD_JSON_ERROR()) {
+										if !callback(nil, nil, BAD_JSON_ERROR(j)) {
 											return nil
 										}
 									}
@@ -1201,6 +1200,6 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 		callback(nil, nil, OBJECT_EXPECTED_ERROR())
 		return OBJECT_EXPECTED_ERROR()
 	}
-	callback(nil, nil, BAD_JSON_ERROR())
-	return BAD_JSON_ERROR()
+	callback(nil, nil, BAD_JSON_ERROR(-1))
+	return BAD_JSON_ERROR(-1)
 }

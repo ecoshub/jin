@@ -17,7 +17,7 @@ func Delete(json []byte, path ... string) ([]byte, error) {
 		var offset int
 		for space(json[offset]) {
 			if offset > len(json) - 1{
-				return nil, BAD_JSON_ERROR() 
+				return nil, BAD_JSON_ERROR(offset) 
 			}
 			offset++
 		}
@@ -70,5 +70,5 @@ func Delete(json []byte, path ... string) ([]byte, error) {
 			break
 		}
 	}
-	return json, BAD_JSON_ERROR() 
+	return json, BAD_JSON_ERROR(-1) 
 }
