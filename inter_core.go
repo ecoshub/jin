@@ -1,17 +1,13 @@
 package jint
 
 import "strconv"
-// import "fmt"
 
 // Only this function commented, other Get() and Set() functions based on same logic. 
+// Do not user with zero length path!
 func Core(json []byte, path ... string) (int, int, int, error){
-	// null path control.
-	// if len(path) == 0 {
-	// 	return -1, -1, -1, NULL_PATH_ERROR()
-	// }
 	// null json control.
 	if len(json) == 0 {
-		return -1, -1, -1, BAD_JSON_ERROR() 
+		return -1, -1, -1, BAD_JSON_ERROR(0) 
 	}
 	// main offset track of this search.
 	offset := 0
@@ -35,9 +31,11 @@ func Core(json []byte, path ... string) (int, int, int, error){
 	for space(json[offset]) {
 		// json length overflow control
 		if offset > len(json) - 1{
-			return -1, -1, -1, BAD_JSON_ERROR() 
+			return -1, -1, -1, BAD_JSON_ERROR(offset) 
+		}else{
+			offset++
+			continue
 		}
-		offset++
 	}
 	// braceType determine whether or not search will be a key search or index search
 	braceType := json[offset]
@@ -73,10 +71,12 @@ func Core(json []byte, path ... string) (int, int, int, error){
 							}
 							// Assign offset to brace index.
 							offset = i
+							break
 						}else{
 							if k != len(path) - 1{
 								return -1, -1, -1, INDEX_OUT_OF_RANGE_ERROR()
 							}
+							break
 						}
 						// Doesn't have to always find a brace. It can be a value. always break after one non-space char.
 						break
@@ -102,12 +102,18 @@ func Core(json []byte, path ... string) (int, int, int, error){
 					}
 					// If current byte is quote
 					if curr == 34 {
-						// check before char it might be escape char.
-						if json[i - 1] == 92 {
+						// escape char ccontrol algorithm
+						for k := i - 1 ; k > 0 ; k -- {
+							if json[k] != 92 {
+								if (i - 1 - k) % 2 == 0 {
+									inQuote = !inQuote
+									break
+								}else{
+									break
+								}
+							}
 							continue
 						}
-						// Change inQuote flag to opposite.
-						inQuote = !inQuote
 						continue
 					}
 					if inQuote {
@@ -122,17 +128,19 @@ func Core(json []byte, path ... string) (int, int, int, error){
 								braceType = curr
 								currentPath = path[k + 1]
 								break
+							}else{
+								level++
+								continue
 							}
-							level++
-							continue
 						}
 						if curr == 93 || curr == 125 {
 							// if level is less than 1 it mean index not in this array. 
 							if level < 0 {
 								return -1, -1, -1, INDEX_OUT_OF_RANGE_ERROR()
+							}else{
+								level--
+								continue
 							}
-							level--
-							continue
 						}
 						// Not found before
 						if !found {
@@ -144,7 +152,6 @@ func Core(json []byte, path ... string) (int, int, int, error){
 									indexCount++
 									if indexCount == arrayIndex {
 										found = true
-
 										for j := i + 1 ; j < len(json) ; j ++ {
 											curr := json[j]
 											if !space(curr){
@@ -152,21 +159,19 @@ func Core(json []byte, path ... string) (int, int, int, error){
 													if k != len(path) - 1{
 														return -1, -1, -1, INDEX_OUT_OF_RANGE_ERROR()
 													}
+													break
 												}
 												break
 											}
 										}
-
-
-
-
 										if k == len(path) - 1{
 											// last path found, break
 											offset = i + 1
 											break
+										}else{
+											continue
 										}
 										// keep going for find next brace Type.
-										continue
 									}
 									continue
 								}
@@ -197,19 +202,20 @@ func Core(json []byte, path ... string) (int, int, int, error){
 			level := k
 			// Not interested with comma in this search
 			isJsonChar[44] = false
-			isJsonChar[32] = true
 			for i := offset ; i < len(json) ; i ++ {
 				// curr is current byte of reading.
 				curr := json[i]
 				// Just interested with json chars. Other wise continue.
 				if !isJsonChar[curr]{
-					continue
-				}
-				// If current byte is quote
-				if curr == 34 {									
-					if json[i - 1] == 92 {
+					if curr == 92 {
+						i++
+						continue
+					}else{
 						continue
 					}
+				}
+				// If current byte is quote
+				if curr == 34 {
 					// change inQuote flag to opposite.
 					inQuote = !inQuote
 					// If key found no need to determine start and end points.
@@ -242,9 +248,10 @@ func Core(json []byte, path ... string) (int, int, int, error){
 							braceType = curr
 							currentPath = path[k + 1]
 							break
+						}else{
+							level++
+							continue
 						}
-						level++
-						continue
 					}
 					if curr == 123 {
 						// if found and new brace is curly brace than 
@@ -257,9 +264,10 @@ func Core(json []byte, path ... string) (int, int, int, error){
 							currentPath = path[k]
 							found = false
 							continue
+						}else{
+							level++
+							continue
 						}
-						level++
-						continue
 					}
 					// Close brace
 					if curr == 93 || curr == 125 {
@@ -279,6 +287,8 @@ func Core(json []byte, path ... string) (int, int, int, error){
 									if currentPath[j] != json[start + j] {
 										same = false
 										break
+									}else{
+										continue
 									}
 								}
 								if same {
@@ -287,8 +297,6 @@ func Core(json []byte, path ... string) (int, int, int, error){
 									// if it is the last path element break
 									// and include comma character to json chars.
 									if k == len(path) - 1{
-										isJsonChar[44] = true
-										isJsonChar[32] = false
 										keyStart = start
 										break
 									}else{
@@ -300,7 +308,7 @@ func Core(json []byte, path ... string) (int, int, int, error){
 							isJsonChar[44] = true
 							// exclude column character to json chars for jump function
 							isJsonChar[58] = false
-							isJsonChar[32] = false
+							// exclude space character to json chars for jump function
 							// jump function start :{} -> ,
 							// it is fast travel from column to comma
 							// first we need keys 
@@ -316,11 +324,18 @@ func Core(json []byte, path ... string) (int, int, int, error){
 								// Quote
 								if curr == 34 {
 									// check before char it might be escape char.
-									if json[j - 1] == 92 {
+									// escape char ccontrol algorithm
+									for k := j - 1 ; k > 0 ; k -- {
+										if json[k] != 92 {
+											if (j - 1 - k) % 2 == 0 {
+												inQuote = !inQuote
+												break
+											}else{
+												break
+											}
+										}
 										continue
 									}
-									// Change inQuote flag to opposite.
-									inQuote = !inQuote
 									continue
 								}
 								if inQuote {
@@ -343,8 +358,9 @@ func Core(json []byte, path ... string) (int, int, int, error){
 											// jump i to j
 											i = j
 											break
+										}else{
+											continue
 										}
-										continue
 									}
 									continue
 								}
@@ -355,7 +371,6 @@ func Core(json []byte, path ... string) (int, int, int, error){
 							// Include column character to json chars, jump func is ending.
 							isJsonChar[58] = true
 							// Include space character to json chars, jump func is ending.
-							// isJsonChar[32] = false
 							continue
 						}
 						continue
@@ -369,25 +384,26 @@ func Core(json []byte, path ... string) (int, int, int, error){
 			// Include comma character to json chars to restore original.
 			isJsonChar[44] = true
 			// Include space character to json chars to restore original.
-			isJsonChar[32] = false
 		}
 	}
-	// fmt.Println("offset", offset, string(json[offset]), json[offset])
 	// this means not search operation has take place
 	// it must be some kinda error or bad format
 	if offset == 0 {
-		return -1, -1, -1, BAD_JSON_ERROR()
+		return -1, -1, -1, BAD_JSON_ERROR(0)
 	}
 	// skip spaces from top.
 	for space(json[offset]) {
 		// json length overflow control
 		if offset > len(json) - 1{
-			return -1, -1, -1, BAD_JSON_ERROR()
+			return -1, -1, -1, BAD_JSON_ERROR(offset) 
+		}else{
+			offset++
+			continue
 		}
-		offset++
 	}
 	// If value starts with open braces
 	if json[offset] == 91 || json[offset] == 123 {
+		// fmt.Println("IN", string(json[offset]))
 		// main level indicator.
 		level := 0
 		// Quote check flag
@@ -395,16 +411,25 @@ func Core(json []byte, path ... string) (int, int, int, error){
 		for i := offset ; i < len(json) ; i ++ {
 			// curr is current byte of reading.
 			curr := json[i]
+			// fmt.Println(curr, string(curr), i, inQuote)
 			// Just interested with json chars. Other wise continue.
 			if !isJsonChar[curr]{
 				continue
 			}
 			if curr == 34 {
-				// // check before char it might be escape char.
-				if json[i - 1] == 92 {
+				// check before char it might be escape char.
+				// escape char ccontrol algorithm
+				for k := i - 1 ; k > 0 ; k -- {
+					if json[k] != 92 {
+						if (i - 1 - k) % 2 == 0 {
+							inQuote = !inQuote
+							break
+						}else{
+							break
+						}
+					}
 					continue
 				}
-				inQuote = !inQuote
 				continue
 			}
 			if inQuote {
@@ -412,15 +437,15 @@ func Core(json []byte, path ... string) (int, int, int, error){
 			}else{
 				if curr == 91 || curr == 123 {
 					level++
+					continue
 				}
 				if curr == 93 || curr == 125 {
-					level--
-					if level == 0 {
-						// Close brace found in same level with start.
-						// Return all of it.
+					if level == 1 {
 						return keyStart, offset, i + 1, nil
+					}else{
+						level--
+						continue
 					}
-					continue
 				}
 				continue
 			}
@@ -431,14 +456,16 @@ func Core(json []byte, path ... string) (int, int, int, error){
 		if json[offset] == 34 {
 			for i := offset + 1;  i < len(json) ; i ++ {
 				curr := json[i]
-				// find ending quote
-				// quote
-				if curr == 34 {
-					// just interested with json chars. Other wise continue.
-					if json[i - 1] == 92 {
-						continue
+				if curr == 92 {
+					i++
+					continue
+				}else{
+					// find ending quote
+					// quote
+					if curr == 34 {
+						// just interested with json chars. Other wise continue.
+						return keyStart, offset + 1, i, nil
 					}
-					return keyStart, offset + 1, i, nil
 				}
 			}
 		}else{
@@ -448,8 +475,9 @@ func Core(json []byte, path ... string) (int, int, int, error){
 				if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 					if offset == i {
 						return -1, -1, -1, EMPTY_ARRAY_ERROR()
+					}else{
+						return keyStart, offset, i, nil
 					}
-					return keyStart, offset, i, nil
 				}
 			}
 		}
@@ -457,5 +485,5 @@ func Core(json []byte, path ... string) (int, int, int, error){
 	// This means not search operation has take place
 	// not any formatting operation has take place
 	// it must be some kinda bad JSON format
-	return -1, -1, -1,  BAD_JSON_ERROR()
+	return -1, -1, -1,  BAD_JSON_ERROR(offset)
 }
