@@ -58,6 +58,8 @@ function setValues(obj, val) {
 	return obj
 }
 
+
+
 if (process.argv.length == 3) {
 	
 	if (process.argv[2] == "get"){
