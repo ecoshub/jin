@@ -7,7 +7,10 @@ func Set(json []byte, newValue []byte, path ... string) ([]byte, error){
 	if err != nil {
 		return json, err
 	}
-	return replace(json, newValue, start - 1, end + 1), nil
+	if json[start - 1] == 34 && json[end] == 34 {
+		return replace(json, newValue, start - 1, end + 1), nil
+	}
+	return replace(json, newValue, start - 1, end), nil
 }
 
 func SetString(json []byte, newValue string, path ... string) ([]byte, error){
