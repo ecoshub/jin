@@ -49,7 +49,7 @@ function setValues(obj, val) {
 	const keys = Object.keys(obj)
 	const values = Object.values(obj)
 	for ( var i = 0 ; i < keys.length ; i ++ ){
-		if (typeof values[i] === 'object') {
+		if (typeof values[i] === 'object' && values[i] != null && values[i] != undefined) {
 			setValues(values[i], val)
 		}else{
 			obj[keys[i]] = val
