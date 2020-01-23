@@ -20,7 +20,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 					}
 					break
 				}else{
-					return json,  ARRAY_EXPECTED_ERROR()
+					return json, OBJECT_EXPECTED_ERROR()
 				}
 			}
 		}
@@ -33,7 +33,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 					}
 					break
 				}else{
-					return json,  ARRAY_EXPECTED_ERROR()
+					return json, OBJECT_EXPECTED_ERROR()
 				}
 			}
 		}
@@ -69,12 +69,12 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 			return json, KEY_ALREADY_EXIST_ERROR()
 		}
 	}else{
-		return json,  OBJECT_EXPECTED_ERROR()
+		return json, OBJECT_EXPECTED_ERROR()
 	}
 	return json, BAD_JSON_ERROR(-1)
 }
 
-func AddValue(json []byte, value []byte, path ... string) ([]byte, error){
+func Add(json []byte, value []byte, path ... string) ([]byte, error){
 	var start int
 	var end int
 	var err error
@@ -159,29 +159,29 @@ func AddKeyValueBool(json []byte, key string, value bool, path ... string) ([]by
 	return AddKeyValue(json, key, []byte("false"), path...)
 }
 
-func AddValueString(json []byte, value string, path ... string) ([]byte, error){
+func AddString(json []byte, value string, path ... string) ([]byte, error){
 	if value[0] != 34 && value[len(value) - 1] != 34 {
-		return AddValue(json, []byte(`"` + value + `"`), path...)
+		return Add(json, []byte(`"` + value + `"`), path...)
 	}
-	return AddValue(json, []byte(value), path...)
+	return Add(json, []byte(value), path...)
 }
 
-func AddValueInt(json []byte, value int, path ... string) ([]byte, error){
-	return AddValue(json, []byte(strconv.Itoa(value)), path...)
+func AddInt(json []byte, value int, path ... string) ([]byte, error){
+	return Add(json, []byte(strconv.Itoa(value)), path...)
 }
 
-func AddValueFloat(json []byte, value float64, path ... string) ([]byte, error){
-	return AddValue(json, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
+func AddFloat(json []byte, value float64, path ... string) ([]byte, error){
+	return Add(json, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
-func AddValueBool(json []byte, value bool, path ... string) ([]byte, error){
+func AddBool(json []byte, value bool, path ... string) ([]byte, error){
 	if value {
-		return AddValue(json, []byte("true"), path...)
+		return Add(json, []byte("true"), path...)
 	}
-	return AddValue(json, []byte("false"), path...)
+	return Add(json, []byte("false"), path...)
 }
 
-func InsertValue(json []byte, index int, value []byte, path ... string) ([]byte, error){
+func Insert(json []byte, index int, value []byte, path ... string) ([]byte, error){
 	// lenpath == 0 and empty array control needed
 	_, valueStart, _, err := Core(json, path...)
 	if err != nil {
@@ -210,24 +210,24 @@ func InsertValue(json []byte, index int, value []byte, path ... string) ([]byte,
 	return json, nil
 }
 
-func InsertValueString(json []byte, index int, value string, path ... string) ([]byte, error){
+func InsertString(json []byte, index int, value string, path ... string) ([]byte, error){
 	if value[0] != 34 && value[len(value) - 1] != 34 {
-		return InsertValue(json, index, []byte(`"` + value + `"`), path...)
+		return Insert(json, index, []byte(`"` + value + `"`), path...)
 	}
-	return InsertValue(json, index, []byte(value), path...)
+	return Insert(json, index, []byte(value), path...)
 }
 
-func InsertValueInt(json []byte, index, value int, path ... string) ([]byte, error){
-	return InsertValue(json, index, []byte(strconv.Itoa(value)), path...)
+func InsertInt(json []byte, index, value int, path ... string) ([]byte, error){
+	return Insert(json, index, []byte(strconv.Itoa(value)), path...)
 }
 
-func InsertValueFloat(json []byte, index int, value float64, path ... string) ([]byte, error){
-	return InsertValue(json, index, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
+func InsertFloat(json []byte, index int, value float64, path ... string) ([]byte, error){
+	return Insert(json, index, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
-func InsertValueBool(json []byte, index int, value bool, path ... string) ([]byte, error){
+func InsertBool(json []byte, index int, value bool, path ... string) ([]byte, error){
 	if value {
-		return InsertValue(json, index, []byte("true"), path...)
+		return Insert(json, index, []byte("true"), path...)
 	}
-	return InsertValue(json, index, []byte("false"), path...)
+	return Insert(json, index, []byte("false"), path...)
 }
