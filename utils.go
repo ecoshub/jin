@@ -72,7 +72,9 @@ func Flatten(json []byte) []byte{
 		curr := json[i]
 		if curr == 92 {
 			newJson = append(newJson, curr)
-			newJson = append(newJson, json[i + 1])
+			if i + 1 < len(json){
+				newJson = append(newJson, json[i + 1])
+			}
 			i++
 			continue
 		}
@@ -376,6 +378,7 @@ func ParseArray(arr string) []string {
 	return nil
 }
 
+// make private after
 func StripQuotes(str string) string {
 	if len(str) > 1 {
 		if str[0] == 34 && str[len(str) - 1] == 34 {
