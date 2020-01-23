@@ -19,16 +19,13 @@ func GetString(json []byte, path ... string) (string, error){
 }
 
 func GetInt(json []byte, path ... string) (int, error){
-	if len(path) == 0 {
-		return -1, NULL_PATH_ERROR()
-	}
-	_, start, end, err := Core(json, path...)
+	value, err := GetString(json, path...)
 	if err != nil {
 		return -1, err
 	}
-	intVal, err := strconv.Atoi(string(json[start:end]))
+	intVal, err := strconv.Atoi(value)
 	if err != nil {
-		return -1, PARSE_INT_ERROR(string(json[start:end]))
+		return -1, PARSE_INT_ERROR(value)
 	}
 	return intVal, nil
 }
