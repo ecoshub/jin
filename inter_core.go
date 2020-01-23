@@ -3,7 +3,8 @@ package jint
 import "strconv"
 
 // Only this function commented, other Get() and Set() functions based on same logic. 
-// Do not user with zero length path!
+// Do not use with zero length path!
+// Not for public usage
 func Core(json []byte, path ... string) (int, int, int, error){
 	// null json control.
 	if len(json) == 0 {
