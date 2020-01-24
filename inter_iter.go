@@ -15,10 +15,12 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 	}
 	for space(json[offset]) {
 		if offset > len(json) - 1{
-			callback(nil, BAD_JSON_ERROR(offset))
+			callback(nil, BAD_JSON_ERROR(0))
 			return BAD_JSON_ERROR(offset)
+		}else{
+			offset++
+			continue
 		}
-		offset++
 	}
 	if len(path) == 0 {
 		if json[offset] == 91 {
@@ -32,10 +34,17 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 					continue
 				}
 				if curr == 34 {
-					if json[i - 1] == 92 {
+					for k := i - 1 ; k > 0 ; k -- {
+						if json[k] != 92 {
+							if (i - 1 - k) % 2 == 0 {
+								inQuote = !inQuote
+								break
+							}else{
+								break
+							}
+						}
 						continue
 					}
-					inQuote = !inQuote
 					continue
 				}
 				if inQuote {
@@ -46,6 +55,9 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 						continue
 					}
 					if curr == 93 || curr == 125 {
+						if level < 1 {
+							return INDEX_OUT_OF_RANGE_ERROR()
+						}
 						if level < 2 {
 							// trim spaces from beginning 
 							for space(json[start]) {
@@ -61,13 +73,13 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 									end := 0
 									for j := start + 1;  j < len(json) ; j ++ {
 										curr := json[j]
+										if  curr == 92 {
+											continue
+										}
 										// find ending quote
 										// quote
 										if curr == 34 {
 											// just interested with json chars. Other wise continue.
-											if json[j - 1] == 92 {
-												continue
-											}
 											end = j
 											break
 										}
@@ -127,13 +139,13 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 									end := 0
 									for j := start + 1;  j < len(json) ; j ++ {
 										curr := json[j]
+										if curr == 92 {
+											continue
+										}
 										// find ending quote
 										// quote
 										if curr == 34 {
 											// just interested with json chars. Other wise continue.
-											if json[j - 1] == 92 {
-												continue
-											}
 											end = j
 											break
 										}
@@ -234,10 +246,18 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 						continue
 					}
 					if curr == 34 {
-						if json[i - 1] == 92 {
+						for k := i - 1 ; k > 0 ; k -- {
+							if json[k] != 92 {
+								if (i - 1 - k) % 2 == 0 {
+									inQuote = !inQuote
+									break
+								}else{
+									break
+								}
+							}
 							continue
 						}
-						inQuote = !inQuote
+						continue
 						continue
 					}
 					if inQuote {
@@ -254,8 +274,7 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 							continue
 						}
 						if curr == 93 || curr == 125 {
-							if level < 0 {
-								callback(nil, INDEX_OUT_OF_RANGE_ERROR())
+							if level < 1 {
 								return INDEX_OUT_OF_RANGE_ERROR()
 							}
 							level--
@@ -339,6 +358,9 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 						continue
 					}
 					if curr == 93 || curr == 125 {
+						if level < 1 {
+							return INDEX_OUT_OF_RANGE_ERROR()
+						}
 						level--
 						continue
 					}
@@ -371,10 +393,17 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 									continue
 								}
 								if curr == 34 {
-									if json[j - 1] == 92 {
+									for k := i - 1 ; k > 0 ; k -- {
+										if json[k] != 92 {
+											if (i - 1 - k) % 2 == 0 {
+												inQuote = !inQuote
+												break
+											}else{
+												break
+											}
+										}
 										continue
 									}
-									inQuote = !inQuote
 									continue
 								}
 								if inQuote {
@@ -436,10 +465,17 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 				continue
 			}
 			if curr == 34 {
-				if json[i - 1] == 92 {
+				for k := i - 1 ; k > 0 ; k -- {
+					if json[k] != 92 {
+						if (i - 1 - k) % 2 == 0 {
+							inQuote = !inQuote
+							break
+						}else{
+							break
+						}
+					}
 					continue
 				}
-				inQuote = !inQuote
 				continue
 			}
 			if inQuote {
@@ -465,20 +501,20 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 								end := 0
 								for j := start + 1;  j < len(json) ; j ++ {
 									curr := json[j]
+									if curr == 92 {
+										continue
+									}
 									// find ending quote
 									// quote
 									if curr == 34 {
 										// just interested with json chars. Other wise continue.
-										if json[j - 1] == 92 {
-											continue
-										}
 										end = j
 										break
 									}
 								}
 								callback(json[start + 1:end], nil)
 								return nil
-							}else{							
+							}else{			
 								end := 0
 								for j := start + 1;  j < len(json) ; j ++ {
 									curr := json[j]
@@ -531,13 +567,13 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 								end := 0
 								for j := start + 1;  j < len(json) ; j ++ {
 									curr := json[j]
+									if curr == 92 {
+										continue
+									}
 									// find ending quote
 									// quote
 									if curr == 34 {
 										// just interested with json chars. Other wise continue.
-										if json[j - 1] == 92 {
-											continue
-										}
 										end = j
 										break
 									}
@@ -547,7 +583,7 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 								}
 								start = i + 1
 								continue
-							}else{							
+							}else{
 								end := 0
 								for j := start + 1;  j < len(json) ; j ++ {
 									curr := json[j]
@@ -654,8 +690,11 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 						continue
 					}
 					if curr == 93 || curr == 125 {
-						level--
 						if level < 1 {
+							callback(nil, nil, INDEX_OUT_OF_RANGE_ERROR())
+							return BAD_JSON_ERROR(valueStart)
+						}
+						if level < 2 {
 							// trim spaces from beginning 
 							for space(json[valueStart]) {
 								if valueStart > len(json) - 1{
@@ -685,13 +724,13 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 								end := 0
 								for j := valueStart + 1;  j < len(json) ; j ++ {
 									curr := json[j]
+									if curr == 92 {
+										continue
+									}
 									// find ending quote
 									// quote
 									if curr == 34 {
 										// just interested with json chars. Other wise continue.
-										if json[j - 1] == 92 {
-											continue
-										}
 										end = j
 										break
 									}
@@ -715,6 +754,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 								return nil
 							}
 						}
+						level--
 						continue
 					}
 					if level == 1 {
@@ -752,13 +792,13 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 								end := 0
 								for j := valueStart + 1;  j < len(json) ; j ++ {
 									curr := json[j]
+									if curr == 92 {
+										continue
+									}
 									// find ending quote
 									// quote
 									if curr == 34 {
 										// just interested with json chars. Other wise continue.
-										if json[j - 1] == 92 {
-											continue
-										}
 										end = j
 										break
 									}
@@ -838,10 +878,17 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 						continue
 					}
 					if curr == 34 {
-						if json[i - 1] == 92 {
+						for k := i - 1 ; k > 0 ; k -- {
+							if json[k] != 92 {
+								if (i - 1 - k) % 2 == 0 {
+									inQuote = !inQuote
+									break
+								}else{
+									break
+								}
+							}
 							continue
 						}
-						inQuote = !inQuote
 						continue
 					}
 					if inQuote {
@@ -976,10 +1023,17 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 									continue
 								}
 								if curr == 34 {
-									if json[j - 1] == 92 {
+									for k := i - 1 ; k > 0 ; k -- {
+										if json[k] != 92 {
+											if (i - 1 - k) % 2 == 0 {
+												inQuote = !inQuote
+												break
+											}else{
+												break
+											}
+										}
 										continue
 									}
-									inQuote = !inQuote
 									continue
 								}
 								if inQuote {
@@ -1087,13 +1141,13 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 						if json[valueStart] == 34 {
 							for j := valueStart + 1;  j < len(json) ; j ++ {
 								curr := json[j]
+								if curr == 92 {
+									continue
+								}
 								// find ending quote
 								// quote
 								if curr == 34 {
 									// just interested with json chars. Other wise continue.
-									if json[j - 1] == 92 {
-										continue
-									}
 									callback(key, json[valueStart + 1:j], nil)
 									return nil
 								}
@@ -1151,13 +1205,13 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 							end := 0
 							for j := valueStart + 1;  j < len(json) ; j ++ {
 								curr := json[j]
+								if curr == 92 {
+									continue
+								}
 								// find ending quote
 								// quote
 								if curr == 34 {
 									// just interested with json chars. Other wise continue.
-									if json[j - 1] == 92 {
-										continue
-									}
 									end = j
 									break
 								}
