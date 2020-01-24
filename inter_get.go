@@ -4,7 +4,7 @@ import "strconv"
 
 func Get(json []byte, path ... string) ([]byte, error){
 	if len(path) == 0 {
-		return nil, NULL_PATH_ERROR()
+		return json, nil
 	}
 	_, start, end, err := Core(json, path...)
 	if err != nil {
