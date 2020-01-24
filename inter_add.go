@@ -1,7 +1,6 @@
 package jint
 
 import "strconv"
-// import "fmt"
 
 func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte, error){	
 	if len(json) < 2 {
@@ -183,11 +182,22 @@ func AddBool(json []byte, value bool, path ... string) ([]byte, error){
 
 func Insert(json []byte, index int, value []byte, path ... string) ([]byte, error){
 	// lenpath == 0 and empty array control needed
-	_, valueStart, _, err := Core(json, path...)
-	if err != nil {
-		return json, err
+	var start int
+	var err error
+	if len(path) == 0 {
+		for i := 0 ; i < len(json) ; i ++ {
+			if !space(json[i]){
+				start = i
+				break
+			}
+		}
+	}else{
+		_, start, _, err = Core(json, path...)
+		if err != nil {
+			return json, err
+		}
 	}
-	if json[valueStart] != 91 {
+	if json[start] != 91 {
 		return json, ARRAY_EXPECTED_ERROR()
 	}
 	if index < 0 {
@@ -195,18 +205,18 @@ func Insert(json []byte, index int, value []byte, path ... string) ([]byte, erro
 	}
 	indexStr := strconv.Itoa(index)
 	path = append(path, indexStr)
-	_, valueStart, _, err = Core(json, path...)
+	_, start, _, err = Core(json, path...)
 	if err != nil {
 		return json, err
 	}
 	val := make([]byte, len(value) + 1)
 	copy(val, value)
 	val[len(val) - 1] = 44
-	if json[valueStart - 1] == 34 {
-		json = replace(json, val, valueStart - 1, valueStart - 1)
+	if json[start - 1] == 34 {
+		json = replace(json, val, start - 1, start - 1)
 		return json, nil
 	}
-	json = replace(json, val, valueStart, valueStart)
+	json = replace(json, val, start, start)
 	return json, nil
 }
 
