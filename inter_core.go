@@ -3,7 +3,7 @@ package jint
 import "strconv"
 
 // Only this function commented, other Get() and Set() functions based on same logic. 
-// Do not use with zero length path!
+// Do not use with zero length path! no control for that
 // Not for public usage
 func Core(json []byte, path ... string) (int, int, int, error){
 	// null json control.
@@ -136,7 +136,7 @@ func Core(json []byte, path ... string) (int, int, int, error){
 						}
 						if curr == 93 || curr == 125 {
 							// if level is less than 1 it mean index not in this array. 
-							if level < 0 {
+							if level < 1 {
 								return -1, -1, -1, INDEX_OUT_OF_RANGE_ERROR()
 							}else{
 								level--
