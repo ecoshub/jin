@@ -3,6 +3,7 @@ package jint
 import (
 	"testing"
 	"strings"
+	"strconv"
 	test "jint/test"
 )
 
@@ -12,15 +13,25 @@ var (
 	values []string
 )
 
-func InitValues(){
+func InitValues(t *testing.T){
 	json = test.ReadFile("test/test-json.json")
 	newPaths := strings.Split(string(test.ReadFile("test/test-json-paths.json")), "\n")
 	newValues := strings.Split(string(test.ReadFile("test/test-json-values.json")), "\n")
 	paths = make([][]string, 0, len(newPaths))
 	values = make([]string, 0, len(newValues))
-	for i,val := range newValues {
-		paths = append(paths, ParseArray(newPaths[i]))
+	if len(newPaths) == 0 {
+		t.Errorf("Paths length is zero.\n")
+		return
+	}
+	if len(newValues) == 0 {
+		t.Errorf("Values length is zero.\n")
+		return
+	}
+	for _,val := range newValues {
 		values = append(values, val)
+	}
+	for _,val := range newPaths {
+		paths = append(paths, ParseArray(val))
 	}
 }
 
@@ -30,18 +41,10 @@ func TestGetInit(t *testing.T){
 		t.Errorf("Init Error E:%v, S:%v\n", err, str)
 		return
 	}
-	InitValues()
+	InitValues(t)
 }
 
 func TestGet(t *testing.T){
-	if len(paths) != len(values) {
-		t.Errorf("Paths and Values length not equal. %v %v \n", len(paths), len(values))
-		return
-	}
-	if len(paths) == 0 {
-		t.Errorf("Paths and Values length is zero.\n")
-		return
-	}
 	for i, _ := range paths {
 		_, start, end, err := Core(json, paths[i]...)
 		if err != nil {
@@ -66,18 +69,11 @@ func TestSetInit(t *testing.T){
 		t.Errorf("Init Error E:%v , S:%v\n", err, str)
 		return
 	}
-	InitValues()
+	InitValues(t)
 }
 
 func TestSet(t *testing.T){
-	if len(paths) != len(values) {
-		t.Errorf("Paths and Values length not equal. %v %v \n", len(paths), len(values))
-		return
-	}
-	if len(paths) == 0 {
-		t.Errorf("Paths and Values length is zero.\n")
-		return
-	}
+
 	for i, _ := range paths {
 		value, err := Set(json, []byte(`"test-string"`), paths[i]...)
 		if err != nil {
@@ -102,18 +98,10 @@ func TestSetKeyInit(t *testing.T){
 		t.Errorf("Init Error E:%v , S:%v\n", err, str)
 		return
 	}
-	InitValues()
+	InitValues(t)
 }
 
 func TestSetKey(t *testing.T){
-	if len(paths) != len(values) {
-		t.Errorf("Paths and Values length not equal. %v %v \n", len(paths), len(values))
-		return
-	}
-	if len(paths) == 0 {
-		t.Errorf("Paths and Values length is zero.\n")
-		return
-	}
 	for i, _ := range paths {
 		keyStart, _, _, err1 := Core(json, paths[i]...)
 		if err1 != nil {
@@ -152,11 +140,199 @@ func TestSetKey(t *testing.T){
 	}
 }
 
-func TestEnd(t *testing.T){
-	str, err := test.ExecuteNode("get")
+func TestAddKVInit(t *testing.T){
+	str, err := test.ExecuteNode("addkv")
 	if err != nil {
 		t.Errorf("Init Error E:%v , S:%v\n", err, str)
 		return
 	}
-	InitValues()
+	InitValues(t)
+}
+
+func TestAddKV(t *testing.T){
+	for i, _ := range paths {
+		value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
+		if err != nil {
+			t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+			return
+		}
+		value, err = Get(value, paths[i]...)
+		if err != nil {
+			t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+			return
+		}
+		if string(Flatten(value)) != StripQuotes(values[i]) {
+			t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i] )
+			return
+		}
+	}
+}
+
+func TestAddInit(t *testing.T){
+	str, err := test.ExecuteNode("add")
+	if err != nil {
+		t.Errorf("Init Error E:%v , S:%v\n", err, str)
+		return
+	}
+	InitValues(t)
+}
+
+func TestAdd(t *testing.T){
+	for i, _ := range paths {
+		// t.Logf("path:>%v %T %v<\n",paths[i], paths[i], len(paths[i]))
+		value, err := Add(json, []byte(`"test-value"`), paths[i]...)
+		if err != nil {
+			t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+			return
+		}
+		value, err = Get(value, paths[i]...)
+		if err != nil {
+			t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+			return
+		}
+		if string(Flatten(value)) != StripQuotes(values[i]) {
+			t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(Flatten(value)), values[i] )
+			return
+		}
+	}
+}
+
+func TestInsertInit(t *testing.T){
+	str, err := test.ExecuteNode("insert")
+	if err != nil {
+		t.Errorf("Init Error E:%v , S:%v\n", err, str)
+		return
+	}
+	InitValues(t)
+}
+
+func TestInsert(t *testing.T){
+	var err error
+	var value []byte
+	for i, _ := range paths {
+		json, err = Insert(json, 0, []byte(`"test-value"`), paths[i]...)
+		if err != nil {
+			t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+			return
+		}
+		value, err = Get(json, paths[i]...)
+		if err != nil {
+			t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+			return
+		}
+		if string(Flatten(value)) != StripQuotes(values[i]) {
+			t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i] )
+			return
+		}
+	}
+}
+
+func TestDeleteKVInit(t *testing.T){
+	str, err := test.ExecuteNode("deleteKV")
+	if err != nil {
+		t.Errorf("Init Error E:%v , S:%v\n", err, str)
+		return
+	}
+	InitValues(t)
+}
+
+func TestDeleteKV(t *testing.T){
+	for i, _ := range paths {
+		value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
+		if err != nil {
+			t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+			return
+		}
+		newPath := make([]string, len(paths[i]))
+		copy(newPath, paths[i])
+		newPath = append(newPath, "test-key")
+		value, err = Delete(value, newPath...)
+		if err != nil {
+			t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+			return
+		}
+		value, err = Get(value, paths[i]...)
+		if err != nil {
+			t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+			return
+		}
+		if string(Flatten(value)) != StripQuotes(values[i]) {
+			t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i] )
+			return
+		}
+	}
+}
+
+func TestDeleteVInit(t *testing.T){
+	str, err := test.ExecuteNode("deleteV")
+	if err != nil {
+		t.Errorf("Init Error E:%v , S:%v\n", err, str)
+		return
+	}
+	InitValues(t)
+}
+
+func TestDeleteV(t *testing.T){
+	for i, _ := range paths {
+		value, err := Get(json, paths[i]...)
+		if err != nil {
+			t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+			return
+		}
+		arr := ParseArray(string(value))
+		value, err = Add(json, []byte(`"test-value"`), paths[i]...)
+		if err != nil {
+			t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+			return
+		}
+		newPath := make([]string, len(paths[i]))
+		copy(newPath, paths[i])
+		newPath = append(newPath, strconv.Itoa(len(arr)))
+		value, err = Delete(value, newPath...)
+		if err != nil {
+			t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+			return
+		}
+		value, err = Get(value, paths[i]...)
+		if err != nil {
+			t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+			return
+		}
+		if string(Flatten(value)) != StripQuotes(values[i]) {
+			t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i] )
+			return
+		}
+	}
+}
+
+func TestArrayIterInit(t *testing.T){
+	str, err := test.ExecuteNode("arrayiter")
+	if err != nil {
+		t.Errorf("Init Error E:%v , S:%v\n", err, str)
+		return
+	}
+	InitValues(t)
+}
+
+func TestArrayIter(t *testing.T){
+	for _, path := range paths {
+		count := 0
+		err := IterateArray(json, func(value []byte, err error) bool {
+			newPath := make([]string, len(path))
+			copy(newPath, path)
+			newPath = append(newPath, strconv.Itoa(count))
+			value2, err := Get(json, newPath...)
+			if string(value) != string(value2) {
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n",  string(value2), string(value), newPath)
+				return false
+			}else{
+				count++
+				return true
+			}
+		}, path...)
+		if err != nil {
+			t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
+			return
+		}
+	}
 }
