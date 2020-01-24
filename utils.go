@@ -343,11 +343,16 @@ func isInt(val string) bool{
 }
 
 func ParseArray(arr string) []string {
+	arr = string(Flatten([]byte(arr)))
 	if arr[0] == '[' && arr[len(arr) - 1] == ']' {
+		if len(arr) == 2 {
+			return []string{}
+		}
 		newArray := make([]string, 0, 16)
 		start := 1
 		inQuote := false
-		for i := 1 ; i < len(arr); i ++ {
+		level := 0
+		for i := 0 ; i < len(arr); i ++ {
 			curr := arr[i]
 			if curr == 92 {
 				i++
@@ -360,16 +365,29 @@ func ParseArray(arr string) []string {
 			if inQuote {
 				continue
 			}else{
-				if curr == 93 {
-					val := StripQuotes(arr[start:i])
-					newArray = append(newArray, StripQuotes(val))
-					break
+				if curr == 91 || curr == 123 {
+					level++
 				}
-				if curr == 44 {
-					val := StripQuotes(arr[start:i])
-					newArray = append(newArray, val)
-					start = i + 1
-					continue
+				if curr == 93 || curr == 125 {
+					level--
+					if curr == 93 {
+						if level == 0 {
+							val := arr[start:i]
+							val = StripQuotes(val)
+							newArray = append(newArray, val)
+							start = i + 1
+							break
+						}
+					}
+				}
+				if level == 1 {
+					if curr == 44 {
+						val := arr[start:i]
+						val = StripQuotes(val)
+						newArray = append(newArray, val)
+						start = i + 1
+						continue
+					}
 				}
 			}
 		}
@@ -380,6 +398,15 @@ func ParseArray(arr string) []string {
 
 // make private after
 func StripQuotes(str string) string {
+	if len(str) > 1 {
+		if str[0] == 34 && str[len(str) - 1] == 34 {
+			str = str[1:len(str)- 1]
+		}
+	}
+	return str
+}
+
+func StripQuotesByte(str []byte) []byte {
 	if len(str) > 1 {
 		if str[0] == 34 && str[len(str) - 1] == 34 {
 			str = str[1:len(str)- 1]
