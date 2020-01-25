@@ -6,10 +6,10 @@ let pathFile  = 'test/test-json-paths.json';
 let valueFile = 'test/test-json-values.json';
 
 const pathToString = (arr) => {
-	var result = "[";
-	arr.forEach((e) => {result += JSON.stringify(e) + ",";})
+	var result = '[';
+	arr.forEach((e) => {result += JSON.stringify(e) + ',';})
 	result = result.slice(0, result.length - 1);
-	result += "]";
+	result += ']';
 	return result;
 }
 
@@ -123,8 +123,8 @@ const clearNewLine = (dir) => {
 }
 
 const createTestCase = (json, content, func) => {
-	fs.writeFileSync(pathFile, "");
-	fs.writeFileSync(valueFile, "");
+	fs.writeFileSync(pathFile, '');
+	fs.writeFileSync(valueFile, '');
 	let type = '';
 	if (typeof json === 'object'){
 		if (Array.isArray(json)){
@@ -146,44 +146,49 @@ const createTestCase = (json, content, func) => {
 
 if (process.argv.length > 2) {
 	var mainArray = JSON.parse(fs.readFileSync(jsonFile));
-	if (process.argv[2] === "get"){
+	if (process.argv[2] === 'get'){
 		createTestCase(mainArray, 'all', (val)=>{return val})
 	}
-	if (process.argv[2] === "set"){
+	if (process.argv[2] === 'set'){
 		createTestCase(mainArray, 'values', (val) => {
 			return 'test-string';
 		})
 	}
-	if (process.argv[2] === "addkv"){
+	if (process.argv[2] === 'addkv'){
 		createTestCase(mainArray, 'object', (val) => {
 			val['test-key'] = 'test-value';
 			return val;
 		})
 	}
-	if (process.argv[2] === "add"){
+	if (process.argv[2] === 'add'){
 		createTestCase(mainArray, 'array', (arr) => {
 			arr.push('test-value');
 			return arr;
 		})
 	}
-	if (process.argv[2] === "insert"){
+	if (process.argv[2] === 'insert'){
 		createTestCase(mainArray, 'array', (arr) => {
 			arr.splice(0, 0, 'test-value')
 			return arr;
 		})
 	}
-	if (process.argv[2] === "deleteKV"){
+	if (process.argv[2] === 'deleteKV'){
 		createTestCase(mainArray, 'object', (arr) => {
 			return arr;
 		})
 	}
-	if (process.argv[2] === "deleteV"){
+	if (process.argv[2] === 'deleteV'){
 		createTestCase(mainArray, 'array', (arr) => {
 			return arr;
 		})
 	}
-	if (process.argv[2] === "arrayiter"){
+	if (process.argv[2] === 'arrayiter'){
 		createTestCase(mainArray, 'array', (arr) => {
+			return arr;
+		})
+	}
+	if (process.argv[2] === 'objectiter'){
+		createTestCase(mainArray, 'object', (arr) => {
 			return arr;
 		})
 	}
