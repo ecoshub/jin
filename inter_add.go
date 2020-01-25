@@ -2,7 +2,7 @@ package jint
 
 import "strconv"
 
-func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte, error){	
+func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte, error){
 	if len(json) < 2 {
 		return json, BAD_JSON_ERROR(0)
 	}
@@ -192,7 +192,7 @@ func Insert(json []byte, index int, value []byte, path ... string) ([]byte, erro
 			}
 		}
 	}else{
-		_, start, _, err = Core(json, false, path...)
+		_, start, _, err = Core(json, true, path...)
 		if err != nil {
 			return json, err
 		}
@@ -200,12 +200,9 @@ func Insert(json []byte, index int, value []byte, path ... string) ([]byte, erro
 	if json[start] != 91 {
 		return json, ARRAY_EXPECTED_ERROR()
 	}
-	if index < 0 {
-		return json, INDEX_OUT_OF_RANGE_ERROR()
-	}
 	indexStr := strconv.Itoa(index)
 	path = append(path, indexStr)
-	_, start, _, err = Core(json, false, path...)
+	_, start, _, err = Core(json, true, path...)
 	if err != nil {
 		return json, err
 	}
