@@ -75,8 +75,7 @@
     },
     "UID":{ 
        "username":[ 
-          "deadlock",
-          "livelock"
+          "deadlock"
        ],
        "numbers":[ 
           { 
