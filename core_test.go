@@ -305,34 +305,74 @@ func TestDeleteV(t *testing.T){
 	}
 }
 
-func TestArrayIterInit(t *testing.T){
-	str, err := test.ExecuteNode("arrayiter")
+// func TestArrayIterInit(t *testing.T){
+// 	str, err := test.ExecuteNode("arrayiter")
+// 	if err != nil {
+// 		t.Errorf("Init Error E:%v , S:%v\n", err, str)
+// 		return
+// 	}
+// 	InitValues(t)
+// }
+
+// func TestArrayIter(t *testing.T){
+// 	for _, path := range paths {
+// 		count := 0
+// 		err := IterateArray(json, func(value []byte, err error) bool {
+// 			newPath := make([]string, len(path))
+// 			copy(newPath, path)
+// 			newPath = append(newPath, strconv.Itoa(count))
+// 			value2, err := Get(json, newPath...)
+// 			if string(value) != string(value2) {
+// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n",  string(value2), string(value), newPath)
+// 				return false
+// 			}else{
+// 				count++
+// 				return true
+// 			}
+// 		}, path...)
+// 		if err != nil {
+// 			t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
+// 			return
+// 		}
+// 	}
+// }
+
+// func TestKeyValueIterInit(t *testing.T){
+// 	str, err := test.ExecuteNode("objectiter")
+// 	if err != nil {
+// 		t.Errorf("Init Error E:%v , S:%v\n", err, str)
+// 		return
+// 	}
+// 	InitValues(t)
+// }
+
+// func TestKeyValueIter(t *testing.T){
+// 	for _, path := range paths {
+// 		err := IterateKeyValue(json, func(key []byte, value []byte, err error) bool {
+// 			newPath := make([]string, len(path))
+// 			copy(newPath, path)
+// 			newPath = append(newPath, string(key))
+// 			value2, err := Get(json, newPath...)
+// 			if string(value) != string(value2) {
+// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n",  string(value2), string(value), newPath)
+// 				return false
+// 			}else{
+// 				return true
+// 			}
+// 		}, path...)
+// 		if err != nil {
+// 			t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
+// 			return
+// 		}
+// 	}
+// }
+
+
+func TestEnd(t *testing.T){
+	str, err := test.ExecuteNode("get")
 	if err != nil {
-		t.Errorf("Init Error E:%v , S:%v\n", err, str)
+		t.Errorf("Init Error E:%v, S:%v\n", err, str)
 		return
 	}
 	InitValues(t)
-}
-
-func TestArrayIter(t *testing.T){
-	for _, path := range paths {
-		count := 0
-		err := IterateArray(json, func(value []byte, err error) bool {
-			newPath := make([]string, len(path))
-			copy(newPath, path)
-			newPath = append(newPath, strconv.Itoa(count))
-			value2, err := Get(json, newPath...)
-			if string(value) != string(value2) {
-				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n",  string(value2), string(value), newPath)
-				return false
-			}else{
-				count++
-				return true
-			}
-		}, path...)
-		if err != nil {
-			t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
-			return
-		}
-	}
 }
