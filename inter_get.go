@@ -6,7 +6,7 @@ func Get(json []byte, path ... string) ([]byte, error){
 	if len(path) == 0 {
 		return json, nil
 	}
-	_, start, end, err := Core(json, path...)
+	_, start, end, err := Core(json, false, path...)
 	if err != nil {
 		return nil, err
 	}

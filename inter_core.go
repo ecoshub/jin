@@ -5,7 +5,7 @@ import "strconv"
 // Only this function commented, other Get() and Set() functions based on same logic. 
 // Do not use with zero length path! no control for that
 // Not for public usage
-func Core(json []byte, path ... string) (int, int, int, error){
+func Core(json []byte, justStart bool, path ... string) (int, int, int, error){
 	// null json control.
 	if len(json) == 0 {
 		return -1, -1, -1, BAD_JSON_ERROR(0) 
@@ -401,6 +401,9 @@ func Core(json []byte, path ... string) (int, int, int, error){
 			offset++
 			continue
 		}
+	}
+	if justStart {
+		return keyStart, offset, 0, nil
 	}
 	// If value starts with open braces
 	if json[offset] == 91 || json[offset] == 123 {
