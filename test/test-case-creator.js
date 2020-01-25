@@ -20,84 +20,84 @@ const createPaths = (obj, type, key, tag, func) => {
 	for ( var i = 0 ; i < keys.length ; i ++ ){
 		if (values[i] !== null && values[i] !== undefined){
 			if (tag === 'all') {
-				key.push(keys[i]);
-				let path = pathToString(key);
-				fs.appendFileSync(pathFile, path + `\n`);
 				values[i] = func(values[i]);
 				if ( values[i] !== undefined){
 					fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
 				}
+				key.push(keys[i]);
+				let path = pathToString(key);
+				fs.appendFileSync(pathFile, path + `\n`);
 				key.pop();
 			}
 			if (tag === 'object') {
 				if (typeof values[i] === 'object' && !Array.isArray(values[i])) {
-					key.push(keys[i]);
-					let path = pathToString(key);
-					fs.appendFileSync(pathFile, path + `\n`);
 					values[i] = func(values[i]);
 					if ( values[i] !== undefined){
 						fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
 					}
+					key.push(keys[i]);
+					let path = pathToString(key);
+					fs.appendFileSync(pathFile, path + `\n`);
 					key.pop();
 				}
 			}
 			if (tag === 'array') {
 				if (typeof values[i] === 'object' && Array.isArray(values[i])) {			
-					key.push(keys[i]);
-					let path = pathToString(key);
-					fs.appendFileSync(pathFile, path + `\n`);
 					values[i] = func(values[i]);
 					if ( values[i] !== undefined){
 						fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
 					}
+					key.push(keys[i]);
+					let path = pathToString(key);
+					fs.appendFileSync(pathFile, path + `\n`);
 					key.pop();
 				}
 			}
 			if (tag === 'arrayvalues') {
 				if (type === 'array'){
-						key.push(keys[i]);
-						let path = pathToString(key);
-						fs.appendFileSync(pathFile, path + `\n`);
 						values[i] = func(values[i]);
 						if ( values[i] !== undefined){
 							fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
 						}
+						key.push(keys[i]);
+						let path = pathToString(key);
+						fs.appendFileSync(pathFile, path + `\n`);
 						key.pop();
 				}
 			}
 			if (tag === 'objectvalues') {
 				if (type === 'object'){
-						key.push(keys[i]);
-						let path = pathToString(key);
-						fs.appendFileSync(pathFile, path + `\n`);
 						values[i] = func(values[i]);
 						if ( values[i] !== undefined){
 							fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
 						}
+						key.push(keys[i]);
+						let path = pathToString(key);
+						fs.appendFileSync(pathFile, path + `\n`);
 						key.pop();
 				}
 			}
 			if (tag === 'values') {
 				if (typeof values[i] !== 'object') {
-					key.push(keys[i]);
-					let path = pathToString(key);
-					fs.appendFileSync(pathFile, path + `\n`);
 					values[i] = func(values[i]);
 					if ( values[i] !== undefined){
 						fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
 					}
+					key.push(keys[i]);
+					let path = pathToString(key);
+					fs.appendFileSync(pathFile, path + `\n`);
 					key.pop();
 				}
 			}
 			if (tag === 'notvalues') {
 				if (typeof values[i] === 'object') {
-					key.push(keys[i]);
-					let path = pathToString(key);
-					fs.appendFileSync(pathFile, path + `\n`);
 					values[i] = func(values[i]);
 					if ( values[i] !== undefined){
 						fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
 					}
+					key.push(keys[i]);
+					let path = pathToString(key);
+					fs.appendFileSync(pathFile, path + `\n`);
 					key.pop();
 				}
 			}
@@ -135,7 +135,7 @@ const createTestCase = (json, content, func) => {
 	}else{
 		type = 'value'
 	}
-	if (content === type || (content === 'arrayvalues' && type === 'array') || (content === 'objectvalues' && type === 'object')) {
+	if (content === type ) {
 		fs.appendFileSync(pathFile, `[]` + '\n');
 		fs.appendFileSync(valueFile, JSON.stringify(func(json)) + `\n`);
 	}
