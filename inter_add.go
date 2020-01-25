@@ -37,7 +37,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 			}
 		}
 	}else{
-		_, start, end , err = Core(json, path...)
+		_, start, end , err = Core(json, false, path...)
 		if err != nil {
 			return json, err
 		}
@@ -56,7 +56,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ... string) ([]byte
 		}else{
 			path = append(path, key)
 			// key already exist control
-			_, _, _ , err = Core(json, path...)
+			_, _, _ , err = Core(json, false, path...)
 			if err != nil {
 				if err.Error() == KEY_NOT_FOUND_ERROR().Error() {
 					val := []byte(`,"` + key + `":` + string(value))
@@ -108,7 +108,7 @@ func Add(json []byte, value []byte, path ... string) ([]byte, error){
 			}
 		}
 	}else{
-		_, start, end , err = Core(json, path...)
+		_, start, end , err = Core(json, false, path...)
 		if err != nil {
 			return json, err
 		}
@@ -192,7 +192,7 @@ func Insert(json []byte, index int, value []byte, path ... string) ([]byte, erro
 			}
 		}
 	}else{
-		_, start, _, err = Core(json, path...)
+		_, start, _, err = Core(json, false, path...)
 		if err != nil {
 			return json, err
 		}
@@ -205,7 +205,7 @@ func Insert(json []byte, index int, value []byte, path ... string) ([]byte, erro
 	}
 	indexStr := strconv.Itoa(index)
 	path = append(path, indexStr)
-	_, start, _, err = Core(json, path...)
+	_, start, _, err = Core(json, false, path...)
 	if err != nil {
 		return json, err
 	}

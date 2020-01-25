@@ -1,17 +1,14 @@
 package jint
 
 import "strconv"
-// import "time"
 // import "fmt"
 
 func IterateArray(json []byte, callback func([]byte, error) bool, path ... string) error{
-	// now := time.Now()
 	var start int
 	var end int
 	var err error
 	if len(path) == 0 {
 		for space(json[start]) {
-			// json length overflow control
 			if start > len(json) - 1{
 				return BAD_JSON_ERROR(start) 
 			}else{
@@ -21,111 +18,111 @@ func IterateArray(json []byte, callback func([]byte, error) bool, path ... strin
 		}
 		end = len(json)
 	}else{
-		_, start, end , err = Core(json, path...)
+		_, start, _ , err = Core(json, true, path...)
 		if err != nil {
 			return err
 		}
 	}
-	start = start
-	end = end
-	// chars := []byte{34, 44, 91, 93, 123, 125}
-	// // creating a bool array fill with false
-	// isJsonChar := make([]bool, 256)
-	// // only interested chars is true
-	// for _,v := range chars {
-	// 	isJsonChar[v] = true
-	// }
-	// // now2 := time.Now()
-	// if json[start] == 91 {
-	// 	valStart := start + 1
-	// 	inQuote := false
-	// 	level := 0
-	// 	for i := start ; i < end; i ++ {
-	// 		curr := json[i]
-	// 		if !isJsonChar[curr] {
-	// 			continue
-	// 		}
-	// 		if curr == 34 {
-	// 			for k := i - 1 ; k > 0 ; k -- {
-	// 				if json[k] != 92 {
-	// 					if (i - 1 - k) % 2 == 0 {
-	// 						inQuote = !inQuote
-	// 						break
-	// 					}else{
-	// 						break
-	// 					}
-	// 				}
-	// 				continue
-	// 			}
-	// 			continue
-	// 		}
-	// 		if inQuote {
-	// 			continue
-	// 		}else{
-	// 			if curr == 91 || curr == 123 {
-	// 				level++
-	// 			}
-	// 			if curr == 93 || curr == 125 {
-	// 				if curr == 93 {
-	// 					if level == 1 {
-	// 						for j := valStart ; j < i ; j ++ {
-	// 							if !space(json[j]) {
-	// 								valStart = j
-	// 								break
-	// 							}
-	// 						}
-	// 						if json[valStart] == 34 {
-	// 							valStart++
-	// 						}
-	// 						for j := i - 1 ; j > valStart ; j -- {
-	// 							if !space(json[j]) {
-	// 								end = j
-	// 								break
-	// 							}
-	// 						}
-	// 						if json[end] != 34 {
-	// 							end++
-	// 						}
-	// 						callback(json[valStart:end], nil)
-	// 						return nil
-	// 					}
-	// 				}
-	// 				level--
-	// 			}
-	// 			if level == 1 {
-	// 				if curr == 44 {
-	// 					lastEnd := i
-	// 					for j := valStart ; j < i ; j ++ {
-	// 						if !space(json[j]) {
-	// 							valStart = j
-	// 							break
-	// 						}
-	// 					}
-	// 					if json[valStart] == 34 {
-	// 						valStart++
-	// 					}
-	// 					for j := i - 1; j > valStart ; j -- {
-	// 						if !space(json[j]) {
-	// 							lastEnd = j
-	// 							break
-	// 						}
-	// 					}
-	// 					if json[lastEnd] != 34 {
-	// 						lastEnd++
-	// 					}
-	// 					if !callback(json[valStart:lastEnd], nil) {
-	// 						return nil
-	// 					}
-	// 					valStart = i + 1
-	// 					continue
-	// 				}
-	// 			}
-	// 		}
-	// 	}
-	// 	return nil
-	// }else{
-	// 	return  ARRAY_EXPECTED_ERROR()
-	// }
+	chars := []byte{34, 44, 91, 93, 123, 125}
+	isJsonChar := make([]bool, 256)
+	for _,v := range chars {
+		isJsonChar[v] = true
+	}
+	if json[start] == 91 {
+		valStart := start + 1
+		inQuote := false
+		level := 0
+		for i := start ; i < len(json); i ++ {
+			curr := json[i]
+			if !isJsonChar[curr] {
+				continue
+			}
+			if curr == 34 {
+				for k := i - 1 ; k > 0 ; k -- {
+					if json[k] != 92 {
+						if (i - 1 - k) % 2 == 0 {
+							inQuote = !inQuote
+							break
+						}else{
+							break
+						}
+					}
+					continue
+				}
+				continue
+			}
+			if inQuote {
+				continue
+			}else{
+				if curr == 91 || curr == 123 {
+					level++
+				}
+				if curr == 93 || curr == 125 {
+					if curr == 93 {
+						if level == 1 {
+							// fmt.Println("]")
+							for j := valStart ; j < i ; j ++ {
+								if !space(json[j]) {
+									valStart = j
+									break
+								}
+							}
+							for j := i - 1 ; j > valStart ; j -- {
+								if !space(json[j]) {
+									end = j
+									break
+								}
+							}
+							if json[valStart] == 34 && json[end] == 34 {
+							// fmt.Println("top")
+								callback(json[valStart + 1:end], nil)
+								return nil
+							}else{
+							// fmt.Println("bot")
+								callback(json[valStart:end + 1], nil)
+								return nil
+							}
+						}
+					}
+					level--
+				}
+				if level == 1 {
+					if curr == 44 {
+						// fmt.Println(",")
+						end = i - 1
+						for j := valStart ; j < i ; j ++ {
+							if !space(json[j]) {
+								valStart = j
+								break
+							}
+						}
+						for j := end; j > valStart ; j -- {
+							if !space(json[j]) {
+								end = j
+								break
+							}
+						}
+						if json[valStart] == 34 && json[end] == 34 {
+							// fmt.Println("top")
+							if !callback(json[valStart + 1:end], nil) {
+								return nil
+							}
+						}else{
+							// fmt.Println("bot")
+							if !callback(json[valStart:end + 1], nil) {
+								return nil
+							}
+						}
+						valStart = i + 1
+						continue
+					}
+				}
+			}
+		}
+		return nil
+	}else{
+		return  ARRAY_EXPECTED_ERROR()
+	}
 	return BAD_JSON_ERROR(-1)
 }
 
