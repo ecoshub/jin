@@ -94,7 +94,7 @@ func Core(json []byte, justStart bool, path ... string) (int, int, int, error){
 				indexCount := 0
 				// Not interested with column char in this search
 				isJsonChar[58] = false
-				for i := offset ; i < len(json) ; i ++ {
+				for i := offset; i < len(json) ; i ++ {
 					// curr is current byte of reading.
 					curr := json[i]
 					// Just interested with json chars. Other wise continue.
@@ -104,9 +104,10 @@ func Core(json []byte, justStart bool, path ... string) (int, int, int, error){
 					// If current byte is quote
 					if curr == 34 {
 						// escape char ccontrol algorithm
-						for k := i - 1 ; k > 0 ; k -- {
-							if json[k] != 92 {
-								if (i - 1 - k) % 2 == 0 {
+						for n := i - 1 ; n > -1 ; n -- {
+							// escape sequance search
+							if json[n] != 92 {
+								if (i - 1 - n) % 2 == 0 {
 									inQuote = !inQuote
 									break
 								}else{
@@ -208,17 +209,24 @@ func Core(json []byte, justStart bool, path ... string) (int, int, int, error){
 				curr := json[i]
 				// Just interested with json chars. Other wise continue.
 				if !isJsonChar[curr]{
-					if curr == 92 {
-						i++
-						continue
-					}else{
-						continue
-					}
+					continue
 				}
 				// If current byte is quote
 				if curr == 34 {
-					// change inQuote flag to opposite.
-					inQuote = !inQuote
+					// escape char ccontrol algorithm
+					for n := i - 1 ; n > -1 ; n -- {
+						// escape sequance search
+						if json[n] != 92 {
+							if (i - 1 - n) % 2 == 0 {
+								// change inQuote flag to opposite.
+								inQuote = !inQuote
+								break
+							}else{
+								goto cont
+							}
+						}
+						continue
+					}
 					// If key found no need to determine start and end points.
 					if found {
 						continue
@@ -234,6 +242,7 @@ func Core(json []byte, justStart bool, path ... string) (int, int, int, error){
 					}
 					// if quote ends that means key ends here
 					end = i
+					cont:
 					continue
 				}
 				if inQuote {
@@ -326,9 +335,9 @@ func Core(json []byte, justStart bool, path ... string) (int, int, int, error){
 								if curr == 34 {
 									// check before char it might be escape char.
 									// escape char ccontrol algorithm
-									for k := j - 1 ; k > 0 ; k -- {
-										if json[k] != 92 {
-											if (j - 1 - k) % 2 == 0 {
+									for n := j - 1 ; n > -1 ; n -- {
+										if json[n] != 92 {
+											if (j - 1 - n) % 2 == 0 {
 												inQuote = !inQuote
 												break
 											}else{
@@ -407,7 +416,6 @@ func Core(json []byte, justStart bool, path ... string) (int, int, int, error){
 	}
 	// If value starts with open braces
 	if json[offset] == 91 || json[offset] == 123 {
-		// fmt.Println("IN", string(json[offset]))
 		// main level indicator.
 		level := 0
 		// Quote check flag
@@ -415,7 +423,6 @@ func Core(json []byte, justStart bool, path ... string) (int, int, int, error){
 		for i := offset ; i < len(json) ; i ++ {
 			// curr is current byte of reading.
 			curr := json[i]
-			// fmt.Println(curr, string(curr), i, inQuote)
 			// Just interested with json chars. Other wise continue.
 			if !isJsonChar[curr]{
 				continue
@@ -423,9 +430,9 @@ func Core(json []byte, justStart bool, path ... string) (int, int, int, error){
 			if curr == 34 {
 				// check before char it might be escape char.
 				// escape char ccontrol algorithm
-				for k := i - 1 ; k > 0 ; k -- {
-					if json[k] != 92 {
-						if (i - 1 - k) % 2 == 0 {
+				for n := i - 1 ; n > -1 ; n -- {
+					if json[n] != 92 {
+						if (i - 1 - n) % 2 == 0 {
 							inQuote = !inQuote
 							break
 						}else{
