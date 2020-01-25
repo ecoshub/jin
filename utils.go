@@ -344,6 +344,9 @@ func isInt(val string) bool{
 
 func ParseArray(arr string) []string {
 	arr = string(Flatten([]byte(arr)))
+	if len(arr) < 2 {
+		return []string{}
+	}
 	if arr[0] == '[' && arr[len(arr) - 1] == ']' {
 		if len(arr) == 2 {
 			return []string{}
