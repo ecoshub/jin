@@ -1,643 +1,734 @@
 package jint
 
 import "strconv"
+// import "time"
+// import "fmt"
 
 func IterateArray(json []byte, callback func([]byte, error) bool, path ... string) error{
-	if len(json) == 0 {
-		callback(nil, BAD_JSON_ERROR(0))
-		return BAD_JSON_ERROR(0)
-	}
-	offset := 0
-	chars := []byte{34, 44, 58, 91, 93, 123, 125}
-	isJsonChar := make([]bool, 256)
-	for _,v := range chars {
-		isJsonChar[v] = true
-	}
-	for space(json[offset]) {
-		if offset > len(json) - 1{
-			callback(nil, BAD_JSON_ERROR(0))
-			return BAD_JSON_ERROR(offset)
-		}else{
-			offset++
-			continue
-		}
-	}
+	// now := time.Now()
+	var start int
+	var end int
+	var err error
 	if len(path) == 0 {
-		if json[offset] == 91 {
-			start := offset + 1
-			level := 0
-			inQuote := false
-			isJsonChar[58] = false
-			for i := offset ; i < len(json) ; i ++ {
-				curr := json[i]
-				if !isJsonChar[curr]{
-					continue
-				}
-				if curr == 34 {
-					for k := i - 1 ; k > 0 ; k -- {
-						if json[k] != 92 {
-							if (i - 1 - k) % 2 == 0 {
-								inQuote = !inQuote
-								break
-							}else{
-								break
-							}
-						}
-						continue
-					}
-					continue
-				}
-				if inQuote {
-					continue
-				}else{
-					if curr == 91 || curr == 123{
-						level++
-						continue
-					}
-					if curr == 93 || curr == 125 {
-						if level < 1 {
-							return INDEX_OUT_OF_RANGE_ERROR()
-						}
-						if level < 2 {
-							// trim spaces from beginning 
-							for space(json[start]) {
-								if start > len(json) - 1{
-									callback(nil, BAD_JSON_ERROR(start))
-									return BAD_JSON_ERROR(start)
-								}
-								start++
-							}
-							if json[start] != 91 && json[start] != 123 {
-								// if a quoted value then strip quotes
-								if json[start] == 34 {
-									end := 0
-									for j := start + 1;  j < len(json) ; j ++ {
-										curr := json[j]
-										if  curr == 92 {
-											continue
-										}
-										// find ending quote
-										// quote
-										if curr == 34 {
-											// just interested with json chars. Other wise continue.
-											end = j
-											break
-										}
-									}
-									callback(json[start + 1:end], nil)
-									return nil
-								}else{							
-									end := 0
-									for j := start + 1;  j < len(json) ; j ++ {
-										curr := json[j]
-										// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
-										if space(curr) || curr == 44 || curr == 93 || curr == 125 {
-											if offset == j {
-												callback(nil, BAD_JSON_ERROR(j))
-												return BAD_JSON_ERROR(j)
-											}
-											end = j
-											break
-										}
-									}
-									callback(json[start:end], nil)
-									return nil
-								}
-							}
-							end := 0
-							for j := i - 1;  j > start ; j -- {
-								curr := json[j]
-								// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
-								if curr == 93 || curr == 125 {
-									if offset == j {
-										callback(nil, BAD_JSON_ERROR(j))
-										return BAD_JSON_ERROR(j)
-									}
-									end = j + 1
-									break
-								}
-							}
-							callback(json[start:end], nil)
-							return nil
-						}
-						level--
-						continue
-					}
-					if level == 1 {
-						if curr == 44 {
-							// trim spaces from beginning 
-							for space(json[start]) {
-								if start > len(json) - 1{
-									callback(nil, BAD_JSON_ERROR(start))
-									return BAD_JSON_ERROR(start)
-								}
-								start++
-							}
-							if json[start] != 91 && json[start] != 123 {
-								// if a quoted value then strip quotes
-								if json[start] == 34 {
-									end := 0
-									for j := start + 1;  j < len(json) ; j ++ {
-										curr := json[j]
-										if curr == 92 {
-											continue
-										}
-										// find ending quote
-										// quote
-										if curr == 34 {
-											// just interested with json chars. Other wise continue.
-											end = j
-											break
-										}
-									}
-									if !callback(json[start + 1:end], nil) {
-										return nil
-									}
-									start = i + 1
-									continue
-								}else{							
-									end := 0
-									for j := start + 1;  j < len(json) ; j ++ {
-										curr := json[j]
-										// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
-										if space(curr) || curr == 44 || curr == 93 || curr == 125 {
-											if offset == j {
-												if !callback(nil, BAD_JSON_ERROR(j)) {
-													return nil
-												}
-											}
-											end = j
-											break
-										}
-									}
-									if !callback(json[start:end], nil) {
-										return nil
-									}
-									start = i + 1
-									continue
-								}
-							}
-							end := 0
-							for j := i - 1;  j > start ; j -- {
-								curr := json[j]
-								// if curreny byte is one of close braces this means end of the value is i
-								if curr == 93 || curr == 125 {
-									if offset == j {
-										if !callback(nil, BAD_JSON_ERROR(j)) {
-											return nil
-										}
-									}
-									end = j + 1
-									break
-								}
-							}
-							if !callback(json[start:end], nil) {
-								return nil
-							}
-							start = i + 1
-							continue
-						}
-						continue
-					}
-					continue
-				}
-			}
-			callback(nil, BAD_JSON_ERROR(offset))
-			return BAD_JSON_ERROR(offset)
-		}else{
-			callback(nil, ARRAY_EXPECTED_ERROR())
-			return ARRAY_EXPECTED_ERROR()
-		}
-	}
-	currentPath := path[0]
-	braceType := json[offset]
-	for k := 0 ; k < len(path) ; k ++ {
-		if braceType == 91 {
-			arrayIndex, err := strconv.Atoi(currentPath)
-			if err != nil {
-				callback(nil, INDEX_EXPECTED_ERROR())
-				return INDEX_EXPECTED_ERROR()
-			}
-			if arrayIndex == 0 {
-				offset++
-				for i := offset; i < len(json) ; i ++ {
-					curr := json[i]
-					if curr == 123 || curr == 91{
-						braceType = curr
-						if k != len(path) - 1{
-							currentPath = path[k + 1]
-						}
-						offset = i
-						break
-					}
-					if !space(curr){
-						break
-					}
-				}
+		for space(json[start]) {
+			// json length overflow control
+			if start > len(json) - 1{
+				return BAD_JSON_ERROR(start) 
 			}else{
-				level := 0
-				inQuote := false
-				found := false
-				indexCount := 0
-				isJsonChar[58] = false
-				for i := offset ; i < len(json) ; i ++ {
-					curr := json[i]
-					if !isJsonChar[curr]{
-						continue
-					}
-					if curr == 34 {
-						for k := i - 1 ; k > 0 ; k -- {
-							if json[k] != 92 {
-								if (i - 1 - k) % 2 == 0 {
-									inQuote = !inQuote
-									break
-								}else{
-									break
-								}
-							}
-							continue
-						}
-						continue
-						continue
-					}
-					if inQuote {
-						continue
-					}else{
-						if curr == 91 || curr == 123{
-							if found {
-								offset = i
-								braceType = curr
-								currentPath = path[k + 1]
-								break
-							}
-							level++
-							continue
-						}
-						if curr == 93 || curr == 125 {
-							if level < 1 {
-								return INDEX_OUT_OF_RANGE_ERROR()
-							}
-							level--
-							continue
-						}
-						if !found {
-							if level == 1 {
-								if curr == 44 {
-									indexCount++
-									if indexCount == arrayIndex {
-										found = true
-										if k == len(path) - 1{
-											offset = i + 1
-											break
-										}
-										continue
-									}
-									continue
-								}
-								continue
-							}
-							continue
-						}
-						continue
-					}
-				}
-				if !found {
-					callback(nil, INDEX_OUT_OF_RANGE_ERROR())
-					return INDEX_OUT_OF_RANGE_ERROR()
-				}
-				isJsonChar[58] = true
-			}
-		}else{
-			inQuote := false
-			found := false
-			start := 0
-			end := 0
-			level := k
-			isJsonChar[44] = false
-			for i := offset ; i < len(json) ; i ++ {
-				curr := json[i]
-				if !isJsonChar[curr]{
-					continue
-				}
-				if curr == 34 {
-					inQuote = !inQuote
-					if found {
-						continue
-					}
-					if level != k + 1 {
-						continue
-					}
-					if inQuote {
-						start = i + 1
-						continue
-					}
-					end = i
-					continue
-				}
-				if inQuote {
-					continue
-				}else{
-					if curr == 91 {
-						if found {
-							braceType = curr
-							currentPath = path[k + 1]
-							break
-						}
-						level++
-						continue
-					}
-					if curr == 123 {
-						if found {
-							k++
-							level++
-							currentPath = path[k]
-							found = false
-							continue
-						}
-						level++
-						continue
-					}
-					if curr == 93 || curr == 125 {
-						if level < 1 {
-							return INDEX_OUT_OF_RANGE_ERROR()
-						}
-						level--
-						continue
-					}
-					if level == k + 1 {
-						if curr == 58 {
-							if len(currentPath) == end - start {
-								same := true
-								for j := 0 ; j < len(currentPath) ; j ++ {
-									if currentPath[j] != json[start + j] {
-										same = false
-										break
-									}
-								}
-								if same {
-									offset = i + 1
-									found = true
-									if k == len(path) - 1{
-										isJsonChar[44] = true
-										break
-									}else{
-										continue
-									}
-								}
-							}
-							isJsonChar[44] = true
-							isJsonChar[58] = false
-							for j := i ;  j < len(json) ; j ++ {
-								curr := json[j]
-								if !isJsonChar[curr]{
-									continue
-								}
-								if curr == 34 {
-									for k := i - 1 ; k > 0 ; k -- {
-										if json[k] != 92 {
-											if (i - 1 - k) % 2 == 0 {
-												inQuote = !inQuote
-												break
-											}else{
-												break
-											}
-										}
-										continue
-									}
-									continue
-								}
-								if inQuote {
-									continue
-								}else{
-									if curr == 91 || curr == 123 {
-										level++
-										continue
-									}
-									if curr == 93 || curr == 125 {
-										level--
-										continue
-									}
-									if curr == 44 {
-										if level == k + 1 {
-											i = j
-											break
-										}
-										continue
-									}
-									continue
-								}
-
-							}
-							isJsonChar[44] = false
-							isJsonChar[58] = true
-							continue
-						}
-						continue
-					}
-				}
-			}
-			if !found {
-				callback(nil, KEY_NOT_FOUND_ERROR())
-				return KEY_NOT_FOUND_ERROR()
-			}
-			isJsonChar[44] = true
-		}
-	}
-	if offset == 0 {
-		callback(nil, BAD_JSON_ERROR(0))
-		return BAD_JSON_ERROR(0)
-	}
-	for space(json[offset]) {
-		if offset > len(json) - 1{
-			callback(nil, BAD_JSON_ERROR(offset))
-			return BAD_JSON_ERROR(offset)
-		}
-		offset++
-	}
-	if json[offset] == 91 {
-		start := offset + 1
-		level := 0
-		inQuote := false
-		isJsonChar[58] = false
-		for i := offset ; i < len(json) ; i ++ {
-			curr := json[i]
-			if !isJsonChar[curr]{
-				continue
-			}
-			if curr == 34 {
-				for k := i - 1 ; k > 0 ; k -- {
-					if json[k] != 92 {
-						if (i - 1 - k) % 2 == 0 {
-							inQuote = !inQuote
-							break
-						}else{
-							break
-						}
-					}
-					continue
-				}
-				continue
-			}
-			if inQuote {
-				continue
-			}else{
-				if curr == 91 || curr == 123{
-					level++
-					continue
-				}
-				if curr == 93 || curr == 125 {
-					if level < 2 {
-						// trim spaces from beginning 
-						for space(json[start]) {
-							if start > len(json) - 1{
-								callback(nil, BAD_JSON_ERROR(start))
-								return BAD_JSON_ERROR(start)
-							}
-							start++
-						}
-						if json[start] != 91 && json[start] != 123 {
-							// if a quoted value then strip quotes
-							if json[start] == 34 {
-								end := 0
-								for j := start + 1;  j < len(json) ; j ++ {
-									curr := json[j]
-									if curr == 92 {
-										continue
-									}
-									// find ending quote
-									// quote
-									if curr == 34 {
-										// just interested with json chars. Other wise continue.
-										end = j
-										break
-									}
-								}
-								callback(json[start + 1:end], nil)
-								return nil
-							}else{			
-								end := 0
-								for j := start + 1;  j < len(json) ; j ++ {
-									curr := json[j]
-									// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
-									if space(curr) || curr == 44 || curr == 93 || curr == 125 {
-										if offset == j {
-											callback(nil, BAD_JSON_ERROR(j))
-											return BAD_JSON_ERROR(j)
-										}
-										end = j
-										break
-									}
-								}
-								callback(json[start:end], nil)
-								return nil
-							}
-						}
-						end := 0
-						for j := i - 1;  j > start ; j -- {
-							curr := json[j]
-							// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
-							if curr == 93 || curr == 125 {
-								if offset == j {
-									callback(nil, BAD_JSON_ERROR(j))
-									return BAD_JSON_ERROR(j)
-								}
-								end = j + 1
-								break
-							}
-						}
-						callback(json[start:end], nil)
-						return nil
-					}
-					level--
-					continue
-				}
-				if level == 1 {
-					if curr == 44 {
-						// trim spaces from beginning 
-						for space(json[start]) {
-							if start > len(json) - 1{
-								callback(nil, BAD_JSON_ERROR(start))
-								return BAD_JSON_ERROR(start)
-							}
-							start++
-						}
-						if json[start] != 91 && json[start] != 123 {
-							// if a quoted value then strip quotes
-							if json[start] == 34 {
-								end := 0
-								for j := start + 1;  j < len(json) ; j ++ {
-									curr := json[j]
-									if curr == 92 {
-										continue
-									}
-									// find ending quote
-									// quote
-									if curr == 34 {
-										// just interested with json chars. Other wise continue.
-										end = j
-										break
-									}
-								}
-								if !callback(json[start + 1:end], nil) {
-									return nil
-								}
-								start = i + 1
-								continue
-							}else{
-								end := 0
-								for j := start + 1;  j < len(json) ; j ++ {
-									curr := json[j]
-									// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
-									if space(curr) || curr == 44 || curr == 93 || curr == 125 {
-										if offset == j {
-											if !callback(nil, BAD_JSON_ERROR(j)) {
-												return nil
-											}
-										}
-										end = j
-										break
-									}
-								}
-								if !callback(json[start:end], nil) {
-									return nil
-								}
-								start = i + 1
-								continue
-							}
-						}
-						end := 0
-						for j := i - 1;  j > start ; j -- {
-							curr := json[j]
-							// if curreny byte is one of close braces this means end of the value is i
-							if curr == 93 || curr == 125 {
-								if offset == j {
-									if !callback(nil, BAD_JSON_ERROR(j)) {
-										return nil
-									}
-								}
-								end = j + 1
-								break
-							}
-						}
-						if !callback(json[start:end], nil) {
-							return nil
-						}
-						start = i + 1
-						continue
-					}
-					continue
-				}
+				start++
 				continue
 			}
 		}
-		isJsonChar[58] = true
+		end = len(json)
 	}else{
-		callback(nil, OBJECT_EXPECTED_ERROR())
-		return OBJECT_EXPECTED_ERROR()
+		_, start, end , err = Core(json, path...)
+		if err != nil {
+			return err
+		}
 	}
-	callback(nil, BAD_JSON_ERROR(-1))
+	start = start
+	end = end
+	// chars := []byte{34, 44, 91, 93, 123, 125}
+	// // creating a bool array fill with false
+	// isJsonChar := make([]bool, 256)
+	// // only interested chars is true
+	// for _,v := range chars {
+	// 	isJsonChar[v] = true
+	// }
+	// // now2 := time.Now()
+	// if json[start] == 91 {
+	// 	valStart := start + 1
+	// 	inQuote := false
+	// 	level := 0
+	// 	for i := start ; i < end; i ++ {
+	// 		curr := json[i]
+	// 		if !isJsonChar[curr] {
+	// 			continue
+	// 		}
+	// 		if curr == 34 {
+	// 			for k := i - 1 ; k > 0 ; k -- {
+	// 				if json[k] != 92 {
+	// 					if (i - 1 - k) % 2 == 0 {
+	// 						inQuote = !inQuote
+	// 						break
+	// 					}else{
+	// 						break
+	// 					}
+	// 				}
+	// 				continue
+	// 			}
+	// 			continue
+	// 		}
+	// 		if inQuote {
+	// 			continue
+	// 		}else{
+	// 			if curr == 91 || curr == 123 {
+	// 				level++
+	// 			}
+	// 			if curr == 93 || curr == 125 {
+	// 				if curr == 93 {
+	// 					if level == 1 {
+	// 						for j := valStart ; j < i ; j ++ {
+	// 							if !space(json[j]) {
+	// 								valStart = j
+	// 								break
+	// 							}
+	// 						}
+	// 						if json[valStart] == 34 {
+	// 							valStart++
+	// 						}
+	// 						for j := i - 1 ; j > valStart ; j -- {
+	// 							if !space(json[j]) {
+	// 								end = j
+	// 								break
+	// 							}
+	// 						}
+	// 						if json[end] != 34 {
+	// 							end++
+	// 						}
+	// 						callback(json[valStart:end], nil)
+	// 						return nil
+	// 					}
+	// 				}
+	// 				level--
+	// 			}
+	// 			if level == 1 {
+	// 				if curr == 44 {
+	// 					lastEnd := i
+	// 					for j := valStart ; j < i ; j ++ {
+	// 						if !space(json[j]) {
+	// 							valStart = j
+	// 							break
+	// 						}
+	// 					}
+	// 					if json[valStart] == 34 {
+	// 						valStart++
+	// 					}
+	// 					for j := i - 1; j > valStart ; j -- {
+	// 						if !space(json[j]) {
+	// 							lastEnd = j
+	// 							break
+	// 						}
+	// 					}
+	// 					if json[lastEnd] != 34 {
+	// 						lastEnd++
+	// 					}
+	// 					if !callback(json[valStart:lastEnd], nil) {
+	// 						return nil
+	// 					}
+	// 					valStart = i + 1
+	// 					continue
+	// 				}
+	// 			}
+	// 		}
+	// 	}
+	// 	return nil
+	// }else{
+	// 	return  ARRAY_EXPECTED_ERROR()
+	// }
 	return BAD_JSON_ERROR(-1)
 }
+
+// func IterateArray(json []byte, callback func([]byte, error) bool, path ... string) error{
+// 	if len(json) == 0 {
+// 		callback(nil, BAD_JSON_ERROR(0))
+// 		return BAD_JSON_ERROR(0)
+// 	}
+// 	offset := 0
+// 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
+// 	isJsonChar := make([]bool, 256)
+// 	for _,v := range chars {
+// 		isJsonChar[v] = true
+// 	}
+// 	for space(json[offset]) {
+// 		if offset > len(json) - 1{
+// 			callback(nil, BAD_JSON_ERROR(offset))
+// 			return BAD_JSON_ERROR(offset)
+// 		}
+// 		offset++
+// 	}
+// 	if len(path) == 0 {
+// 		if json[offset] == 91 {
+// 			start := offset + 1
+// 			level := 0
+// 			inQuote := false
+// 			isJsonChar[58] = false
+// 			for i := offset ; i < len(json) ; i ++ {
+// 				curr := json[i]
+// 				if !isJsonChar[curr]{
+// 					continue
+// 				}
+// 				if curr == 34 {
+// 					if json[i - 1] == 92 {
+// 						continue
+// 					}
+// 					inQuote = !inQuote
+// 					continue
+// 				}
+// 				if inQuote {
+// 					continue
+// 				}else{
+// 					if curr == 91 || curr == 123{
+// 						level++
+// 						continue
+// 					}
+// 					if curr == 93 || curr == 125 {
+// 						if level < 2 {
+// 							// trim spaces from beginning 
+// 							for space(json[start]) {
+// 								if start > len(json) - 1{
+// 									callback(nil, BAD_JSON_ERROR(start))
+// 									return BAD_JSON_ERROR(start)
+// 								}
+// 								start++
+// 							}
+// 							if json[start] != 91 && json[start] != 123 {
+// 								// if a quoted value then strip quotes
+// 								if json[start] == 34 {
+// 									end := 0
+// 									for j := start + 1;  j < len(json) ; j ++ {
+// 										curr := json[j]
+// 										// find ending quote
+// 										// quote
+// 										if curr == 34 {
+// 											// just interested with json chars. Other wise continue.
+// 											if json[j - 1] == 92 {
+// 												continue
+// 											}
+// 											end = j
+// 											break
+// 										}
+// 									}
+// 									callback(json[start + 1:end], nil)
+// 									return nil
+// 								}else{							
+// 									end := 0
+// 									for j := start + 1;  j < len(json) ; j ++ {
+// 										curr := json[j]
+// 										// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
+// 										if space(curr) || curr == 44 || curr == 93 || curr == 125 {
+// 											if offset == j {
+// 												callback(nil, BAD_JSON_ERROR(j))
+// 												return BAD_JSON_ERROR(j)
+// 											}
+// 											end = j
+// 											break
+// 										}
+// 									}
+// 									callback(json[start:end], nil)
+// 									return nil
+// 								}
+// 							}
+// 							end := 0
+// 							for j := i - 1;  j > start ; j -- {
+// 								curr := json[j]
+// 								// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
+// 								if curr == 93 || curr == 125 {
+// 									if offset == j {
+// 										callback(nil, BAD_JSON_ERROR(j))
+// 										return BAD_JSON_ERROR(j)
+// 									}
+// 									end = j + 1
+// 									break
+// 								}
+// 							}
+// 							callback(json[start:end], nil)
+// 							return nil
+// 						}
+// 						level--
+// 						continue
+// 					}
+// 					if level == 1 {
+// 						if curr == 44 {
+// 							// trim spaces from beginning 
+// 							for space(json[start]) {
+// 								if start > len(json) - 1{
+// 									callback(nil, BAD_JSON_ERROR(start))
+// 									return BAD_JSON_ERROR(start)
+// 								}
+// 								start++
+// 							}
+// 							if json[start] != 91 && json[start] != 123 {
+// 								// if a quoted value then strip quotes
+// 								if json[start] == 34 {
+// 									end := 0
+// 									for j := start + 1;  j < len(json) ; j ++ {
+// 										curr := json[j]
+// 										// find ending quote
+// 										// quote
+// 										if curr == 34 {
+// 											// just interested with json chars. Other wise continue.
+// 											if json[j - 1] == 92 {
+// 												continue
+// 											}
+// 											end = j
+// 											break
+// 										}
+// 									}
+// 									if !callback(json[start + 1:end], nil) {
+// 										return nil
+// 									}
+// 									start = i + 1
+// 									continue
+// 								}else{							
+// 									end := 0
+// 									for j := start + 1;  j < len(json) ; j ++ {
+// 										curr := json[j]
+// 										// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
+// 										if space(curr) || curr == 44 || curr == 93 || curr == 125 {
+// 											if offset == j {
+// 												if !callback(nil, BAD_JSON_ERROR(j)) {
+// 													return nil
+// 												}
+// 											}
+// 											end = j
+// 											break
+// 										}
+// 									}
+// 									if !callback(json[start:end], nil) {
+// 										return nil
+// 									}
+// 									start = i + 1
+// 									continue
+// 								}
+// 							}
+// 							end := 0
+// 							for j := i - 1;  j > start ; j -- {
+// 								curr := json[j]
+// 								// if curreny byte is one of close braces this means end of the value is i
+// 								if curr == 93 || curr == 125 {
+// 									if offset == j {
+// 										if !callback(nil, BAD_JSON_ERROR(j)) {
+// 											return nil
+// 										}
+// 									}
+// 									end = j + 1
+// 									break
+// 								}
+// 							}
+// 							if !callback(json[start:end], nil) {
+// 								return nil
+// 							}
+// 							start = i + 1
+// 							continue
+// 						}
+// 						continue
+// 					}
+// 					continue
+// 				}
+// 			}
+// 			callback(nil, BAD_JSON_ERROR(offset))
+// 			return BAD_JSON_ERROR(offset)
+// 		}else{
+// 			callback(nil, ARRAY_EXPECTED_ERROR())
+// 			return ARRAY_EXPECTED_ERROR()
+// 		}
+// 	}
+// 	currentPath := path[0]
+// 	braceType := json[offset]
+// 	for k := 0 ; k < len(path) ; k ++ {
+// 		if braceType == 91 {
+// 			arrayIndex, err := strconv.Atoi(currentPath)
+// 			if err != nil {
+// 				callback(nil, INDEX_EXPECTED_ERROR())
+// 				return INDEX_EXPECTED_ERROR()
+// 			}
+// 			if arrayIndex == 0 {
+// 				offset++
+// 				for i := offset; i < len(json) ; i ++ {
+// 					curr := json[i]
+// 					if curr == 123 || curr == 91{
+// 						braceType = curr
+// 						if k != len(path) - 1{
+// 							currentPath = path[k + 1]
+// 						}
+// 						offset = i
+// 						break
+// 					}
+// 					if !space(curr){
+// 						break
+// 					}
+// 				}
+// 			}else{
+// 				level := 0
+// 				inQuote := false
+// 				found := false
+// 				indexCount := 0
+// 				isJsonChar[58] = false
+// 				for i := offset ; i < len(json) ; i ++ {
+// 					curr := json[i]
+// 					if !isJsonChar[curr]{
+// 						continue
+// 					}
+// 					if curr == 34 {
+// 						if json[i - 1] == 92 {
+// 							continue
+// 						}
+// 						inQuote = !inQuote
+// 						continue
+// 					}
+// 					if inQuote {
+// 						continue
+// 					}else{
+// 						if curr == 91 || curr == 123{
+// 							if found {
+// 								offset = i
+// 								braceType = curr
+// 								currentPath = path[k + 1]
+// 								break
+// 							}
+// 							level++
+// 							continue
+// 						}
+// 						if curr == 93 || curr == 125 {
+// 							if level < 0 {
+// 								callback(nil, INDEX_OUT_OF_RANGE_ERROR())
+// 								return INDEX_OUT_OF_RANGE_ERROR()
+// 							}
+// 							level--
+// 							continue
+// 						}
+// 						if !found {
+// 							if level == 1 {
+// 								if curr == 44 {
+// 									indexCount++
+// 									if indexCount == arrayIndex {
+// 										found = true
+// 										if k == len(path) - 1{
+// 											offset = i + 1
+// 											break
+// 										}
+// 										continue
+// 									}
+// 									continue
+// 								}
+// 								continue
+// 							}
+// 							continue
+// 						}
+// 						continue
+// 					}
+// 				}
+// 				if !found {
+// 					callback(nil, INDEX_OUT_OF_RANGE_ERROR())
+// 					return INDEX_OUT_OF_RANGE_ERROR()
+// 				}
+// 				isJsonChar[58] = true
+// 			}
+// 		}else{
+// 			inQuote := false
+// 			found := false
+// 			start := 0
+// 			end := 0
+// 			level := k
+// 			isJsonChar[44] = false
+// 			for i := offset ; i < len(json) ; i ++ {
+// 				curr := json[i]
+// 				if !isJsonChar[curr]{
+// 					continue
+// 				}
+// 				if curr == 34 {
+// 					inQuote = !inQuote
+// 					if found {
+// 						continue
+// 					}
+// 					if level != k + 1 {
+// 						continue
+// 					}
+// 					if inQuote {
+// 						start = i + 1
+// 						continue
+// 					}
+// 					end = i
+// 					continue
+// 				}
+// 				if inQuote {
+// 					continue
+// 				}else{
+// 					if curr == 91 {
+// 						if found {
+// 							braceType = curr
+// 							currentPath = path[k + 1]
+// 							break
+// 						}
+// 						level++
+// 						continue
+// 					}
+// 					if curr == 123 {
+// 						if found {
+// 							k++
+// 							level++
+// 							currentPath = path[k]
+// 							found = false
+// 							continue
+// 						}
+// 						level++
+// 						continue
+// 					}
+// 					if curr == 93 || curr == 125 {
+// 						level--
+// 						continue
+// 					}
+// 					if level == k + 1 {
+// 						if curr == 58 {
+// 							if len(currentPath) == end - start {
+// 								same := true
+// 								for j := 0 ; j < len(currentPath) ; j ++ {
+// 									if currentPath[j] != json[start + j] {
+// 										same = false
+// 										break
+// 									}
+// 								}
+// 								if same {
+// 									offset = i + 1
+// 									found = true
+// 									if k == len(path) - 1{
+// 										isJsonChar[44] = true
+// 										break
+// 									}else{
+// 										continue
+// 									}
+// 								}
+// 							}
+// 							isJsonChar[44] = true
+// 							isJsonChar[58] = false
+// 							for j := i ;  j < len(json) ; j ++ {
+// 								curr := json[j]
+// 								if !isJsonChar[curr]{
+// 									continue
+// 								}
+// 								if curr == 34 {
+// 									if json[j - 1] == 92 {
+// 										continue
+// 									}
+// 									inQuote = !inQuote
+// 									continue
+// 								}
+// 								if inQuote {
+// 									continue
+// 								}else{
+// 									if curr == 91 || curr == 123 {
+// 										level++
+// 										continue
+// 									}
+// 									if curr == 93 || curr == 125 {
+// 										level--
+// 										continue
+// 									}
+// 									if curr == 44 {
+// 										if level == k + 1 {
+// 											i = j
+// 											break
+// 										}
+// 										continue
+// 									}
+// 									continue
+// 								}
+
+// 							}
+// 							isJsonChar[44] = false
+// 							isJsonChar[58] = true
+// 							continue
+// 						}
+// 						continue
+// 					}
+// 				}
+// 			}
+// 			if !found {
+// 				callback(nil, KEY_NOT_FOUND_ERROR())
+// 				return KEY_NOT_FOUND_ERROR()
+// 			}
+// 			isJsonChar[44] = true
+// 		}
+// 	}
+// 	if offset == 0 {
+// 		callback(nil, BAD_JSON_ERROR(0))
+// 		return BAD_JSON_ERROR(0)
+// 	}
+// 	for space(json[offset]) {
+// 		if offset > len(json) - 1{
+// 			callback(nil, BAD_JSON_ERROR(offset))
+// 			return BAD_JSON_ERROR(offset)
+// 		}
+// 		offset++
+// 	}
+// 	if json[offset] == 91 {
+// 		start := offset + 1
+// 		level := 0
+// 		inQuote := false
+// 		isJsonChar[58] = false
+// 		for i := offset ; i < len(json) ; i ++ {
+// 			curr := json[i]
+// 			if !isJsonChar[curr]{
+// 				continue
+// 			}
+// 			if curr == 34 {
+// 				if json[i - 1] == 92 {
+// 					continue
+// 				}
+// 				inQuote = !inQuote
+// 				continue
+// 			}
+// 			if inQuote {
+// 				continue
+// 			}else{
+// 				if curr == 91 || curr == 123{
+// 					level++
+// 					continue
+// 				}
+// 				if curr == 93 || curr == 125 {
+// 					if level < 2 {
+// 						// trim spaces from beginning 
+// 						for space(json[start]) {
+// 							if start > len(json) - 1{
+// 								callback(nil, BAD_JSON_ERROR(start))
+// 								return BAD_JSON_ERROR(start)
+// 							}
+// 							start++
+// 						}
+// 						if json[start] != 91 && json[start] != 123 {
+// 							// if a quoted value then strip quotes
+// 							if json[start] == 34 {
+// 								end := 0
+// 								for j := start + 1;  j < len(json) ; j ++ {
+// 									curr := json[j]
+// 									// find ending quote
+// 									// quote
+// 									if curr == 34 {
+// 										// just interested with json chars. Other wise continue.
+// 										if json[j - 1] == 92 {
+// 											continue
+// 										}
+// 										end = j
+// 										break
+// 									}
+// 								}
+// 								callback(json[start + 1:end], nil)
+// 								return nil
+// 							}else{							
+// 								end := 0
+// 								for j := start + 1;  j < len(json) ; j ++ {
+// 									curr := json[j]
+// 									// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
+// 									if space(curr) || curr == 44 || curr == 93 || curr == 125 {
+// 										if offset == j {
+// 											callback(nil, BAD_JSON_ERROR(j))
+// 											return BAD_JSON_ERROR(j)
+// 										}
+// 										end = j
+// 										break
+// 									}
+// 								}
+// 								callback(json[start:end], nil)
+// 								return nil
+// 							}
+// 						}
+// 						end := 0
+// 						for j := i - 1;  j > start ; j -- {
+// 							curr := json[j]
+// 							// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
+// 							if curr == 93 || curr == 125 {
+// 								if offset == j {
+// 									callback(nil, BAD_JSON_ERROR(j))
+// 									return BAD_JSON_ERROR(j)
+// 								}
+// 								end = j + 1
+// 								break
+// 							}
+// 						}
+// 						callback(json[start:end], nil)
+// 						return nil
+// 					}
+// 					level--
+// 					continue
+// 				}
+// 				if level == 1 {
+// 					if curr == 44 {
+// 						// trim spaces from beginning 
+// 						for space(json[start]) {
+// 							if start > len(json) - 1{
+// 								callback(nil, BAD_JSON_ERROR(start))
+// 								return BAD_JSON_ERROR(start)
+// 							}
+// 							start++
+// 						}
+// 						if json[start] != 91 && json[start] != 123 {
+// 							// if a quoted value then strip quotes
+// 							if json[start] == 34 {
+// 								end := 0
+// 								for j := start + 1;  j < len(json) ; j ++ {
+// 									curr := json[j]
+// 									// find ending quote
+// 									// quote
+// 									if curr == 34 {
+// 										// just interested with json chars. Other wise continue.
+// 										if json[j - 1] == 92 {
+// 											continue
+// 										}
+// 										end = j
+// 										break
+// 									}
+// 								}
+// 								if !callback(json[start + 1:end], nil) {
+// 									return nil
+// 								}
+// 								start = i + 1
+// 								continue
+// 							}else{							
+// 								end := 0
+// 								for j := start + 1;  j < len(json) ; j ++ {
+// 									curr := json[j]
+// 									// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
+// 									if space(curr) || curr == 44 || curr == 93 || curr == 125 {
+// 										if offset == j {
+// 											if !callback(nil, BAD_JSON_ERROR(j)) {
+// 												return nil
+// 											}
+// 										}
+// 										end = j
+// 										break
+// 									}
+// 								}
+// 								if !callback(json[start:end], nil) {
+// 									return nil
+// 								}
+// 								start = i + 1
+// 								continue
+// 							}
+// 						}
+// 						end := 0
+// 						for j := i - 1;  j > start ; j -- {
+// 							curr := json[j]
+// 							// if curreny byte is one of close braces this means end of the value is i
+// 							if curr == 93 || curr == 125 {
+// 								if offset == j {
+// 									if !callback(nil, BAD_JSON_ERROR(j)) {
+// 										return nil
+// 									}
+// 								}
+// 								end = j + 1
+// 								break
+// 							}
+// 						}
+// 						if !callback(json[start:end], nil) {
+// 							return nil
+// 						}
+// 						start = i + 1
+// 						continue
+// 					}
+// 					continue
+// 				}
+// 				continue
+// 			}
+// 		}
+// 		isJsonChar[58] = true
+// 	}else{
+// 		callback(nil, OBJECT_EXPECTED_ERROR())
+// 		return OBJECT_EXPECTED_ERROR()
+// 	}
+// 	callback(nil, BAD_JSON_ERROR(-1))
+// 	return BAD_JSON_ERROR(-1)
+// }
 
 func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, path ... string) error{
 	if len(json) == 0 {
@@ -690,11 +781,8 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 						continue
 					}
 					if curr == 93 || curr == 125 {
+						level--
 						if level < 1 {
-							callback(nil, nil, INDEX_OUT_OF_RANGE_ERROR())
-							return BAD_JSON_ERROR(valueStart)
-						}
-						if level < 2 {
 							// trim spaces from beginning 
 							for space(json[valueStart]) {
 								if valueStart > len(json) - 1{
@@ -724,13 +812,13 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 								end := 0
 								for j := valueStart + 1;  j < len(json) ; j ++ {
 									curr := json[j]
-									if curr == 92 {
-										continue
-									}
 									// find ending quote
 									// quote
 									if curr == 34 {
 										// just interested with json chars. Other wise continue.
+										if json[j - 1] == 92 {
+											continue
+										}
 										end = j
 										break
 									}
@@ -754,7 +842,6 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 								return nil
 							}
 						}
-						level--
 						continue
 					}
 					if level == 1 {
@@ -792,13 +879,13 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 								end := 0
 								for j := valueStart + 1;  j < len(json) ; j ++ {
 									curr := json[j]
-									if curr == 92 {
-										continue
-									}
 									// find ending quote
 									// quote
 									if curr == 34 {
 										// just interested with json chars. Other wise continue.
+										if json[j - 1] == 92 {
+											continue
+										}
 										end = j
 										break
 									}
@@ -878,17 +965,10 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 						continue
 					}
 					if curr == 34 {
-						for k := i - 1 ; k > 0 ; k -- {
-							if json[k] != 92 {
-								if (i - 1 - k) % 2 == 0 {
-									inQuote = !inQuote
-									break
-								}else{
-									break
-								}
-							}
+						if json[i - 1] == 92 {
 							continue
 						}
+						inQuote = !inQuote
 						continue
 					}
 					if inQuote {
@@ -1023,17 +1103,10 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 									continue
 								}
 								if curr == 34 {
-									for k := i - 1 ; k > 0 ; k -- {
-										if json[k] != 92 {
-											if (i - 1 - k) % 2 == 0 {
-												inQuote = !inQuote
-												break
-											}else{
-												break
-											}
-										}
+									if json[j - 1] == 92 {
 										continue
 									}
+									inQuote = !inQuote
 									continue
 								}
 								if inQuote {
@@ -1141,13 +1214,13 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 						if json[valueStart] == 34 {
 							for j := valueStart + 1;  j < len(json) ; j ++ {
 								curr := json[j]
-								if curr == 92 {
-									continue
-								}
 								// find ending quote
 								// quote
 								if curr == 34 {
 									// just interested with json chars. Other wise continue.
+									if json[j - 1] == 92 {
+										continue
+									}
 									callback(key, json[valueStart + 1:j], nil)
 									return nil
 								}
@@ -1205,13 +1278,13 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte, error) bool, pat
 							end := 0
 							for j := valueStart + 1;  j < len(json) ; j ++ {
 								curr := json[j]
-								if curr == 92 {
-									continue
-								}
 								// find ending quote
 								// quote
 								if curr == 34 {
 									// just interested with json chars. Other wise continue.
+									if json[j - 1] == 92 {
+										continue
+									}
 									end = j
 									break
 								}
