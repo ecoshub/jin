@@ -1,5 +1,6 @@
 # jint
 fast JSON interperter lib for golang
+## A COMPREHENSIVE AND FAST WAY TO DEAL WITH JSON
 ## UNDER DEVELOPMENT
 + (+) Basic get & set fucntions
 + (+) Add & remove functions
