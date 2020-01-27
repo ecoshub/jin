@@ -7,7 +7,7 @@ func Delete(json []byte, path ... string) ([]byte, error) {
 	}
 	var currBrace byte
 	if lenp > 1 {
-		_, valueStart, _, err := Core(json, false, path[:lenp - 1]...)
+		_, valueStart, _, err := core(json, false, path[:lenp - 1]...)
 		if err != nil {
 			return json, err
 		}
@@ -27,7 +27,7 @@ func Delete(json []byte, path ... string) ([]byte, error) {
 	var end int
 	var err error
 	if currBrace == 91 {
-		_, start, end, err = Core(json, false, path...)
+		_, start, end, err = core(json, false, path...)
 		if err != nil {
 			return json, err
 		}
@@ -37,7 +37,7 @@ func Delete(json []byte, path ... string) ([]byte, error) {
 		}
 	}
 	if currBrace == 123 {
-		start, _, end, err = Core(json, false, path...)
+		start, _, end, err = core(json, false, path...)
 		if err != nil {
 			return json, err
 		}

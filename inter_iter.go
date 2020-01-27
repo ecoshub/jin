@@ -14,7 +14,7 @@ func IterateArray(json []byte, callback func([]byte) bool, path ... string) erro
 			}
 		}
 	}else{
-		_, start, _ , err = Core(json, true, path...)
+		_, start, _ , err = core(json, true, path...)
 		if err != nil {
 			return err
 		}
@@ -135,7 +135,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ... s
 			}
 		}
 	}else{
-		_, start, _ , err = Core(json, true, path...)
+		_, start, _ , err = core(json, true, path...)
 		if err != nil {
 			return err
 		}

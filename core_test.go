@@ -61,7 +61,7 @@ func TestGetInit(t *testing.T){
 
 func TestGet(t *testing.T){
 	for i, _ := range paths {
-		_, start, end, err := Core(json, false, paths[i]...)
+		_, start, end, err := core(json, false, paths[i]...)
 		if err != nil {
 			t.Errorf("Total Fail(Test Get), path:%v err:%v\n", paths[i], err)
 			return
@@ -117,7 +117,7 @@ func TestSetKeyInit(t *testing.T){
 
 func TestSetKey(t *testing.T){
 	for i, _ := range paths {
-		keyStart, _, _, err1 := Core(json, true, paths[i]...)
+		keyStart, _, _, err1 := core(json, true, paths[i]...)
 		if err1 != nil {
 			t.Errorf("Total Fail(Core), path:%v\n", paths[i])
 			return	
@@ -137,7 +137,7 @@ func TestSetKey(t *testing.T){
 			newPath := make([]string, len(paths[i]))
 			copy(newPath, paths[i][:len(paths[i]) - 1])
 			newPath[len(newPath) - 1] = "test-key"
-			_, start, end, err := Core(newJson, false, newPath...)
+			_, start, end, err := core(newJson, false, newPath...)
 			if err != nil {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
@@ -402,7 +402,7 @@ func TestGetInitFlatten(t *testing.T){
 
 func TestGetFlatten(t *testing.T){
 	for i, _ := range paths {
-		_, start, end, err := Core(json, false, paths[i]...)
+		_, start, end, err := core(json, false, paths[i]...)
 		if err != nil {
 			t.Errorf("Total Fail(Test Get), path:%v err:%v\n", paths[i], err)
 			return
@@ -459,7 +459,7 @@ func TestSetKeyInitFlatten(t *testing.T){
 
 func TestSetKeyFlatten(t *testing.T){
 	for i, _ := range paths {
-		keyStart, _, _, err1 := Core(json, true, paths[i]...)
+		keyStart, _, _, err1 := core(json, true, paths[i]...)
 		if err1 != nil {
 			t.Errorf("Total Fail(Core), path:%v\n", paths[i])
 			return	
@@ -479,7 +479,7 @@ func TestSetKeyFlatten(t *testing.T){
 			newPath := make([]string, len(paths[i]))
 			copy(newPath, paths[i][:len(paths[i]) - 1])
 			newPath[len(newPath) - 1] = "test-key"
-			_, start, end, err := Core(newJson, false, newPath...)
+			_, start, end, err := core(newJson, false, newPath...)
 			if err != nil {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
