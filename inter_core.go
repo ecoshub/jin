@@ -84,9 +84,9 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 					}
 				}
 			} else {
-				// Brace level every brace increments the level
+				// every brace increments the level
 				level := 0
-				// main in quote flag for determine what is in quote and what is not
+				// main in.quote flag for determine what is in quote and what is not
 				inQuote := false
 				// index found flag.
 				found := false
@@ -103,7 +103,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 					}
 					// If current byte is quote
 					if curr == 34 {
-						// escape char ccontrol algorithm
+						// escape char control algorithm
 						for n := i - 1; n > -1; n-- {
 							// escape sequance search
 							if json[n] != 92 {
@@ -171,9 +171,9 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 											offset = i + 1
 											break
 										} else {
+											// keep going for find next brace Type.
 											continue
 										}
-										// keep going for find next brace Type.
 									}
 									continue
 								}
@@ -213,20 +213,24 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 				}
 				// If current byte is quote
 				if curr == 34 {
-					// escape char ccontrol algorithm
-					for n := i - 1; n > -1; n-- {
-						// escape sequance search
-						if json[n] != 92 {
-							if (i-1-n)%2 == 0 {
-								// change inQuote flag to opposite.
-								inQuote = !inQuote
-								break
-							} else {
-								goto cont
+					if inQuote {
+						for n := i - 1; n > -1; n-- {
+							// escape sequance search
+							if json[n] != 92 {
+								if (i-1-n)%2 == 0 {
+									// change inQuote flag to opposite.
+									inQuote = !inQuote
+									break
+								} else {
+									goto cont
+								}
 							}
+							continue
 						}
-						continue
+					}else{
+						inQuote = !inQuote
 					}
+					// escape char ccontrol algorithm
 					// If key found no need to determine start and end points.
 					if found {
 						continue
@@ -318,7 +322,6 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 							isJsonChar[44] = true
 							// exclude column character to json chars for jump function
 							isJsonChar[58] = false
-							// exclude space character to json chars for jump function
 							// jump function start :{} -> ,
 							// it is fast travel from column to comma
 							// first we need keys
@@ -333,7 +336,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 								}
 								// Quote
 								if curr == 34 {
-									// check before char it might be escape char.
+									// check before quote char it might be escape char.
 									// escape char ccontrol algorithm
 									for n := j - 1; n > -1; n-- {
 										if json[n] != 92 {
@@ -363,8 +366,8 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 									}
 									// comma
 									if curr == 44 {
-										// level same with path
 										if level == k+1 {
+										// level same with path
 											// jump i to j
 											i = j
 											break
@@ -435,7 +438,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 						if (i-1-n)%2 == 0 {
 							inQuote = !inQuote
 							break
-						} else {
+						}else{
 							break
 						}
 					}
