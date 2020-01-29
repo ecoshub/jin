@@ -60,10 +60,13 @@ func TestGetInit(t *testing.T) {
 }
 
 func TestParseGet(t *testing.T) {
-	pars := Parse(json)
+	pars, err := Parse(json)
+	if err!= nil {
+		t.Errorf("Total fail (parse get) err:%v", err)
+	}
 	for i, _ := range paths {
-		value, done := pars.Get(paths[i]...)
-		if !done {
+		value, err := pars.Get(paths[i]...)
+		if err != nil {
 			t.Errorf("Total Fail(Test Parse get), path:%v\n", paths[i])
 		}
 		if len(value) > 1 {
