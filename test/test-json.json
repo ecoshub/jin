@@ -1,11 +1,148 @@
-{
-		"st": 1,
-		"sid": 486,
-		"tt": "active",
-		"gr": 0,
-		"uuid": "de305d54-75b4-431b-adb2-eb6b9e546014",
-		"ip": "127.0.0.1",
-		"ua": "user_agent",
-		"tz": -6,
-		"v": 1
-}
+[
+	{
+		"event": "save",
+		"mac": "bc:ae:c5:13:84:f9",
+		"username": "eco",
+		"content": "all",
+		"bool": false,
+		"testcase": {
+			"hi": "guys",
+			"activeYears": [
+				2005,
+				2020,
+				[
+					"emq",
+					"john"
+				]
+			]
+		},
+		"2": "test-name",
+		"main": {
+			"event": "cmsg",
+			"mac": "bc:ae:c5:13:84:f9",
+			"msg": "\"hi\" everyone!",
+			"colors": [
+				"red",
+				"blue",
+				"green"
+			],
+			"done": false,
+			"id": {
+				"username": [
+					"eco",
+					"ecomain"
+				],
+				"num": 9129234,
+				"id": {
+					"username": [
+						"deadlock",
+						"test-name"
+					]
+				}
+			},
+			"eyes": [
+				"green",
+				"blue"
+			]
+		},
+		"id": {
+			"test-number": 9129234,
+			"numbers": [
+				31,
+				10,
+				20,
+				[
+					1990,
+					1991,
+					1992
+				],
+				22,
+				32
+			],
+			"active": false
+		},
+		"test-json": {
+			"test-number": 9129234,
+			"test-array": [
+				11,
+				[
+					10,
+					11,
+					12,
+					13
+				],
+				32
+			]
+		},
+		"UID": {
+			"username": [
+				"deadlock"
+			],
+			"numbers": [
+				{
+					"int": "31"
+				},
+				{
+					"float": "3.14"
+				},
+				{
+					"double": "3.0"
+				},
+				{
+					"bool": false
+				}
+			]
+		},
+		"eyes": [
+			"green",
+			"blue"
+		],
+		"bools": [
+			true,
+			false,
+			true
+		]
+	},
+	{
+		"event": "first",
+		"mac": "00:00:ba:ba:ba:ba",
+		"name": "emq"
+	},
+	{
+		"event": "second",
+		"mac": "00:00:ba:ba:ba:ba",
+		"bool": false
+	},
+	{
+		"event": "third",
+		"mac": "00:00:ba:ba:ba:ba",
+		"username": {
+			"name": "emq",
+			"surname": "test-name"
+		}
+	},
+	[
+		[
+			1,
+			[
+				31,
+				62,
+				69
+			],
+			5,
+			[
+				12,
+				13,
+				14,
+				15
+			],
+			[]
+		],
+		"test-string",
+		[
+			40,
+			41,
+			42
+		]
+	]
+]
