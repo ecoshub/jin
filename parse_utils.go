@@ -7,7 +7,7 @@ type node struct {
 	value       []byte
 	start       int
 	end         int
-	valueStored bool
+	hasValue    bool
 	up          *node
 	down        []*node
 }
@@ -22,11 +22,14 @@ func CreateNode(up *node) *node {
 	return &Node
 }
 
-func Parse(json []byte) *parse {
+func Parse(json []byte) (*parse, error) {
 	core := CreateNode(nil)
-	pCore(json, core)
+	err := pCore(json, core)
+	if err != nil {
+		return nil, err
+	}
 	pars := parse{core: core, json: json}
-	return &pars
+	return &pars, nil
 }
 
 func (n *node) link(label string) *node {
@@ -52,11 +55,11 @@ func (n *node) attach(other *node) {
 	n.down = append(n.down, other)
 }
 
-func (n *node) walk(path []string) *node {
+func (n *node) walk(path []string) (*node, error) {
 	lenp := len(path)
 	curr := n
 	if len(path) == 0 {
-		return curr
+		return curr, nil
 	}
 	for i := 0; i < lenp; i++ {
 		exists := false
@@ -67,10 +70,10 @@ func (n *node) walk(path []string) *node {
 			}
 		}
 		if !exists {
-			return nil
+			return nil, KEY_NOT_FOUND_ERROR()
 		}
 	}
-	return curr
+	return curr, nil
 }
 
 func trim(json []byte) []byte {
@@ -101,6 +104,56 @@ func trim(json []byte) []byte {
 	}
 	return json[start : end+1]
 }
+
+func (n * node) getIndex() int {
+	for i, v := range n.up.down {
+		if v.label == n.label {
+			return i
+		}
+	}
+	return -1
+}
+
+func (n * node) setOffsetUp(off int){
+	index := n.getIndex() + 1
+	n = n.up
+	n.end += off
+	start := false
+	for i, d := range n.down{
+		if i == index {
+			start = true
+		}
+		if start {
+			d.start += off
+			d.end += off
+			d.hasValue = false
+			if len(d.down) > 0 {
+				d.setOffset(0, off)
+			}
+		}
+	}
+	if n.up != nil {
+		n.setOffsetUp(off)
+	}
+}
+
+func (n * node) setOffset(startIndex, off int){
+	start := false
+	for i, d := range n.down{
+		if i == startIndex {
+			start = true
+		}
+		if start {
+			d.start += off
+			d.end += off
+			d.hasValue = false
+			if len(d.down) > 0 {
+				d.setOffset(0, off)
+			}
+		}
+	}
+}
+
 
 func (p *parse) Three(withValues bool) {
 	p.core.recursivePrint(p.json, 0, withValues)
