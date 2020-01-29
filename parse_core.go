@@ -10,7 +10,7 @@ type node struct {
 	value    []byte
 	start    int
 	end      int
-	hasValue bool
+	valueStored bool
 	up       *node
 	down     []*node
 }
@@ -27,162 +27,44 @@ func CreateNode(up *node) *node {
 
 func Parse(json []byte) *parse {
 	core := CreateNode(nil)
-	core.label = "0"
 	mapping(json, core)
 	pars := parse{core: core, json: json}
-	// pars.Three(true)
-	return &pars
-}
-
-func ParseString(json string) *parse {
-	arr := []byte(json)
-	core := CreateNode(nil)
-	core.label = "*"
-	mapping(arr, core)
-	pars := parse{core: core, json: arr}
 	return &pars
 }
 
 func (n *node) getVal(json []byte) []byte {
-	if n.hasValue {
+	if n.valueStored {
 		return n.value
 	}
-	start := n.start
-	for i := start; i < n.end; i++ {
-		if space(json[i]) {
-			start++
-		} else {
-			break
-		}
+	if n.start == n.end {
+		return []byte{}
 	}
-	if json[start] == 34 {
-		start++
-	}
-	end := n.end
-	for i := end - 1; i > start; i-- {
-		if space(json[i]) {
-			end--
-		} else {
-			break
-		}
-	}
-	if json[end-1] == 34 {
-		end--
-	}
-	n.value = json[start:end]
-	n.hasValue = true
+	n.value = trim(json[n.start:n.end])
+	n.valueStored = true
 	return n.value
 }
 
-func (n *node) setVal(val []byte) {
-	n.value = val
-	n.hasValue = true
-}
-
-func (n *node) getIndex() int {
-	for i, v := range n.up.down {
-		if v.label == n.label {
-			return i
-		}
-	}
-	return -1
-}
-
-func (n *node) add(label string) *node {
+func (n *node) link(label string) *node {
 	if n.down == nil {
 		new := CreateNode(n)
 		new.label = label
 		n.attach(new)
 		return new
-	} else {
-		for _, d := range n.down {
-			if d.label == label {
-				return d
-			}
-		}
-		new := CreateNode(n)
-		new.label = label
-		n.attach(new)
-		return new
 	}
-	fmt.Println("WARNING add()")
-	return nil
+	for _, d := range n.down {
+		if d.label == label {
+			return d
+		}
+	}
+	new := CreateNode(n)
+	new.label = label
+	n.attach(new)
+	return new
 }
 
 func (n *node) attach(other *node) {
 	other.up = n
 	n.down = append(n.down, other)
-}
-
-func (n *node) deAttach(label string) {
-	newDownList := make([]*node, len(n.down)-1)
-	count := 0
-	for _, v := range n.down {
-		if v.label != label {
-			newDownList[count] = v
-			count++
-		}
-	}
-	n.down = newDownList
-}
-
-func (n *node) insert(other *node, index int) {
-	lend := len(n.down)
-	newDown := make([]*node, lend+1)
-	count := 0
-	for i := 0; i < lend; i++ {
-		if i == index {
-			newDown[count] = other
-			count++
-			newDown[count] = n.down[i]
-			count++
-		} else {
-			newDown[count] = n.down[i]
-			count++
-		}
-	}
-	n.down = newDown
-	other.up = n
-}
-
-func (n *node) setOffset(startIndex, off int) {
-	start := false
-	for i, d := range n.down {
-		if i == startIndex {
-			start = true
-		}
-		if start {
-			d.start += off
-			d.end += off
-			d.hasValue = false
-			if len(d.down) > 0 {
-				d.setOffset(0, off)
-			}
-		}
-	}
-}
-
-func (n *node) setOffsetUp(off int) {
-	index := n.getIndex() + 1
-	n = n.up
-	n.end += off
-	start := false
-	for i, d := range n.down {
-		if i == index {
-			start = true
-		}
-		if start {
-			d.start += off
-			d.end += off
-			d.hasValue = false
-			if len(d.down) > 0 {
-				d.setOffset(0, off)
-			}
-		}
-	}
-	if n.up != nil {
-		n.setOffsetUp(off)
-	}
 }
 
 func (n *node) walk(path []string) *node {
@@ -214,167 +96,7 @@ func (p *parse) Get(path ...string) ([]byte, bool) {
 	if curr == nil {
 		return []byte{}, false
 	}
-	val := curr.getVal(p.json)
-	if val[0] == byte('"') {
-		val = val[1 : len(val)-1]
-	}
-	return val, true
-}
-
-func (p *parse) GetString(path ...string) (string, bool) {
-	val, done := p.Get(path...)
-	return string(val), done
-}
-
-func (p *parse) GetInt(path ...string) (int, bool) {
-	val, done := p.GetString(path...)
-	num, err := strconv.Atoi(val)
-	if err != nil {
-		return -1, false
-	}
-	return num, done
-}
-
-func (p *parse) GetBool(path ...string) (bool, bool) {
-	val, done := p.GetString(path...)
-	if !done {
-		return false, false
-	}
-	if val == "true" {
-		return true, true
-	}
-	if val == "false" {
-		return false, true
-	}
-	return false, false
-}
-
-func (p *parse) GetFloat(path ...string) (float64, bool) {
-	val, done := p.GetString(path...)
-	if !done {
-		return 0.0, false
-	}
-	num, err := strconv.ParseFloat(val, 64)
-	if err != nil {
-		return -1, false
-	}
-	return num, done
-}
-
-func (p *parse) Set(newVal []byte, path ...string) bool {
-	if len(path) == 0 {
-		return false
-	}
-	curr := p.core.down[0].walk(path)
-	if curr == nil {
-		return false
-	}
-	val := curr.getVal(p.json)
-	oldType := 0 //value
-	newType := 0 // value
-	if val[0] == byte('{') || val[0] == byte('[') {
-		oldType = 1 // json
-	}
-	if newVal[0] == byte('{') || newVal[0] == byte('[') {
-		newType = 1 // json
-	}
-	newJson := make([]byte, 0, len(p.json)-len(val)+len(newVal))
-	newJson = append(newJson, p.json[:curr.start]...)
-	newJson = append(newJson, newVal...)
-	newJson = append(newJson, p.json[curr.start+len(val):]...)
-	p.json = newJson
-	newVal = Flatten(newVal)
-	delt := 0
-	switch oldType {
-	case 0:
-		switch newType {
-		case 0:
-			// value to value
-			curr.setVal(newVal)
-			delt = len(newVal) - len(val)
-		case 1:
-			// value to json/array
-			newCore := CreateNode(nil)
-			mapping(newVal, newCore)
-			if newCore.down[0] != nil {
-				newCore = newCore.down[0]
-			}
-			newCore.label = curr.label
-			newCore.up = curr.up
-
-			index := curr.getIndex()
-			curr.up.down[index] = newCore
-			delt = len(newVal) - len(val)
-			newCore.start += curr.start
-			newCore.end += curr.start
-			for _, d := range newCore.down {
-				d.start += curr.start
-				d.end += curr.start
-				d.hasValue = false
-			}
-			newCore.up.setOffset(index+1, delt)
-		}
-	case 1:
-		switch newType {
-		case 0:
-			// json/array to value
-			off := curr.end - curr.start
-			delt = len(newVal) - off
-			curr.down = []*node{}
-			curr.end = curr.start + len(newVal)
-			curr.hasValue = false
-		case 1:
-			// json/array to json/array
-			delt = len(newVal) - len(val)
-			index := curr.getIndex()
-			newCore := CreateNode(nil)
-			mapping(newVal, newCore)
-			if newCore.down[0] != nil {
-				newCore = newCore.down[0]
-			}
-			newCore.label = curr.label
-			curr.up.down[index] = newCore
-			newCore.up = curr.up
-			newCore.up.setOffset(index, curr.start)
-
-		}
-	}
-	curr.setOffsetUp(delt)
-	return true
-}
-
-func (p *parse) SetString(newVal string, path ...string) bool {
-	arr := []byte(newVal)
-	return p.Set(arr, path...)
-}
-
-func (p *parse) Three(withValues bool) {
-	p.core.recursivePrint(p.json, 0, withValues)
-}
-
-func (n *node) recursivePrint(json []byte, depth int, withValues bool) {
-	for _, d := range n.down {
-		str := ""
-		for i := 0; i < depth-1; i++ {
-			str += fmt.Sprintf("\t")
-		}
-		if withValues {
-			if depth != 0 {
-				fmt.Printf("\t%v %-6v : %v\n", str+string(9492)+" ", d.label, string(d.getVal(json)))
-			} else {
-				fmt.Printf("%v%v %-6v : %v\n", str, string(9472), d.label, string(d.getVal(json)))
-			}
-		} else {
-			if depth != 0 {
-				fmt.Printf("\t%v %v\n", str+string(9492)+" ", d.label)
-			} else {
-				fmt.Printf("%v%v %v\n", str, string(9472), d.label)
-			}
-		}
-		if len(d.down) > 0 {
-			d.recursivePrint(json, depth+1, withValues)
-		}
-	}
+	return curr.getVal(p.json), true
 }
 
 func mapping(json []byte, core *node) {
@@ -417,18 +139,23 @@ func mapping(json []byte, core *node) {
 			continue
 		}
 		if curr == 34 {
-			for n := i - 1; n > -1; n-- {
-				if json[n] != 92 {
-					if (i-1-n)%2 == 0 {
-						inQuote = !inQuote
-						break
-					} else {
-						break
+			if inQuote {
+				for n := i - 1; n > -1; n-- {
+					if json[n] != 92 {
+						if (i-1-n)%2 == 0 {
+							inQuote = !inQuote
+							break
+						} else {
+							break
+						}
 					}
+					continue
 				}
 				continue
+			}else{
+				inQuote = !inQuote
+				continue
 			}
-			continue
 		}
 		if inQuote {
 			continue
@@ -438,7 +165,7 @@ func mapping(json []byte, core *node) {
 				switch last {
 				// { , -> :
 				case 123, 44:
-					key = trimSpaceString(json[lastIndex:i])
+					key = string(trim(json[lastIndex:i]))
 					break
 				}
 				break
@@ -447,12 +174,12 @@ func mapping(json []byte, core *node) {
 				// [ : , -> ,
 				// middle value area
 				case 58:
-					core = core.add(key)
+					core = core.link(key)
 					core.start = lastIndex
 					core.end = i
 					core = core.up
 				case 91, 44:
-					core = core.add(strconv.Itoa(indexLevel[len(indexLevel)-1]))
+					core = core.link(strconv.Itoa(indexLevel[len(indexLevel)-1]))
 					core.start = lastIndex
 					core.end = i
 					core = core.up
@@ -464,7 +191,7 @@ func mapping(json []byte, core *node) {
 				// last value area
 				switch last {
 				case 44, 91:
-					core = core.add(strconv.Itoa(indexLevel[len(indexLevel)-1]))
+					core = core.link(strconv.Itoa(indexLevel[len(indexLevel)-1]))
 					core.start = lastIndex
 					core.end = i
 					core = core.up
@@ -473,7 +200,7 @@ func mapping(json []byte, core *node) {
 					return
 				}
 				core = core.up
-				core = core.add(path[len(path)-1])
+				core = core.link(path[len(path)-1])
 				core.start = brace[len(brace)-1]
 				core.end = i + 1
 				core = core.up
@@ -488,7 +215,7 @@ func mapping(json []byte, core *node) {
 				// last value area
 				switch last {
 				case 58:
-					core = core.add(key)
+					core = core.link(key)
 					core.start = lastIndex
 					core.end = i
 					core = core.up
@@ -497,7 +224,7 @@ func mapping(json []byte, core *node) {
 					return
 				}
 				core = core.up
-				core = core.add(path[len(path)-1])
+				core = core.link(path[len(path)-1])
 				core.start = brace[len(brace)-1]
 				core.end = i + 1
 				core = core.up
@@ -511,10 +238,10 @@ func mapping(json []byte, core *node) {
 				switch last {
 				// : -> [
 				case 58:
-					core = core.add(key)
+					core = core.link(key)
 					path = append(path, key)
 				default:
-					core = core.add(strconv.Itoa(indexLevel[len(indexLevel)-1]))
+					core = core.link(strconv.Itoa(indexLevel[len(indexLevel)-1]))
 					path = append(path, strconv.Itoa(indexLevel[len(indexLevel)-1]))
 				}
 				indexLevel = append(indexLevel, 0)
@@ -525,10 +252,10 @@ func mapping(json []byte, core *node) {
 				switch last {
 				// : -> {
 				case 58:
-					core = core.add(key)
+					core = core.link(key)
 					path = append(path, key)
 				default:
-					core = core.add(strconv.Itoa(indexLevel[len(indexLevel)-1]))
+					core = core.link(strconv.Itoa(indexLevel[len(indexLevel)-1]))
 					path = append(path, strconv.Itoa(indexLevel[len(indexLevel)-1]))
 				}
 				indexLevel = append(indexLevel, 0)
@@ -543,13 +270,13 @@ func mapping(json []byte, core *node) {
 	}
 }
 
-func trimSpaceString(json []byte) string {
+func trim(json []byte) []byte {
 	if len(json) < 1 {
-		return ""
+		return nil
 	}
 	start := 0
 	for i := start; i < len(json); i++ {
-		if space(json[i]) || json[i] == 34 {
+		if space(json[i]){
 			start++
 		} else {
 			break
@@ -557,11 +284,46 @@ func trimSpaceString(json []byte) string {
 	}
 	end := len(json) - 1
 	for i := end; i > start; i-- {
-		if space(json[i]) || json[i] == 34 {
+		if space(json[i]){
 			end--
 		} else {
 			break
 		}
 	}
-	return string(json[start : end+1])
+	if json[start] == 34 {
+		start++
+	}
+	if json[end] == 34 {
+		end--
+	}
+	return json[start : end+1]
+}
+
+func (p *parse) Three(withValues bool) {
+	p.core.recursivePrint(p.json, 0, withValues)
+}
+
+func (n *node) recursivePrint(json []byte, depth int, withValues bool) {
+	for _, d := range n.down {
+		str := ""
+		for i := 0; i < depth-1; i++ {
+			str += fmt.Sprintf("\t")
+		}
+		if withValues {
+			if depth != 0 {
+				fmt.Printf("\t%v %-6v : %v\n", str+string(9492)+" ", d.label, string(d.getVal(json)))
+			} else {
+				fmt.Printf("%v%v %-6v : %v\n", str, string(9472), d.label, string(d.getVal(json)))
+			}
+		} else {
+			if depth != 0 {
+				fmt.Printf("\t%v %v\n", str+string(9492)+" ", d.label)
+			} else {
+				fmt.Printf("%v%v %v\n", str, string(9472), d.label)
+			}
+		}
+		if len(d.down) > 0 {
+			d.recursivePrint(json, depth+1, withValues)
+		}
+	}
 }
