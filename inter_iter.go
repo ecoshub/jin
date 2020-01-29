@@ -1,45 +1,45 @@
 package jint
 
-func IterateArray(json []byte, callback func([]byte) bool, path ... string) error{
+func IterateArray(json []byte, callback func([]byte) bool, path ...string) error {
 	var start int
 	var end int
 	var err error
 	if len(path) == 0 {
 		for space(json[start]) {
-			if start > len(json) - 1{
-				return BAD_JSON_ERROR(start) 
-			}else{
+			if start > len(json)-1 {
+				return BAD_JSON_ERROR(start)
+			} else {
 				start++
 				continue
 			}
 		}
-	}else{
-		_, start, _ , err = core(json, true, path...)
+	} else {
+		_, start, _, err = core(json, true, path...)
 		if err != nil {
 			return err
 		}
 	}
 	chars := []byte{34, 44, 91, 93, 123, 125}
 	isJsonChar := make([]bool, 256)
-	for _,v := range chars {
+	for _, v := range chars {
 		isJsonChar[v] = true
 	}
 	if json[start] == 91 {
 		start++
 		inQuote := false
 		level := 0
-		for i := start ; i < len(json); i ++ {
+		for i := start; i < len(json); i++ {
 			curr := json[i]
 			if !isJsonChar[curr] {
 				continue
 			}
 			if curr == 34 {
-				for k := i - 1 ; k > 0 ; k -- {
+				for k := i - 1; k > 0; k-- {
 					if json[k] != 92 {
-						if (i - 1 - k) % 2 == 0 {
+						if (i-1-k)%2 == 0 {
 							inQuote = !inQuote
 							break
-						}else{
+						} else {
 							break
 						}
 					}
@@ -49,7 +49,7 @@ func IterateArray(json []byte, callback func([]byte) bool, path ... string) erro
 			}
 			if inQuote {
 				continue
-			}else{
+			} else {
 				if curr == 91 || curr == 123 {
 					level++
 					continue
@@ -60,23 +60,23 @@ func IterateArray(json []byte, callback func([]byte) bool, path ... string) erro
 					}
 					if curr == 93 {
 						if level == 0 {
-							for j := start ; j < i ; j ++ {
+							for j := start; j < i; j++ {
 								if !space(json[j]) {
 									start = j
 									break
 								}
 							}
-							for j := i - 1 ; j > start ; j -- {
+							for j := i - 1; j > start; j-- {
 								if !space(json[j]) {
 									end = j
 									break
 								}
 							}
 							if json[start] == 34 && json[end] == 34 {
-								callback(json[start + 1:end])
+								callback(json[start+1 : end])
 								return nil
-							}else{
-								callback(json[start:end + 1])
+							} else {
+								callback(json[start : end+1])
 								return nil
 							}
 						}
@@ -87,24 +87,24 @@ func IterateArray(json []byte, callback func([]byte) bool, path ... string) erro
 				if level == 0 {
 					if curr == 44 {
 						end = i - 1
-						for j := start ; j < i ; j ++ {
+						for j := start; j < i; j++ {
 							if !space(json[j]) {
 								start = j
 								break
 							}
 						}
-						for j := end; j > start ; j -- {
+						for j := end; j > start; j-- {
 							if !space(json[j]) {
 								end = j
 								break
 							}
 						}
 						if json[start] == 34 && json[end] == 34 {
-							if !callback(json[start + 1:end]) {
+							if !callback(json[start+1 : end]) {
 								return nil
 							}
-						}else{
-							if !callback(json[start:end + 1]) {
+						} else {
+							if !callback(json[start : end+1]) {
 								return nil
 							}
 						}
@@ -115,34 +115,34 @@ func IterateArray(json []byte, callback func([]byte) bool, path ... string) erro
 			}
 		}
 		return nil
-	}else{
-		return  ARRAY_EXPECTED_ERROR()
+	} else {
+		return ARRAY_EXPECTED_ERROR()
 	}
 	return BAD_JSON_ERROR(-1)
 }
 
-func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ... string) error{
+func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...string) error {
 	var start int
 	var err error
 	var end int
 	if len(path) == 0 {
 		for space(json[start]) {
-			if start > len(json) - 1{
-				return BAD_JSON_ERROR(start) 
-			}else{
+			if start > len(json)-1 {
+				return BAD_JSON_ERROR(start)
+			} else {
 				start++
 				continue
 			}
 		}
-	}else{
-		_, start, _ , err = core(json, true, path...)
+	} else {
+		_, start, _, err = core(json, true, path...)
 		if err != nil {
 			return err
 		}
 	}
 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
 	isJsonChar := make([]bool, 256)
-	for _,v := range chars {
+	for _, v := range chars {
 		isJsonChar[v] = true
 	}
 	if json[start] == 123 {
@@ -152,18 +152,18 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ... s
 		inQuote := false
 		level := 0
 		var key []byte
-		for i := start ; i < len(json); i ++ {
+		for i := start; i < len(json); i++ {
 			curr := json[i]
 			if !isJsonChar[curr] {
 				continue
 			}
 			if curr == 34 {
-				for k := i - 1 ; k > 0 ; k -- {
+				for k := i - 1; k > 0; k-- {
 					if json[k] != 92 {
-						if (i - 1 - k) % 2 == 0 {
+						if (i-1-k)%2 == 0 {
 							inQuote = !inQuote
 							break
-						}else{
+						} else {
 							goto cont
 						}
 					}
@@ -174,12 +174,12 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ... s
 					continue
 				}
 				keyEnd = i
-				cont:
+			cont:
 				continue
 			}
 			if inQuote {
 				continue
-			}else{
+			} else {
 				if curr == 91 || curr == 123 {
 					level++
 					continue
@@ -190,23 +190,23 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ... s
 					}
 					if curr == 125 {
 						if level == 0 {
-							for j := start; j < i ; j ++ {
+							for j := start; j < i; j++ {
 								if !space(json[j]) {
 									start = j
 									break
 								}
 							}
-							for j := i - 1 ; j > start; j -- {
+							for j := i - 1; j > start; j-- {
 								if !space(json[j]) {
 									end = j
 									break
 								}
 							}
 							if json[start] == 34 && json[end] == 34 {
-								callback(key, json[start + 1:end])
+								callback(key, json[start+1:end])
 								return nil
-							}else{
-								callback(key, json[start:end + 1])
+							} else {
+								callback(key, json[start:end+1])
 								return nil
 							}
 						}
@@ -217,31 +217,31 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ... s
 				if level == 0 {
 					if curr == 44 {
 						end = i - 1
-						for j := start; j < i ; j ++ {
+						for j := start; j < i; j++ {
 							if !space(json[j]) {
 								start = j
 								break
 							}
 						}
-						for j := i - 1; j > start; j -- {
+						for j := i - 1; j > start; j-- {
 							if !space(json[j]) {
 								end = j
 								break
 							}
 						}
 						if json[start] == 34 && json[end] == 34 {
-							if !callback(key, json[start + 1:end]) {
+							if !callback(key, json[start+1:end]) {
 								return nil
 							}
-						}else{
-							if !callback(key, json[start:end + 1]) {
+						} else {
+							if !callback(key, json[start:end+1]) {
 								return nil
 							}
 						}
 						continue
 					}
 					if curr == 58 {
-						key = json[keyStart + 1:keyEnd]
+						key = json[keyStart+1 : keyEnd]
 						start = i + 1
 						continue
 					}
@@ -249,8 +249,8 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ... s
 			}
 		}
 		return nil
-	}else{
-		return  OBJECT_EXPECTED_ERROR()
+	} else {
+		return OBJECT_EXPECTED_ERROR()
 	}
 	return BAD_JSON_ERROR(-1)
 }

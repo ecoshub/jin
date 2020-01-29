@@ -6,16 +6,16 @@ type scheme struct {
 	keys []string
 }
 
-func Scheme(keys []string) *scheme{
-	return &scheme{keys:keys}
+func Scheme(keys []string) *scheme {
+	return &scheme{keys: keys}
 }
 
-func (s * scheme) MakeJson(values []string) []byte{
+func (s *scheme) MakeJson(values []string) []byte {
 	return MakeJson(s.keys, values)
 }
 
 func replace(json, newValue []byte, start, end int) []byte {
-	newJson := make([]byte, 0, len(json) - end + start + len(newValue))
+	newJson := make([]byte, 0, len(json)-end+start+len(newValue))
 	newJson = append(newJson, json[:start]...)
 	newJson = append(newJson, newValue...)
 	newJson = append(newJson, json[end:]...)
@@ -23,7 +23,7 @@ func replace(json, newValue []byte, start, end int) []byte {
 }
 
 func trimSpace(str string, start, eoe int) string {
-	for space(str[start]){
+	for space(str[start]) {
 		start++
 	}
 	end := start
@@ -33,19 +33,19 @@ func trimSpace(str string, start, eoe int) string {
 	return str[start:end]
 }
 
-func compare(json []byte, start, end int , key string) bool{
-	if len(key) != end - start {
+func compare(json []byte, start, end int, key string) bool {
+	if len(key) != end-start {
 		return false
 	}
-	for i := 0 ; i < len(key) ; i ++ {
-		if key[i] != json[start + i] {
+	for i := 0; i < len(key); i++ {
+		if key[i] != json[start+i] {
 			return false
 		}
 	}
 	return true
 }
 
-func space(curr byte) bool{
+func space(curr byte) bool {
 	// space
 	if curr == 32 {
 		return true
@@ -65,15 +65,15 @@ func space(curr byte) bool{
 	return false
 }
 
-func Flatten(json []byte) []byte{
+func Flatten(json []byte) []byte {
 	newJson := make([]byte, 0, len(json))
 	inQuote := false
-	for i := 0 ; i < len(json) ; i ++ {
+	for i := 0; i < len(json); i++ {
 		curr := json[i]
 		if curr == 92 {
 			newJson = append(newJson, curr)
-			if i + 1 < len(json){
-				newJson = append(newJson, json[i + 1])
+			if i+1 < len(json) {
+				newJson = append(newJson, json[i+1])
 			}
 			i++
 			continue
@@ -86,8 +86,8 @@ func Flatten(json []byte) []byte{
 		if inQuote {
 			newJson = append(newJson, curr)
 			continue
-		}else{
-			if !space(curr){
+		} else {
+			if !space(curr) {
 				newJson = append(newJson, curr)
 				continue
 			}
@@ -96,24 +96,24 @@ func Flatten(json []byte) []byte{
 	return newJson
 }
 
-func createTabs(n int) []byte{
+func createTabs(n int) []byte {
 	res := make([]byte, n)
-	for i,_ := range res {
+	for i, _ := range res {
 		res[i] = 9
 	}
 	return res
 }
 
-func Format(json []byte) []byte{
+func Format(json []byte) []byte {
 	json = Flatten(json)
 	newJson := make([]byte, 0, len(json))
 	inQuote := false
 	level := 0
-	for i := 0 ; i < len(json) ; i ++ {
+	for i := 0; i < len(json); i++ {
 		curr := json[i]
 		if curr == 34 {
 			newJson = append(newJson, curr)
-			if json[i - 1] == 92 {
+			if json[i-1] == 92 {
 				continue
 			}
 			inQuote = !inQuote
@@ -122,8 +122,8 @@ func Format(json []byte) []byte{
 		if inQuote {
 			newJson = append(newJson, curr)
 			continue
-		}else{
-			if !space(curr){
+		} else {
+			if !space(curr) {
 				if curr == 91 {
 					level++
 					// add curr
@@ -186,17 +186,17 @@ func Format(json []byte) []byte{
 	return newJson
 }
 
-func MakeArray(values []string) []byte{
+func MakeArray(values []string) []byte {
 	if values == nil {
 		return []byte(`[]`)
 	}
-	js := make([]byte,0,128)
+	js := make([]byte, 0, 128)
 	js = append(js, 91)
 	for _, v := range values {
 		js = append(js, []byte(formatType(v))...)
 		js = append(js, 44)
 	}
-	js = js[:len(js) -1]
+	js = js[:len(js)-1]
 	js = append(js, 93)
 	return js
 }
@@ -205,13 +205,13 @@ func MakeArrayFromInts(values []int) []byte {
 	if values == nil {
 		return []byte(`[]`)
 	}
-	js := make([]byte,0,128)
+	js := make([]byte, 0, 128)
 	js = append(js, 91)
 	for _, v := range values {
 		js = append(js, []byte(strconv.Itoa(v))...)
 		js = append(js, 44)
 	}
-	js = js[:len(js) -1]
+	js = js[:len(js)-1]
 	js = append(js, 93)
 	return js
 }
@@ -220,17 +220,17 @@ func MakeArrayFromBools(values []bool) []byte {
 	if values == nil {
 		return []byte(`[]`)
 	}
-	js := make([]byte,0,128)
+	js := make([]byte, 0, 128)
 	js = append(js, 91)
 	for _, v := range values {
 		if v == true {
 			js = append(js, []byte("true")...)
-		}else{
+		} else {
 			js = append(js, []byte("false")...)
 		}
 		js = append(js, 44)
 	}
-	js = js[:len(js) -1]
+	js = js[:len(js)-1]
 	js = append(js, 93)
 	return js
 }
@@ -239,34 +239,34 @@ func MakeArrayFromFloats(values []float64) []byte {
 	if values == nil {
 		return []byte(`[]`)
 	}
-	js := make([]byte,0,128)
+	js := make([]byte, 0, 128)
 	js = append(js, 91)
 	for _, v := range values {
 		num := strconv.FormatFloat(v, 'e', -1, 64)
 		start := 0
-		for i := 0 ; i < len(num) ; i ++ {
+		for i := 0; i < len(num); i++ {
 			if num[i] == 'e' {
 				start = i
 			}
 		}
-		exp, _ := strconv.Atoi(num[start + 2:])
+		exp, _ := strconv.Atoi(num[start+2:])
 		if exp == 0 {
 			js = append(js, []byte(num[:start])...)
-		}else{
+		} else {
 			js = append(js, []byte(num)...)
 		}
 		js = append(js, 44)
 	}
-	js = js[:len(js) -1]
+	js = js[:len(js)-1]
 	js = append(js, 93)
 	return js
 }
 
-func MakeJsonWithMap(json map[string]string) []byte{
+func MakeJsonWithMap(json map[string]string) []byte {
 	if json == nil {
 		return []byte(`{}`)
 	}
-	js := make([]byte,0,128)
+	js := make([]byte, 0, 128)
 	js = append(js, 123)
 	for k, v := range json {
 		js = append(js, 34)
@@ -276,7 +276,7 @@ func MakeJsonWithMap(json map[string]string) []byte{
 		js = append(js, []byte(formatType(v))...)
 		js = append(js, 44)
 	}
-	js = js[:len(js) -1]
+	js = js[:len(js)-1]
 	js = append(js, 125)
 	return js
 }
@@ -288,7 +288,7 @@ func MakeJson(keys, values []string) []byte {
 	if keys == nil {
 		return []byte(`{}`)
 	}
-	js := make([]byte,0,128)
+	js := make([]byte, 0, 128)
 	js = append(js, 123)
 	for i, k := range keys {
 		js = append(js, 34)
@@ -298,22 +298,22 @@ func MakeJson(keys, values []string) []byte {
 		js = append(js, []byte(formatType(values[i]))...)
 		js = append(js, 44)
 	}
-	js = js[:len(js) -1]
+	js = js[:len(js)-1]
 	js = append(js, 125)
 	return js
 }
 
-func formatType(val string) string{
-	if len(val) > 0{
-		if isBool(val){
+func formatType(val string) string {
+	if len(val) > 0 {
+		if isBool(val) {
 			return val
-		} 
-		if isInt(val){
-			if val[0] == 48 && len(val) > 1{
+		}
+		if isInt(val) {
+			if val[0] == 48 && len(val) > 1 {
 				return `"` + val + `"`
 			}
 			return val
-		} 
+		}
 		if isFloat(val) {
 			return val
 		}
@@ -322,23 +322,23 @@ func formatType(val string) string{
 	return `""`
 }
 
-func isBool(val string) bool{
-	return val == "true" || val =="false"
+func isBool(val string) bool {
+	return val == "true" || val == "false"
 }
 
-func isFloat(val string) bool{
+func isFloat(val string) bool {
 	_, err := strconv.ParseFloat(val, 64)
 	if err != nil {
 		return false
-	} 
+	}
 	return true
 }
 
-func isInt(val string) bool{
+func isInt(val string) bool {
 	_, err := strconv.ParseInt(val, 10, 32)
 	if err != nil {
 		return false
-	} 
+	}
 	return true
 }
 
@@ -347,7 +347,7 @@ func ParseArray(arr string) []string {
 	if len(arr) < 2 {
 		return []string{}
 	}
-	if arr[0] == '[' && arr[len(arr) - 1] == ']' {
+	if arr[0] == '[' && arr[len(arr)-1] == ']' {
 		if len(arr) == 2 {
 			return []string{}
 		}
@@ -355,7 +355,7 @@ func ParseArray(arr string) []string {
 		start := 1
 		inQuote := false
 		level := 0
-		for i := 0 ; i < len(arr); i ++ {
+		for i := 0; i < len(arr); i++ {
 			curr := arr[i]
 			if curr == 92 {
 				i++
@@ -367,7 +367,7 @@ func ParseArray(arr string) []string {
 			}
 			if inQuote {
 				continue
-			}else{
+			} else {
 				if curr == 91 || curr == 123 {
 					level++
 				}
@@ -402,8 +402,8 @@ func ParseArray(arr string) []string {
 // make private after
 func StripQuotes(str string) string {
 	if len(str) > 1 {
-		if str[0] == 34 && str[len(str) - 1] == 34 {
-			str = str[1:len(str)- 1]
+		if str[0] == 34 && str[len(str)-1] == 34 {
+			str = str[1 : len(str)-1]
 		}
 	}
 	return str
@@ -411,8 +411,8 @@ func StripQuotes(str string) string {
 
 func StripQuotesByte(str []byte) []byte {
 	if len(str) > 1 {
-		if str[0] == 34 && str[len(str) - 1] == 34 {
-			str = str[1:len(str)- 1]
+		if str[0] == 34 && str[len(str)-1] == 34 {
+			str = str[1 : len(str)-1]
 		}
 	}
 	return str
