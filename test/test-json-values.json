@@ -1,65 +1,9 @@
-{"id":"d50887ca-a6ce-4e59-b89f-14f0b5d03b03","name":{"fullName":"Leonid Bugaev","givenName":"Leonid","familyName":"Bugaev"},"email":"leonsbox@gmail.com","gender":"male","location":"Saint Petersburg, Saint Petersburg, RU","geo":{"city":"Saint Petersburg","state":"Saint Petersburg","country":"Russia","lat":59.9342802,"lng":30.3350986},"bio":"Senior engineer at Granify.com","site":"http://flickfaver.com","avatar":"https://d1ts43dypk8bqh.cloudfront.net/v1/avatars/d50887ca-a6ce-4e59-b89f-14f0b5d03b03","employment":{"name":"www.latera.ru","title":"Software Engineer","domain":"gmail.com"},"facebook":{"handle":"leonid.bugaev"},"github":{"handle":"buger","id":14009,"avatar":"https://avatars.githubusercontent.com/u/14009?v=3","company":"Granify","blog":"http://leonsbox.com","followers":95,"following":10},"twitter":{"handle":"flickfaver","id":77004410,"bio":null,"followers":2,"following":1,"statuses":5,"favorites":0,"location":"","site":"http://flickfaver.com","avatar":null},"linkedin":{"handle":"in/leonidbugaev"},"googleplus":{"handle":null},"angellist":{"handle":"leonid-bugaev","id":61541,"bio":"Senior engineer at Granify.com","blog":"http://buger.github.com","site":"http://buger.github.com","followers":41,"avatar":"https://d1qb2nb5cznatu.cloudfront.net/users/61541-medium_jpg?1405474390"},"klout":{"handle":null,"score":null},"foursquare":{"handle":null},"aboutme":{"handle":"leonid.bugaev","bio":null,"avatar":null},"gravatar":{"handle":"buger","urls":[],"avatar":"http://1.gravatar.com/avatar/f7c8edd577d13b8930d5522f28123510","avatars":[{"url":"http://1.gravatar.com/avatar/f7c8edd577d13b8930d5522f28123510","type":"thumbnail"}]},"fuzzy":false}
-"d50887ca-a6ce-4e59-b89f-14f0b5d03b03"
-{"fullName":"Leonid Bugaev","givenName":"Leonid","familyName":"Bugaev"}
-"Leonid Bugaev"
-"Leonid"
-"Bugaev"
-"leonsbox@gmail.com"
-"male"
-"Saint Petersburg, Saint Petersburg, RU"
-{"city":"Saint Petersburg","state":"Saint Petersburg","country":"Russia","lat":59.9342802,"lng":30.3350986}
-"Saint Petersburg"
-"Saint Petersburg"
-"Russia"
-59.9342802
-30.3350986
-"Senior engineer at Granify.com"
-"http://flickfaver.com"
-"https://d1ts43dypk8bqh.cloudfront.net/v1/avatars/d50887ca-a6ce-4e59-b89f-14f0b5d03b03"
-{"name":"www.latera.ru","title":"Software Engineer","domain":"gmail.com"}
-"www.latera.ru"
-"Software Engineer"
-"gmail.com"
-{"handle":"leonid.bugaev"}
-"leonid.bugaev"
-{"handle":"buger","id":14009,"avatar":"https://avatars.githubusercontent.com/u/14009?v=3","company":"Granify","blog":"http://leonsbox.com","followers":95,"following":10}
-"buger"
-14009
-"https://avatars.githubusercontent.com/u/14009?v=3"
-"Granify"
-"http://leonsbox.com"
-95
-10
-{"handle":"flickfaver","id":77004410,"bio":null,"followers":2,"following":1,"statuses":5,"favorites":0,"location":"","site":"http://flickfaver.com","avatar":null}
-"flickfaver"
-77004410
-2
 1
-5
+486
+"active"
 0
-""
-"http://flickfaver.com"
-{"handle":"in/leonidbugaev"}
-"in/leonidbugaev"
-{"handle":null}
-{"handle":"leonid-bugaev","id":61541,"bio":"Senior engineer at Granify.com","blog":"http://buger.github.com","site":"http://buger.github.com","followers":41,"avatar":"https://d1qb2nb5cznatu.cloudfront.net/users/61541-medium_jpg?1405474390"}
-"leonid-bugaev"
-61541
-"Senior engineer at Granify.com"
-"http://buger.github.com"
-"http://buger.github.com"
-41
-"https://d1qb2nb5cznatu.cloudfront.net/users/61541-medium_jpg?1405474390"
-{"handle":null,"score":null}
-{"handle":null}
-{"handle":"leonid.bugaev","bio":null,"avatar":null}
-"leonid.bugaev"
-{"handle":"buger","urls":[],"avatar":"http://1.gravatar.com/avatar/f7c8edd577d13b8930d5522f28123510","avatars":[{"url":"http://1.gravatar.com/avatar/f7c8edd577d13b8930d5522f28123510","type":"thumbnail"}]}
-"buger"
-[]
-"http://1.gravatar.com/avatar/f7c8edd577d13b8930d5522f28123510"
-[{"url":"http://1.gravatar.com/avatar/f7c8edd577d13b8930d5522f28123510","type":"thumbnail"}]
-{"url":"http://1.gravatar.com/avatar/f7c8edd577d13b8930d5522f28123510","type":"thumbnail"}
-"http://1.gravatar.com/avatar/f7c8edd577d13b8930d5522f28123510"
-"thumbnail"
-false
+"de305d54-75b4-431b-adb2-eb6b9e546014"
+"127.0.0.1"
+"user_agent"
+-6
+1
