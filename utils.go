@@ -207,7 +207,7 @@ func MakeEmptyArray() []byte {
 
 func MakeArrayInt(values []int) []byte {
 	if values == nil {
-		return []byte(`[]`)
+		return []byte{91,93}
 	}
 	js := make([]byte, 0, 128)
 	js = append(js, 91)
@@ -222,7 +222,7 @@ func MakeArrayInt(values []int) []byte {
 
 func MakeArrayBool(values []bool) []byte {
 	if values == nil {
-		return []byte(`[]`)
+		return []byte{91,93}
 	}
 	js := make([]byte, 0, 128)
 	js = append(js, 91)
@@ -241,7 +241,7 @@ func MakeArrayBool(values []bool) []byte {
 
 func MakeArrayFloat(values []float64) []byte {
 	if values == nil {
-		return []byte(`[]`)
+		return []byte{91,93}
 	}
 	js := make([]byte, 0, 128)
 	js = append(js, 91)
@@ -268,7 +268,7 @@ func MakeArrayFloat(values []float64) []byte {
 
 func MakeJsonWithMap(json map[string]string) []byte {
 	if json == nil {
-		return []byte(`{}`)
+		return []byte{123,125}
 	}
 	js := make([]byte, 0, 128)
 	js = append(js, 123)
@@ -290,7 +290,7 @@ func MakeJson(keys, values []string) []byte {
 		return nil
 	}
 	if keys == nil {
-		return []byte(`{}`)
+		return []byte{123,125}
 	}
 	js := make([]byte, 0, 128)
 	js = append(js, 123)
@@ -355,7 +355,7 @@ func ParseArray(arr string) []string {
 	if len(arr) < 2 {
 		return []string{}
 	}
-	if arr[0] == '[' && arr[len(arr)-1] == ']' {
+	if arr[0] == 91 && arr[len(arr)-1] == 93 {
 		if len(arr) == 2 {
 			return []string{}
 		}
