@@ -1,13 +1,13 @@
 package jint
 
 import (
-	"testing"
-	"strconv"
 	"fmt"
-	"jparse"
-	test "jint/test"
-	"strings"
 	jsonparser "github.com/buger/jsonparser"
+	test "jint/test"
+	"jparse"
+	"strconv"
+	"strings"
+	"testing"
 )
 
 func jsonInit(cmd string) {
@@ -47,7 +47,7 @@ func BenchmarkWarmUp(b *testing.B) {
 	}
 }
 
-func BenchmarkGetSameAnswerCheckSmall(b  * testing.B){
+func BenchmarkGetSameAnswerCheckSmall(b *testing.B) {
 	test.WriteFile("test/test-json.json", smallFixture)
 	jsonInit("get")
 	b.ResetTimer()
@@ -55,7 +55,7 @@ func BenchmarkGetSameAnswerCheckSmall(b  * testing.B){
 	for i, _ := range paths {
 		val, _ := Get(json, paths[i]...)
 		val2, _, _, err := jsonparser.Get(json, newPaths[i]...)
-		if string(val) != string(val2){
+		if string(val) != string(val2) {
 			b.Errorf("Fail (Bench Same Answer Check), not same answer path:%v\n, jint:\t\t>%v<\n, jsonparser:\t>%v<  i:%v\nerr:%v\n", newPaths, string(val), string(val2), i, err)
 		}
 	}
@@ -73,7 +73,7 @@ func BenchmarkJparse2FullAccessSmall(b *testing.B) {
 	}
 }
 
-func BenchmarkJintFullAccessSmall(b  * testing.B){
+func BenchmarkJintFullAccessSmall(b *testing.B) {
 	// test.WriteFile("test/test-json.json", smallFixture)
 	jsonInit("get")
 	b.ResetTimer()
@@ -84,7 +84,7 @@ func BenchmarkJintFullAccessSmall(b  * testing.B){
 	}
 }
 
-func BenchmarkJsonparserFullAccessSmall(b  * testing.B){
+func BenchmarkJsonparserFullAccessSmall(b *testing.B) {
 	// test.WriteFile("test/test-json.json", smallFixture)
 	jsonInit("get")
 	newPaths := pathConverter(paths)
@@ -96,7 +96,7 @@ func BenchmarkJsonparserFullAccessSmall(b  * testing.B){
 	}
 }
 
-func BenchmarkGetSameAnswerCheckMedium(b  * testing.B){
+func BenchmarkGetSameAnswerCheckMedium(b *testing.B) {
 	test.WriteFile("test/test-json.json", mediumFixture)
 	jsonInit("get")
 	b.ResetTimer()
@@ -104,7 +104,7 @@ func BenchmarkGetSameAnswerCheckMedium(b  * testing.B){
 	for i, _ := range paths {
 		val, _ := Get(json, paths[i]...)
 		val2, _, _, err := jsonparser.Get(json, newPaths[i]...)
-		if string(val) != string(val2){
+		if string(val) != string(val2) {
 			b.Errorf("Fail (Bench Same Answer Check), not same answer path:%v\n, jint:\t\t>%v<\n, jsonparser:\t>%v<  i:%v\nerr:%v\n", newPaths, string(val), string(val2), i, err)
 		}
 	}
@@ -134,7 +134,7 @@ func BenchmarkJparse2FullAccessMedium(b *testing.B) {
 	}
 }
 
-func BenchmarkJintFullAccessMedium(b  * testing.B){
+func BenchmarkJintFullAccessMedium(b *testing.B) {
 	// test.WriteFile("test/test-json.json", mediumFixture)
 	jsonInit("get")
 	b.ResetTimer()
@@ -145,7 +145,7 @@ func BenchmarkJintFullAccessMedium(b  * testing.B){
 	}
 }
 
-func BenchmarkJsonparserFullAccessMedium(b  * testing.B){
+func BenchmarkJsonparserFullAccessMedium(b *testing.B) {
 	// test.WriteFile("test/test-json.json", mediumFixture)
 	jsonInit("get")
 	newPaths := pathConverter(paths)
@@ -157,7 +157,7 @@ func BenchmarkJsonparserFullAccessMedium(b  * testing.B){
 	}
 }
 
-func BenchmarkGetSameAnswerCheckLarge(b  * testing.B){
+func BenchmarkGetSameAnswerCheckLarge(b *testing.B) {
 	test.WriteFile("test/test-json.json", largeFixture)
 	jsonInit("get")
 	b.ResetTimer()
@@ -165,7 +165,7 @@ func BenchmarkGetSameAnswerCheckLarge(b  * testing.B){
 	for i, _ := range paths {
 		val, _ := Get(json, paths[i]...)
 		val2, _, _, err := jsonparser.Get(json, newPaths[i]...)
-		if string(val) != string(val2){
+		if string(val) != string(val2) {
 			b.Errorf("Fail (Bench Same Answer Check), not same answer path:%v\n, jint:\t\t>%v<\n, jsonparser:\t>%v<  i:%v\nerr:%v\n", newPaths, string(val), string(val2), i, err)
 		}
 	}
@@ -195,7 +195,7 @@ func BenchmarkJparse2FullAccessLarge(b *testing.B) {
 	}
 }
 
-func BenchmarkJintFullAccessLarge(b  * testing.B){
+func BenchmarkJintFullAccessLarge(b *testing.B) {
 	// test.WriteFile("test/test-json.json", largeFixture)
 	jsonInit("get")
 	b.ResetTimer()
@@ -206,7 +206,7 @@ func BenchmarkJintFullAccessLarge(b  * testing.B){
 	}
 }
 
-func BenchmarkJsonparserFullAccessLarge(b  * testing.B){
+func BenchmarkJsonparserFullAccessLarge(b *testing.B) {
 	// test.WriteFile("test/test-json.json", largeFixture)
 	jsonInit("get")
 	newPaths := pathConverter(paths)
@@ -218,7 +218,7 @@ func BenchmarkJsonparserFullAccessLarge(b  * testing.B){
 	}
 }
 
-func BenchmarkIterateArrayJint(b  * testing.B){
+func BenchmarkIterateArrayJint(b *testing.B) {
 	test.WriteFile("test/test-json.json", test.ReadFile("test/original-test-case.json"))
 	jsonInit("arrayiter")
 	b.ResetTimer()
@@ -227,12 +227,12 @@ func BenchmarkIterateArrayJint(b  * testing.B){
 			IterateArray(json, func(value []byte) bool {
 				nop(value)
 				return true
-			},paths[i]...)
+			}, paths[i]...)
 		}
 	}
 }
 
-func BenchmarkIterateArrayJsonparser(b  * testing.B){
+func BenchmarkIterateArrayJsonparser(b *testing.B) {
 	test.WriteFile("test/test-json.json", test.ReadFile("test/original-test-case.json"))
 	jsonInit("arrayiter")
 	newPaths := pathConverter(paths)
@@ -241,12 +241,12 @@ func BenchmarkIterateArrayJsonparser(b  * testing.B){
 		for i, _ := range paths {
 			jsonparser.ArrayEach(json, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
 				nop(value)
-			},newPaths[i]...)
+			}, newPaths[i]...)
 		}
 	}
 }
 
-func BenchmarkIterateObjectJint(b  * testing.B){
+func BenchmarkIterateObjectJint(b *testing.B) {
 	test.WriteFile("test/test-json.json", test.ReadFile("test/original-test-case.json"))
 	jsonInit("objectiter")
 	b.ResetTimer()
@@ -255,12 +255,12 @@ func BenchmarkIterateObjectJint(b  * testing.B){
 			IterateKeyValue(json, func(key []byte, value []byte) bool {
 				nop(key, value)
 				return true
-			},paths[i]...)
+			}, paths[i]...)
 		}
 	}
 }
 
-func BenchmarkIterateObjectJsonparser(b  * testing.B){
+func BenchmarkIterateObjectJsonparser(b *testing.B) {
 	test.WriteFile("test/test-json.json", test.ReadFile("test/original-test-case.json"))
 	jsonInit("objectiter")
 	newPaths := pathConverter(paths)
@@ -271,7 +271,7 @@ func BenchmarkIterateObjectJsonparser(b  * testing.B){
 				// fmt.Println(string(key))
 				nop(key, value)
 				return nil
-			},newPaths[i]...)
+			}, newPaths[i]...)
 		}
 	}
 }
@@ -300,7 +300,7 @@ func BenchmarkJintMedium(b *testing.B) {
 		Get(mediumFixture, "person", "github", "followers")
 		Get(mediumFixture, "company")
 
-		IterateArray(mediumFixture, func(value []byte) bool{
+		IterateArray(mediumFixture, func(value []byte) bool {
 			Get(value, "url")
 			nop()
 			return true
@@ -321,14 +321,14 @@ func BenchmarkJsonparserMedium(b *testing.B) {
 	}
 }
 
-func BenchmarkJintLarge(b  * testing.B){
+func BenchmarkJintLarge(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		IterateArray(largeFixture, func(value []byte) bool{
+		IterateArray(largeFixture, func(value []byte) bool {
 			Get(value, "username")
 			return true
 		}, "users")
 
-		IterateArray(largeFixture, func(value []byte) bool{
+		IterateArray(largeFixture, func(value []byte) bool {
 			Get(value, "id")
 			Get(value, "slug")
 			return true
@@ -336,7 +336,7 @@ func BenchmarkJintLarge(b  * testing.B){
 	}
 }
 
-func BenchmarkJsonparserLarge(b  * testing.B){
+func BenchmarkJsonparserLarge(b *testing.B) {
 	for i := 0; i < b.N; i++ {
 		jsonparser.ArrayEach(largeFixture, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
 			jsonparser.Get(value, "username")
@@ -351,15 +351,15 @@ func BenchmarkJsonparserLarge(b  * testing.B){
 	}
 }
 
-func pathConverter(paths [][]string) [][]string{
+func pathConverter(paths [][]string) [][]string {
 	newPaths := make([][]string, 0, len(paths))
 	for _, path := range paths {
 		newPath := make([]string, 0, len(path))
 		for _, p := range path {
 			_, err := strconv.Atoi(p)
 			if err == nil {
-				newPath = append(newPath, `[` + p + `]` )
-			}else{
+				newPath = append(newPath, `[`+p+`]`)
+			} else {
 				newPath = append(newPath, p)
 			}
 		}

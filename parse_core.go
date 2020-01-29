@@ -2,7 +2,7 @@ package jint
 
 import "strconv"
 
-func pCore(json []byte, core *node) error{
+func pCore(json []byte, core *node) error {
 	if len(json) == 0 {
 		return BAD_JSON_ERROR(0)
 	}
@@ -55,7 +55,7 @@ func pCore(json []byte, core *node) error{
 					continue
 				}
 				continue
-			}else{
+			} else {
 				inQuote = !inQuote
 				continue
 			}

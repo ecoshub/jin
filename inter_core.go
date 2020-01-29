@@ -227,7 +227,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 							}
 							continue
 						}
-					}else{
+					} else {
 						inQuote = !inQuote
 					}
 					// escape char ccontrol algorithm
@@ -367,7 +367,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 									// comma
 									if curr == 44 {
 										if level == k+1 {
-										// level same with path
+											// level same with path
 											// jump i to j
 											i = j
 											break
@@ -438,7 +438,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 						if (i-1-n)%2 == 0 {
 							inQuote = !inQuote
 							break
-						}else{
+						} else {
 							break
 						}
 					}

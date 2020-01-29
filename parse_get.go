@@ -7,7 +7,7 @@ func (p *parse) Get(path ...string) ([]byte, error) {
 	curr := p.core.walk(path)
 	if curr == nil {
 		return []byte{}, nil
-	}else{
+	} else {
 		return nil, KEY_NOT_FOUND_ERROR()
 	}
 	return curr.getVal(p.json), nil

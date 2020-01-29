@@ -3,13 +3,13 @@ package jint
 import "fmt"
 
 type node struct {
-	label    string
-	value    []byte
-	start    int
-	end      int
+	label       string
+	value       []byte
+	start       int
+	end         int
 	valueStored bool
-	up       *node
-	down     []*node
+	up          *node
+	down        []*node
 }
 
 type parse struct {
@@ -79,7 +79,7 @@ func trim(json []byte) []byte {
 	}
 	start := 0
 	for i := start; i < len(json); i++ {
-		if space(json[i]){
+		if space(json[i]) {
 			start++
 		} else {
 			break
@@ -87,7 +87,7 @@ func trim(json []byte) []byte {
 	}
 	end := len(json) - 1
 	for i := end; i > start; i-- {
-		if space(json[i]){
+		if space(json[i]) {
 			end--
 		} else {
 			break

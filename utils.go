@@ -202,12 +202,12 @@ func MakeArray(values []string) []byte {
 }
 
 func MakeEmptyArray() []byte {
-	return []byte{91,93}
+	return []byte{91, 93}
 }
 
 func MakeArrayInt(values []int) []byte {
 	if values == nil {
-		return []byte{91,93}
+		return []byte{91, 93}
 	}
 	js := make([]byte, 0, 128)
 	js = append(js, 91)
@@ -222,7 +222,7 @@ func MakeArrayInt(values []int) []byte {
 
 func MakeArrayBool(values []bool) []byte {
 	if values == nil {
-		return []byte{91,93}
+		return []byte{91, 93}
 	}
 	js := make([]byte, 0, 128)
 	js = append(js, 91)
@@ -241,7 +241,7 @@ func MakeArrayBool(values []bool) []byte {
 
 func MakeArrayFloat(values []float64) []byte {
 	if values == nil {
-		return []byte{91,93}
+		return []byte{91, 93}
 	}
 	js := make([]byte, 0, 128)
 	js = append(js, 91)
@@ -268,7 +268,7 @@ func MakeArrayFloat(values []float64) []byte {
 
 func MakeJsonWithMap(json map[string]string) []byte {
 	if json == nil {
-		return []byte{123,125}
+		return []byte{123, 125}
 	}
 	js := make([]byte, 0, 128)
 	js = append(js, 123)
@@ -290,7 +290,7 @@ func MakeJson(keys, values []string) []byte {
 		return nil
 	}
 	if keys == nil {
-		return []byte{123,125}
+		return []byte{123, 125}
 	}
 	js := make([]byte, 0, 128)
 	js = append(js, 123)
@@ -308,7 +308,7 @@ func MakeJson(keys, values []string) []byte {
 }
 
 func MakeEmptyJson() []byte {
-	return []byte{123,125}
+	return []byte{123, 125}
 }
 
 func formatType(val string) string {
