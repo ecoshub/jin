@@ -201,7 +201,11 @@ func MakeArray(values []string) []byte {
 	return js
 }
 
-func MakeArrayFromInts(values []int) []byte {
+func MakeEmptyArray() []byte {
+	return []byte{91,93}
+}
+
+func MakeArrayInt(values []int) []byte {
 	if values == nil {
 		return []byte(`[]`)
 	}
@@ -216,7 +220,7 @@ func MakeArrayFromInts(values []int) []byte {
 	return js
 }
 
-func MakeArrayFromBools(values []bool) []byte {
+func MakeArrayBool(values []bool) []byte {
 	if values == nil {
 		return []byte(`[]`)
 	}
@@ -235,7 +239,7 @@ func MakeArrayFromBools(values []bool) []byte {
 	return js
 }
 
-func MakeArrayFromFloats(values []float64) []byte {
+func MakeArrayFloat(values []float64) []byte {
 	if values == nil {
 		return []byte(`[]`)
 	}
@@ -301,6 +305,10 @@ func MakeJson(keys, values []string) []byte {
 	js = js[:len(js)-1]
 	js = append(js, 125)
 	return js
+}
+
+func MakeEmptyJson() []byte {
+	return []byte{123,125}
 }
 
 func formatType(val string) string {
