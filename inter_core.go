@@ -487,11 +487,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 				curr := json[i]
 				// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
 				if space(curr) || curr == 44 || curr == 93 || curr == 125 {
-					if offset == i {
-						return -1, -1, -1, EMPTY_ARRAY_ERROR()
-					} else {
-						return keyStart, offset, i, nil
-					}
+					return keyStart, offset, i, nil
 				}
 			}
 		}
