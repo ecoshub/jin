@@ -59,6 +59,25 @@ func TestGetInit(t *testing.T) {
 	InitValues(t, false)
 }
 
+func TestParseGet(t *testing.T) {
+	pars := Parse(json)
+	for i, _ := range paths {
+		value, done := pars.Get(paths[i]...)
+		if !done {
+			t.Errorf("Total Fail(Test Parse get), path:%v\n", paths[i])
+		}
+		if len(value) > 1 {
+			if value[0] == 91 || value[0] == 123 {
+				value = Flatten(value)
+			}
+		}
+		if string(value) != StripQuotes(values[i]) {
+			t.Errorf("Fail (Test Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), StripQuotes(values[i]), i)
+			return
+		}
+	}
+}
+
 func TestGet(t *testing.T) {
 	for i, _ := range paths {
 		_, start, end, err := core(json, false, paths[i]...)
