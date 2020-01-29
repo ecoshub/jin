@@ -4,7 +4,6 @@ import (
 	"fmt"
 	jsonparser "github.com/buger/jsonparser"
 	test "jint/test"
-	"jparse"
 	"strconv"
 	"strings"
 	"testing"
@@ -61,12 +60,15 @@ func BenchmarkGetSameAnswerCheckSmall(b *testing.B) {
 	}
 }
 
-func BenchmarkJparse2FullAccessSmall(b *testing.B) {
+func BenchmarkJparseFullAccessSmall(b *testing.B) {
 	// test.WriteFile("test/test-json.json", smallFixture)
 	jsonInit("get")
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		prs := Parse(json)
+		prs, err := Parse(json)
+		if err!= nil {
+			b.Errorf("Total fail (parse get) path:%v err:%v", paths[i], err)
+		}
 		for i, _ := range paths {
 			prs.Get(paths[i]...)
 		}
@@ -74,7 +76,7 @@ func BenchmarkJparse2FullAccessSmall(b *testing.B) {
 }
 
 func BenchmarkJintFullAccessSmall(b *testing.B) {
-	// test.WriteFile("test/test-json.json", smallFixture)
+	test.WriteFile("test/test-json.json", smallFixture)
 	jsonInit("get")
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
@@ -111,23 +113,14 @@ func BenchmarkGetSameAnswerCheckMedium(b *testing.B) {
 }
 
 func BenchmarkJparseFullAccessMedium(b *testing.B) {
-	test.WriteFile("test/test-json.json", mediumFixture)
-	jsonInit("get")
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		prs := jparse.Parse(json)
-		for i, _ := range paths {
-			prs.Get(paths[i]...)
-		}
-	}
-}
-
-func BenchmarkJparse2FullAccessMedium(b *testing.B) {
 	// test.WriteFile("test/test-json.json", mediumFixture)
 	jsonInit("get")
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		prs := Parse(json)
+		prs, err := Parse(json)
+		if err!= nil {
+			b.Errorf("Total fail (parse get) path:%v err:%v", paths[i], err)
+		}
 		for i, _ := range paths {
 			prs.Get(paths[i]...)
 		}
@@ -172,23 +165,14 @@ func BenchmarkGetSameAnswerCheckLarge(b *testing.B) {
 }
 
 func BenchmarkJparseFullAccessLarge(b *testing.B) {
-	test.WriteFile("test/test-json.json", largeFixture)
-	jsonInit("get")
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
-		prs := jparse.Parse(json)
-		for i, _ := range paths {
-			prs.Get(paths[i]...)
-		}
-	}
-}
-
-func BenchmarkJparse2FullAccessLarge(b *testing.B) {
 	// test.WriteFile("test/test-json.json", mediumFixture)
 	jsonInit("get")
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		prs := Parse(json)
+		prs, err := Parse(json)
+		if err!= nil {
+			b.Errorf("Total fail (parse get) path:%v err:%v", paths[i], err)
+		}
 		for i, _ := range paths {
 			prs.Get(paths[i]...)
 		}
