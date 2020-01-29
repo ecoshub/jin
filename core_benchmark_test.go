@@ -4,6 +4,7 @@ import (
 	"testing"
 	"strconv"
 	"fmt"
+	"jparse"
 	test "jint/test"
 	"strings"
 	jsonparser "github.com/buger/jsonparser"
