@@ -3,11 +3,13 @@ package jint
 import "fmt"
 
 type node struct {
+	// type 0 is value
+	// type 1 is key&Value
+	// type 2 is object
+	// type 3 is array
+	typ         int
 	label       string
 	value       []byte
-	start       int
-	end         int
-	hasValue    bool
 	up          *node
 	down        []*node
 }
@@ -105,54 +107,54 @@ func trim(json []byte) []byte {
 	return json[start : end+1]
 }
 
-func (n * node) getIndex() int {
-	for i, v := range n.up.down {
-		if v.label == n.label {
-			return i
-		}
-	}
-	return -1
-}
+// func (n * node) getIndex() int {
+// 	for i, v := range n.up.down {
+// 		if v.label == n.label {
+// 			return i
+// 		}
+// 	}
+// 	return -1
+// }
 
-func (n * node) setOffsetUp(off int){
-	index := n.getIndex() + 1
-	n = n.up
-	n.end += off
-	start := false
-	for i, d := range n.down{
-		if i == index {
-			start = true
-		}
-		if start {
-			d.start += off
-			d.end += off
-			d.hasValue = false
-			if len(d.down) > 0 {
-				d.setOffset(0, off)
-			}
-		}
-	}
-	if n.up != nil {
-		n.setOffsetUp(off)
-	}
-}
+// func (n * node) setOffsetUp(off int){
+// 	index := n.getIndex() + 1
+// 	n = n.up
+// 	n.end += off
+// 	start := false
+// 	for i, d := range n.down{
+// 		if i == index {
+// 			start = true
+// 		}
+// 		if start {
+// 			d.start += off
+// 			d.end += off
+// 			d.hasValue = false
+// 			if len(d.down) > 0 {
+// 				d.setOffset(0, off)
+// 			}
+// 		}
+// 	}
+// 	if n.up != nil {
+// 		n.setOffsetUp(off)
+// 	}
+// }
 
-func (n * node) setOffset(startIndex, off int){
-	start := false
-	for i, d := range n.down{
-		if i == startIndex {
-			start = true
-		}
-		if start {
-			d.start += off
-			d.end += off
-			d.hasValue = false
-			if len(d.down) > 0 {
-				d.setOffset(0, off)
-			}
-		}
-	}
-}
+// func (n * node) setOffset(startIndex, off int){
+// 	start := false
+// 	for i, d := range n.down{
+// 		if i == startIndex {
+// 			start = true
+// 		}
+// 		if start {
+// 			d.start += off
+// 			d.end += off
+// 			d.hasValue = false
+// 			if len(d.down) > 0 {
+// 				d.setOffset(0, off)
+// 			}
+// 		}
+// 	}
+// }
 
 
 func (p *parse) Three(withValues bool) {
@@ -167,9 +169,9 @@ func (n *node) recursivePrint(json []byte, depth int, withValues bool) {
 		}
 		if withValues {
 			if depth != 0 {
-				fmt.Printf("\t%v %-6v : %v\n", str+string(9492)+" ", d.label, string(d.getVal(json)))
+				fmt.Printf("\t%v %-6v : %v\n", str+string(9492)+" ", d.label, string(d.value))
 			} else {
-				fmt.Printf("%v%v %-6v : %v\n", str, string(9472), d.label, string(d.getVal(json)))
+				fmt.Printf("%v%v %-6v : %v\n", str, string(9472), d.label, string(d.value))
 			}
 		} else {
 			if depth != 0 {

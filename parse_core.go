@@ -25,9 +25,9 @@ func pCore(json []byte, core *node) error {
 	lastIndex := -1
 	level := 0
 	key := ""
-	brace := make([]int, 0, 32)
-	indexLevel := make([]int, 0, 32)
-	path := make([]string, 0, 32)
+	brace := make([]int, 0, 16)
+	indexLevel := make([]int, 0, 16)
+	path := make([]string, 0, 16)
 	if json[offset] == 123 || json[offset] == 91 {
 		indexLevel = append(indexLevel, 0)
 		brace = append(brace, offset)
@@ -59,6 +59,7 @@ func pCore(json []byte, core *node) error {
 				inQuote = !inQuote
 				continue
 			}
+			continue
 		}
 		if inQuote {
 			continue
@@ -78,13 +79,13 @@ func pCore(json []byte, core *node) error {
 				// middle value area
 				case 58:
 					core = core.link(key)
-					core.start = lastIndex
-					core.end = i
+					core.value = json[lastIndex:i]
+					core.typ = 0
 					core = core.up
 				case 91, 44:
 					core = core.link(strconv.Itoa(indexLevel[len(indexLevel)-1]))
-					core.start = lastIndex
-					core.end = i
+					core.value = json[lastIndex:i]
+					core.typ = 0
 					core = core.up
 				}
 				indexLevel[len(indexLevel)-1]++
@@ -95,8 +96,8 @@ func pCore(json []byte, core *node) error {
 				switch last {
 				case 44, 91:
 					core = core.link(strconv.Itoa(indexLevel[len(indexLevel)-1]))
-					core.start = lastIndex
-					core.end = i
+					core.value = json[lastIndex:i]
+					core.typ = 0
 					core = core.up
 				}
 				if len(path) == 0 {
@@ -104,8 +105,17 @@ func pCore(json []byte, core *node) error {
 				}
 				core = core.up
 				core = core.link(path[len(path)-1])
-				core.start = brace[len(brace)-1]
-				core.end = i + 1
+				core.value = json[brace[len(brace)-1]:i + 1]
+				if len(core.value) != 0 {
+					if core.value[0] == 91 {
+						core.typ = 3
+					}
+					if core.value[0] == 123 {
+						core.typ = 2
+					}
+				}else{
+					return BAD_JSON_ERROR(i)
+				}
 				core = core.up
 
 				path = path[:len(path)-1]
@@ -119,8 +129,8 @@ func pCore(json []byte, core *node) error {
 				switch last {
 				case 58:
 					core = core.link(key)
-					core.start = lastIndex
-					core.end = i
+					core.value = json[lastIndex:i]
+					core.typ = 1
 					core = core.up
 				}
 				if len(path) == 0 {
@@ -128,8 +138,17 @@ func pCore(json []byte, core *node) error {
 				}
 				core = core.up
 				core = core.link(path[len(path)-1])
-				core.start = brace[len(brace)-1]
-				core.end = i + 1
+				core.value = json[brace[len(brace)-1]:i + 1]
+				if len(core.value) != 0 {
+					if core.value[0] == 91 {
+						core.typ = 3
+					}
+					if core.value[0] == 123 {
+						core.typ = 2
+					}
+				}else{
+					return BAD_JSON_ERROR(i)
+				}
 				core = core.up
 
 				path = path[:len(path)-1]

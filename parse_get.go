@@ -1,24 +1,20 @@
 package jint
 
+
 func (p *parse) Get(path ...string) ([]byte, error) {
 	if len(path) == 0 {
+		// later
 		return nil, NULL_PATH_ERROR()
 	}
 	curr, err := p.core.walk(path)
 	if err != nil {
 		return nil, err
 	}
-	return curr.getVal(p.json), nil
-}
+	// if len(curr.down) == 0 {
+	// 	return trim(curr.value), nil
+	// }else{
 
-func (n *node) getVal(json []byte) []byte {
-	if n.hasValue {
-		return n.value
-	}
-	if n.start == n.end {
-		return []byte{}
-	}
-	n.value = trim(json[n.start:n.end])
-	n.hasValue = true
-	return n.value
+	// }
+	// return curr.value, nil
+	return trim(curr.value), nil
 }
