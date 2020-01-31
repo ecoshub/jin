@@ -3,15 +3,15 @@ package jint
 import "strconv"
 import "fmt"
 
-type scheme struct {
+type Scheme struct {
 	keys []string
 }
 
-func Scheme(keys...string) *scheme {
-	return &scheme{keys: keys}
+func Scheme(keys...string) *Scheme {
+	return &Scheme{keys: keys}
 }
 
-func (s *scheme) MakeJson(values...interface{}) []byte {
+func (s *Scheme) MakeJson(values...interface{}) []byte {
 	strValues := make([]string, len(values))
 	for i,v := range values {
 		strValues[i] = fmt.Sprintf("%v", v)
