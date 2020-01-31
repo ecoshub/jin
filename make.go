@@ -7,7 +7,7 @@ type Scheme struct {
 	keys []string
 }
 
-func Scheme(keys...string) *Scheme {
+func MakeScheme(keys...string) *Scheme {
 	return &Scheme{keys: keys}
 }
 
