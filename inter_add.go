@@ -50,7 +50,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 			}
 		}
 		if empty {
-			val := []byte(`"` + key + `":` + string(value))
+			val := []byte(`"` + key + `":` + formatType(string(value)))
 			json = replace(json, val, end-1, end-1)
 			return json, nil
 		} else {
@@ -59,7 +59,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 			_, _, _, err = core(json, false, path...)
 			if err != nil {
 				if err.Error() == KEY_NOT_FOUND_ERROR().Error() {
-					val := []byte(`,"` + key + `":` + string(value))
+					val := []byte(`,"` + key + `":` + formatType(string(value)))
 					json = replace(json, val, end-1, end-1)
 					return json, nil
 				}
@@ -137,9 +137,6 @@ func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 }
 
 func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, error) {
-	if value[0] != 34 && value[len(value)-1] != 34 {
-		value = `"` + value + `"`
-	}
 	return AddKeyValue(json, key, []byte(value), path...)
 }
 
