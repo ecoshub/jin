@@ -14,18 +14,21 @@ func Get(json []byte, path ...string) ([]byte, error) {
 }
 
 func GetString(json []byte, path ...string) (string, error) {
-	val, done := Get(json, path...)
-	return string(val), done
+	val, err := Get(json, path...)
+	if err != nil {
+		return "", err
+	}
+	return string(val), err
 }
 
 func GetInt(json []byte, path ...string) (int, error) {
-	value, err := GetString(json, path...)
+	val, err := GetString(json, path...)
 	if err != nil {
 		return -1, err
 	}
-	intVal, err := strconv.Atoi(value)
+	intVal, err := strconv.Atoi(val)
 	if err != nil {
-		return -1, PARSE_INT_ERROR(value)
+		return -1, PARSE_INT_ERROR(val)
 	}
 	return intVal, nil
 }
@@ -57,7 +60,6 @@ func GetBool(json []byte, path ...string) (bool, error) {
 }
 
 // get array functions not safe in random json files.
-
 func GetStringArray(json []byte, path ...string) ([]string, error) {
 	val, err := GetString(json, path...)
 	if err != nil {
@@ -67,33 +69,12 @@ func GetStringArray(json []byte, path ...string) ([]string, error) {
 	if lena < 2 {
 		return nil, PARSE_STRING_ARRAY_ERROR(val)
 	}
-	if val[0] == '[' && val[lena-1] == ']' {
-		newArray := make([]string, 0, 16)
-		start := 1
-		inQuote := false
-		for i := 1; i < lena-1; i++ {
-			curr := val[i]
-			if curr == 34 || curr == 44 {
-				if curr == 34 {
-					// escape character control
-					if val[i-1] == 92 {
-						continue
-					}
-					inQuote = !inQuote
-					continue
-				}
-				if inQuote {
-					continue
-				} else {
-					if curr == 44 {
-						newArray = append(newArray, trimSpace(val, start, i))
-						start = i + 1
-					}
-				}
-			}
+	if val[0] == 91 && val[lena-1] == 93 {
+		arr := ParseArray(val)
+		if arr == nil {
+			return nil, PARSE_STRING_ARRAY_ERROR(val)
 		}
-		newArray = append(newArray, trimSpace(val, start, lena-1))
-		return newArray, nil
+		return arr, nil
 	} else {
 		return nil, PARSE_STRING_ARRAY_ERROR(val)
 	}
@@ -108,41 +89,56 @@ func GetIntArray(json []byte, path ...string) ([]int, error) {
 	if lena < 2 {
 		return nil, PARSE_INT_ARRAY_ERROR(val)
 	}
-	if val[0] == '[' && val[lena-1] == ']' {
+	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]int, 0, 16)
 		start := 1
 		inQuote := false
-		for i := 1; i < lena-1; i++ {
+		level := 0
+		for i := 0; i < len(val); i++ {
 			curr := val[i]
-			if curr == 34 || curr == 44 {
-				if curr == 34 {
-					// escape character control
-					if val[i-1] == 92 {
-						continue
-					}
-					inQuote = !inQuote
-					continue
+			if curr == 92 {
+				i++
+				continue
+			}
+			if curr == 34 {
+				inQuote = !inQuote
+				continue
+			}
+			if inQuote {
+				continue
+			} else {
+				if curr == 91 || curr == 123 {
+					level++
 				}
-				if inQuote {
-					continue
-				} else {
+				if curr == 93 || curr == 125 {
+					level--
+					if curr == 93 {
+						if level == 0 {
+							element := val[start:i]
+							num, err := strconv.Atoi(TrimAndStripQuote(element))
+							if err != nil {
+								return nil, PARSE_INT_ERROR(TrimAndStripQuote(element))
+							}
+							newArray = append(newArray, num)
+							start = i + 1
+							break
+						}
+					}
+				}
+				if level == 1 {
 					if curr == 44 {
-						num, err := strconv.Atoi(trimSpace(val, start, i))
+						element := val[start:i]
+						num, err := strconv.Atoi(TrimAndStripQuote(element))
 						if err != nil {
-							return nil, PARSE_INT_ERROR(trimSpace(val, start, i))
+							return nil, PARSE_INT_ERROR(TrimAndStripQuote(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
+						continue
 					}
 				}
 			}
 		}
-
-		num, err := strconv.Atoi(trimSpace(val, start, lena-1))
-		if err != nil {
-			return nil, PARSE_INT_ERROR(trimSpace(val, start, lena-1))
-		}
-		newArray = append(newArray, num)
 		return newArray, nil
 	} else {
 		return nil, PARSE_INT_ARRAY_ERROR(val)
@@ -158,41 +154,56 @@ func GetFloatArray(json []byte, path ...string) ([]float64, error) {
 	if lena < 2 {
 		return nil, PARSE_FLOAT_ARRAY_ERROR(val)
 	}
-	if val[0] == '[' && val[lena-1] == ']' {
+	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]float64, 0, 16)
 		start := 1
 		inQuote := false
-		for i := 1; i < lena-1; i++ {
+		level := 0
+		for i := 0; i < len(val); i++ {
 			curr := val[i]
-			if curr == 34 || curr == 44 {
-				if curr == 34 {
-					// escape character control
-					if val[i-1] == 92 {
-						continue
-					}
-					inQuote = !inQuote
-					continue
+			if curr == 92 {
+				i++
+				continue
+			}
+			if curr == 34 {
+				inQuote = !inQuote
+				continue
+			}
+			if inQuote {
+				continue
+			} else {
+				if curr == 91 || curr == 123 {
+					level++
 				}
-				if inQuote {
-					continue
-				} else {
+				if curr == 93 || curr == 125 {
+					level--
+					if curr == 93 {
+						if level == 0 {
+							element := val[start:i]
+							num, err := strconv.ParseFloat(TrimAndStripQuote(element), 64)
+							if err != nil {
+								return nil, PARSE_FLOAT_ERROR(TrimAndStripQuote(element))
+							}
+							newArray = append(newArray, num)
+							start = i + 1
+							break
+						}
+					}
+				}
+				if level == 1 {
 					if curr == 44 {
-						num, err := strconv.ParseFloat(trimSpace(val, start, i), 64)
+						element := val[start:i]
+						num, err := strconv.ParseFloat(TrimAndStripQuote(element), 64)
 						if err != nil {
-							return nil, PARSE_FLOAT_ERROR(trimSpace(val, start, i))
+							return nil, PARSE_FLOAT_ERROR(TrimAndStripQuote(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
+						continue
 					}
 				}
 			}
 		}
-
-		num, err := strconv.ParseFloat(trimSpace(val, start, lena-1), 64)
-		if err != nil {
-			return nil, PARSE_FLOAT_ERROR(trimSpace(val, start, lena-1))
-		}
-		newArray = append(newArray, num)
 		return newArray, nil
 	} else {
 		return nil, PARSE_FLOAT_ARRAY_ERROR(val)
@@ -208,50 +219,65 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 	if lena < 2 {
 		return nil, PARSE_BOOL_ARRAY_ERROR(val)
 	}
-	if val[0] == '[' && val[lena-1] == ']' {
+	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]bool, 0, 16)
 		start := 1
 		inQuote := false
-		for i := 1; i < lena-1; i++ {
+		level := 0
+		for i := 0; i < len(val); i++ {
 			curr := val[i]
-			if curr == 34 || curr == 44 {
-				if curr == 34 {
-					// escape character control
-					if val[i-1] == 92 {
-						continue
-					}
-					inQuote = !inQuote
-					continue
+			if curr == 92 {
+				i++
+				continue
+			}
+			if curr == 34 {
+				inQuote = !inQuote
+				continue
+			}
+			if inQuote {
+				continue
+			} else {
+				if curr == 91 || curr == 123 {
+					level++
 				}
-				if inQuote {
-					continue
-				} else {
-					if curr == 44 {
-						val := trimSpace(val, start, i)
-						if val == "true" || val == "false" {
-							if val == "true" {
-								newArray = append(newArray, true)
-								start = i + 1
-							} else {
-								newArray = append(newArray, false)
-								start = i + 1
+				if curr == 93 || curr == 125 {
+					level--
+					if curr == 93 {
+						if level == 0 {
+							element := val[start:i]
+							element = TrimAndStripQuote(element)
+							if element == "true" || element == "false" {
+								if element == "true" {
+									newArray = append(newArray, true)
+								}else{
+									newArray = append(newArray, false)
+								}
+							}else{
+								return nil, PARSE_BOOL_ERROR(TrimAndStripQuote(element))
 							}
-						} else {
-							return nil, PARSE_BOOL_ERROR(val)
+							start = i + 1
+							break
 						}
 					}
 				}
+				if level == 1 {
+					if curr == 44 {
+						element := val[start:i]
+						element = TrimAndStripQuote(element)
+						if element == "true" || element == "false" {
+							if element == "true" {
+								newArray = append(newArray, true)
+							}else{
+								newArray = append(newArray, false)
+							}
+						}else{
+							return nil, PARSE_BOOL_ERROR(element)
+						}
+						start = i + 1
+						continue
+					}
+				}
 			}
-		}
-		val := trimSpace(val, start, lena-2)
-		if val == "true" || val == "false" {
-			if val == "true" {
-				newArray = append(newArray, true)
-			} else {
-				newArray = append(newArray, false)
-			}
-		} else {
-			return nil, PARSE_BOOL_ERROR(val)
 		}
 		return newArray, nil
 	} else {
