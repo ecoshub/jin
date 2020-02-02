@@ -173,7 +173,6 @@ func Format(json []byte) []byte {
 }
 
 func ParseArray(arr string) []string {
-	arr = string(Flatten([]byte(arr)))
 	if len(arr) < 2 {
 		return []string{}
 	}
@@ -206,7 +205,7 @@ func ParseArray(arr string) []string {
 					if curr == 93 {
 						if level == 0 {
 							val := arr[start:i]
-							val = StripQuotes(val)
+							val = TrimAndStripQuote(val)
 							newArray = append(newArray, val)
 							start = i + 1
 							break
@@ -216,7 +215,7 @@ func ParseArray(arr string) []string {
 				if level == 1 {
 					if curr == 44 {
 						val := arr[start:i]
-						val = StripQuotes(val)
+						val = TrimAndStripQuote(val)
 						newArray = append(newArray, val)
 						start = i + 1
 						continue
@@ -246,4 +245,46 @@ func StripQuotesByte(str []byte) []byte {
 		}
 	}
 	return str
+}
+
+func formatType(val string) string {
+	if len(val) > 0 {
+		if isBool(val) {
+			return val
+		}
+		if isInt(val) {
+			if val[0] == 48 && len(val) > 1 {
+				return `"` + val + `"`
+			}
+			return val
+		}
+		if isFloat(val) {
+			return val
+		}
+		return `"` + val + `"`
+	}
+	return `""`
+}
+
+func TrimAndStripQuote(str string) string{
+	start := 0
+	lens := len(str) - 1
+	for space(str[start]) {
+		if start > lens {
+			break
+		}
+		start++
+	}
+	end := lens
+	for space(str[end]) {
+		if end < 1 {
+			break
+		}
+		end--
+	}
+	if str[start] == 34 && str[end] == 34 {
+		start++
+		end--
+	}
+	return str[start:end + 1]
 }
