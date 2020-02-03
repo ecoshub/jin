@@ -1,12 +1,15 @@
 package jint
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 type node struct {
-	label       string
-	value       []byte
-	up          *node
-	down        []*node
+	label string
+	value []byte
+	up    *node
+	down  []*node
 }
 
 type parse struct {
@@ -52,6 +55,23 @@ func (n *node) attach(other *node) {
 	n.down = append(n.down, other)
 }
 
+func (n * node) insert(up *node, index int) error{
+	lend := len(up.down)
+	if lend != 0 {
+		if lend - 1 < index {
+			return INDEX_OUT_OF_RANGE_ERROR()
+		}
+		for i := index ; i < lend ; i ++ {
+			up.down[i].label = strconv.Itoa(i + 1)
+		}
+		n.label = strconv.Itoa(index)
+		up.down[index] = n
+		n.up = up
+		return nil
+	}
+	return INDEX_OUT_OF_RANGE_ERROR()
+}
+
 func (n *node) walk(path []string) (*node, error) {
 	lenp := len(path)
 	curr := n
@@ -73,7 +93,7 @@ func (n *node) walk(path []string) (*node, error) {
 	return curr, nil
 }
 
-func (n * node) getIndex() int {
+func (n *node) getIndex() int {
 	for i, v := range n.up.down {
 		if v.label == n.label {
 			return i
