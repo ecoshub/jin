@@ -1,7 +1,7 @@
 package jint
 
 import (
-	test "/test"
+	test "jint/test"
 	"strconv"
 	"strings"
 	"testing"
@@ -187,18 +187,22 @@ func TestAddKVInit(t *testing.T) {
 
 func TestAddKV(t *testing.T) {
 	for i, _ := range paths {
-		value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
+		value, err := AddKeyValue(json, "test-key", []byte(`test-value`), paths[i]...)
 		if err != nil {
 			t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
 			return
 		}
-		value, err = Get(value, paths[i]...)
+		_, start, end, err := core(value, false, paths[i]...)
 		if err != nil {
 			t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 			return
 		}
-		if string(Flatten(value)) != StripQuotes(values[i]) {
-			t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
+		val := value[start:end]
+		if value[start-1] != 34 {
+			val = Flatten(val)
+		}
+		if string(Flatten(val)) != StripQuotes(values[i]) {
+			t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(val), values[i])
 			return
 		}
 	}

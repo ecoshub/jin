@@ -3,7 +3,7 @@ package jint
 import (
 	"fmt"
 	jsonparser "github.com/buger/jsonparser"
-	test "/test"
+	test "jint/test"
 	"strconv"
 	"strings"
 	"testing"
