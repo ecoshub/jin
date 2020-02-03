@@ -263,7 +263,7 @@ func formatType(val string) string {
 		if isFloat(val) {
 			return val
 		}
-		if val[0] == 34 && val[len(val) - 1] == 34 {
+		if val[0] == 34 && val[len(val)-1] == 34 {
 			return val
 		}
 		return `"` + val + `"`
@@ -307,10 +307,10 @@ func trim(str []byte) []byte {
 		}
 		end--
 	}
-	return str[start:end + 1]
+	return str[start : end+1]
 }
 
-func trimAndStripQuote(str string) string{
+func trimAndStripQuote(str string) string {
 	start := 0
 	lens := len(str) - 1
 	for space(str[start]) {
@@ -330,5 +330,5 @@ func trimAndStripQuote(str string) string{
 		start++
 		end--
 	}
-	return str[start:end + 1]
+	return str[start : end+1]
 }

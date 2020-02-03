@@ -66,7 +66,7 @@ func BenchmarkJparseFullAccessSmall(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		prs, err := Parse(json)
-		if err!= nil {
+		if err != nil {
 			b.Errorf("Total fail (parse get) path:%v err:%v", paths[i], err)
 		}
 		for i, _ := range paths {
@@ -118,7 +118,7 @@ func BenchmarkJparseFullAccessMedium(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		prs, err := Parse(json)
-		if err!= nil {
+		if err != nil {
 			b.Errorf("Total fail (parse get) path:%v err:%v", paths[i], err)
 		}
 		for i, _ := range paths {
@@ -170,7 +170,7 @@ func BenchmarkJparseFullAccessLarge(b *testing.B) {
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
 		prs, err := Parse(json)
-		if err!= nil {
+		if err != nil {
 			b.Errorf("Total fail (parse get) path:%v err:%v", paths[i], err)
 		}
 		for i, _ := range paths {

@@ -61,7 +61,7 @@ func TestGetInit(t *testing.T) {
 
 func TestParseGet(t *testing.T) {
 	pars, err := Parse(json)
-	if err!= nil {
+	if err != nil {
 		t.Errorf("Total fail (parse get) err:%v", err)
 	}
 	for i, _ := range paths {
@@ -187,7 +187,7 @@ func TestAddKVInit(t *testing.T) {
 
 func TestAddKV(t *testing.T) {
 	for i, _ := range paths {
-		value, err := AddKeyValue(json, "test-key", []byte(`test-value`), paths[i]...)
+		value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
 		if err != nil {
 			t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
 			return

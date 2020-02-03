@@ -59,7 +59,7 @@ func (p *parse) GetBool(path ...string) (bool, error) {
 	return false, PARSE_BOOL_ERROR(val)
 }
 
-func (p * parse) GetStringArray(path ...string) ([]string, error) {
+func (p *parse) GetStringArray(path ...string) ([]string, error) {
 	val, err := p.GetString(path...)
 	if err != nil {
 		return nil, err
@@ -79,7 +79,7 @@ func (p * parse) GetStringArray(path ...string) ([]string, error) {
 	}
 }
 
-func (p * parse) GetIntArray(path ...string) ([]int, error) {
+func (p *parse) GetIntArray(path ...string) ([]int, error) {
 	val, err := p.GetString(path...)
 	if err != nil {
 		return nil, err
@@ -144,7 +144,7 @@ func (p * parse) GetIntArray(path ...string) ([]int, error) {
 	}
 }
 
-func (p * parse) GetFloatArray(path ...string) ([]float64, error) {
+func (p *parse) GetFloatArray(path ...string) ([]float64, error) {
 	val, err := p.GetString(path...)
 	if err != nil {
 		return nil, err
@@ -209,7 +209,7 @@ func (p * parse) GetFloatArray(path ...string) ([]float64, error) {
 	}
 }
 
-func (p * parse) GetBoolArray(path ...string) ([]bool, error) {
+func (p *parse) GetBoolArray(path ...string) ([]bool, error) {
 	val, err := p.GetString(path...)
 	if err != nil {
 		return nil, err
@@ -248,10 +248,10 @@ func (p * parse) GetBoolArray(path ...string) ([]bool, error) {
 							if element == "true" || element == "false" {
 								if element == "true" {
 									newArray = append(newArray, true)
-								}else{
+								} else {
 									newArray = append(newArray, false)
 								}
-							}else{
+							} else {
 								return nil, PARSE_BOOL_ERROR(trimAndStripQuote(element))
 							}
 							start = i + 1
@@ -266,10 +266,10 @@ func (p * parse) GetBoolArray(path ...string) ([]bool, error) {
 						if element == "true" || element == "false" {
 							if element == "true" {
 								newArray = append(newArray, true)
-							}else{
+							} else {
 								newArray = append(newArray, false)
 							}
-						}else{
+						} else {
 							return nil, PARSE_BOOL_ERROR(element)
 						}
 						start = i + 1

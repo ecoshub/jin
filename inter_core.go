@@ -1,6 +1,7 @@
 package jint
 
 import "strconv"
+
 // import "fmt"
 
 // Only this function commented, other Get() and Set() functions based on same logic.
@@ -420,7 +421,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 			if !isJsonChar[curr] {
 				continue
 			}
-			if curr == 34 {	
+			if curr == 34 {
 				// check before char it might be escape char.
 				// escape char ccontrol algorithm
 				for n := i - 1; n > -1; n-- {
@@ -434,7 +435,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 					}
 					continue
 				}
-				continue		
+				continue
 			}
 			if inQuote {
 				continue

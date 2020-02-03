@@ -5,18 +5,18 @@ import "fmt"
 
 type Scheme struct {
 	originalKeys []string
-	keys []string
+	keys         []string
 }
 
-func MakeScheme(keys...string) *Scheme {
-	return &Scheme{keys: keys, originalKeys:keys}
+func MakeScheme(keys ...string) *Scheme {
+	return &Scheme{keys: keys, originalKeys: keys}
 }
 
-func (s *Scheme) MakeJson(values...interface{}) []byte {
+func (s *Scheme) MakeJson(values ...interface{}) []byte {
 	return MakeJson(s.keys, values)
 }
 
-func (s *Scheme) Add(key string) (bool) {
+func (s *Scheme) Add(key string) bool {
 	for _, k := range s.keys {
 		if k == key {
 			return false
@@ -26,13 +26,13 @@ func (s *Scheme) Add(key string) (bool) {
 	return true
 }
 
-func (s *Scheme) Remove(key string) (bool) {
+func (s *Scheme) Remove(key string) bool {
 	newKeys := make([]string, 0, len(s.keys))
 	result := false
 	for _, k := range s.keys {
 		if k != key {
 			newKeys = append(newKeys, k)
-		}else{
+		} else {
 			result = true
 		}
 	}
@@ -40,28 +40,28 @@ func (s *Scheme) Remove(key string) (bool) {
 	return result
 }
 
-func (s *Scheme) Save(){
+func (s *Scheme) Save() {
 	s.originalKeys = s.keys
 }
 
-func (s *Scheme) Restore(){
+func (s *Scheme) Restore() {
 	s.keys = s.originalKeys
 }
 
-func (s *Scheme) Print(){
-	fmt.Println("Current  Keys : ",s.keys)
-	fmt.Println("Original Keys : ",s.originalKeys)
+func (s *Scheme) Print() {
+	fmt.Println("Current  Keys : ", s.keys)
+	fmt.Println("Original Keys : ", s.originalKeys)
 }
 
-func MakeArray(elements...[]byte) []byte {
+func MakeArray(elements ...[]byte) []byte {
 	arr := make([]byte, 0, 128)
-	arr = append(arr , 91)
+	arr = append(arr, 91)
 	for _, el := range elements {
 		arr = append(arr, el...)
-		arr = append(arr , 44)
+		arr = append(arr, 44)
 	}
-	arr = arr[:len(arr) - 1]
-	arr = append(arr , 93)
+	arr = arr[:len(arr)-1]
+	arr = append(arr, 93)
 	return arr
 }
 

@@ -3,9 +3,6 @@ package jint
 import "strconv"
 
 func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte, error) {
-	if len(json) < 2 {
-		return json, BAD_JSON_ERROR(0)
-	}
 	var start int
 	var end int
 	var err error
@@ -50,7 +47,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 			}
 		}
 		if empty {
-			val := []byte(`"` + key + `":` + formatType(string(value)))
+			val := []byte(`"` + key + `":` + string(value))
 			json = replace(json, val, end-1, end-1)
 			return json, nil
 		} else {
@@ -58,7 +55,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 			_, _, _, err = core(json, false, path...)
 			if err != nil {
 				if err.Error() == KEY_NOT_FOUND_ERROR().Error() {
-					val := []byte(`,"` + key + `":` + formatType(string(value)))
+					val := []byte(`,"` + key + `":` + string(value))
 					json = replace(json, val, end-1, end-1)
 					return json, nil
 				}

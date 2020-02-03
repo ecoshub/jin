@@ -3,7 +3,7 @@ package jint
 import "strconv"
 
 func pCore(json []byte, core *node) error {
-	if len(json) == 0 {
+	if len(json) < 2 {
 		return BAD_JSON_ERROR(0)
 	}
 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
@@ -102,7 +102,7 @@ func pCore(json []byte, core *node) error {
 				}
 				core = core.up
 				core = core.link(path[len(path)-1])
-				core.value = json[brace[len(brace)-1]:i + 1]
+				core.value = json[brace[len(brace)-1] : i+1]
 				core = core.up
 
 				path = path[:len(path)-1]
@@ -124,7 +124,7 @@ func pCore(json []byte, core *node) error {
 				}
 				core = core.up
 				core = core.link(path[len(path)-1])
-				core.value = json[brace[len(brace)-1]:i + 1]
+				core.value = json[brace[len(brace)-1] : i+1]
 				core = core.up
 
 				path = path[:len(path)-1]

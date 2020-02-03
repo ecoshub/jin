@@ -248,10 +248,10 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 							if element == "true" || element == "false" {
 								if element == "true" {
 									newArray = append(newArray, true)
-								}else{
+								} else {
 									newArray = append(newArray, false)
 								}
-							}else{
+							} else {
 								return nil, PARSE_BOOL_ERROR(trimAndStripQuote(element))
 							}
 							start = i + 1
@@ -266,10 +266,10 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 						if element == "true" || element == "false" {
 							if element == "true" {
 								newArray = append(newArray, true)
-							}else{
+							} else {
 								newArray = append(newArray, false)
 							}
-						}else{
+						} else {
 							return nil, PARSE_BOOL_ERROR(element)
 						}
 						start = i + 1
