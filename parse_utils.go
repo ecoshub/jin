@@ -72,6 +72,16 @@ func (n * node) insert(up *node, index int) error{
 	return INDEX_OUT_OF_RANGE_ERROR()
 }
 
+func (n *node) deAttach() {
+	newDown := make([]*node, 0, len(n.up.down) - 1)
+	for _,d := range n.up.down {
+		if d.label != n.label {
+			newDown = append(newDown, d)
+		}
+	}
+	n.up.down = newDown
+}
+
 func (n *node) walk(path []string) (*node, error) {
 	lenp := len(path)
 	curr := n
