@@ -22,7 +22,7 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 			}
 		}
 		if len(json) >= 2 {
-			if json[0] == 123 && json[len(p.json)-1] == 125 {
+			if json[0] == 123 && json[len(json)-1] == 125 {
 				newKV := []byte(`,"` + key + `":` + string(newVal))
 				if lenv >= 2 {
 					if newVal[0] == 91 || newVal[0] == 123 {
@@ -52,13 +52,17 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 		}
 		return BAD_JSON_ERROR(0)
 	}
+	curr, err = p.core.walk(path)
+	if err != nil {
+		return err
+	}
 	for _, d := range curr.up.down {
 		if d.label == key {
 			return KEY_ALREADY_EXISTS_ERROR()
 		}
 	}
 	if len(json) >= 2 {
-		if json[0] == 123 && json[len(p.json)-1] == 125 {
+		if json[0] == 123 && json[len(json)-1] == 125 {
 			if lenv >= 2 {
 				if newVal[0] == 91 || newVal[0] == 123 {
 					newNode := CreateNode(nil)
@@ -73,7 +77,7 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 					}
 					for i := 0; i < lenp; i++ {
 						newNode = newNode.up
-						newNode.value, err = Get(p.json, path[:lenp-i]...)
+						newNode.value, err = Get(p.json, path[:lenp-i-1]...)
 						if err != nil {
 							return err
 						}
@@ -92,7 +96,7 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 			}
 			for i := 0; i < lenp; i++ {
 				newNode = newNode.up
-				newNode.value, err = Get(p.json, path[:lenp-i]...)
+				newNode.value, err = Get(p.json, path[:lenp-i-1]...)
 				if err != nil {
 					return err
 				}
@@ -116,10 +120,13 @@ func (p *parse) Add(newVal []byte, path ...string) error {
 	if err != nil {
 		return err
 	}
-	curr = p.core
+	if err != nil {
+		return err
+	}
 	if lenp == 0 {
+		curr = p.core
 		if len(json) >= 2 {
-			if json[0] == 91 && json[len(p.json)-1] == 93 {
+			if json[0] == 91 && json[len(json)-1] == 93 {
 				newValue := []byte(`,` + string(newVal))
 				if lenv >= 2 {
 					if newVal[0] == 91 || newVal[0] == 123 {
@@ -151,6 +158,10 @@ func (p *parse) Add(newVal []byte, path ...string) error {
 		}
 		return BAD_JSON_ERROR(0)
 	}
+	curr, err = p.core.walk(path)
+	if err != nil {
+		return err
+	}
 	if len(json) >= 2 {
 		if json[0] == 91 && json[len(json)-1] == 93 {
 			if lenv >= 2 {
@@ -166,7 +177,7 @@ func (p *parse) Add(newVal []byte, path ...string) error {
 					if err != nil {
 						return err
 					}
-					for i := 0; i < lenp; i++ {
+					for i := 0; i < lenp-1; i++ {
 						newNode = newNode.up
 						newNode.value, err = Get(p.json, path[:lenp-i]...)
 						if err != nil {
@@ -215,7 +226,7 @@ func (p *parse) Insert(newIndex int, newVal []byte, path ...string) error {
 	curr = p.core
 	if lenp == 0 {
 		if len(json) >= 2 {
-			if json[0] == 91 && json[len(p.json)-1] == 93 {
+			if json[0] == 91 && json[len(json)-1] == 93 {
 				if lenv >= 2 {
 					if newVal[0] == 91 || newVal[0] == 123 {
 						newNode := CreateNode(nil)
@@ -224,14 +235,13 @@ func (p *parse) Insert(newIndex int, newVal []byte, path ...string) error {
 						if err != nil {
 							return err
 						}
-						newNode.value = newVal
+						// newNode.value = newVal
 						p.json, err = Insert(p.json, newIndex, newVal, path...)
 						curr.down = append(curr.down, newNode)
 						newNode.up = curr
 						return nil
 					}
 				}
-				p.json, err = Insert(p.json, newIndex, newVal, path...)
 				newNode := CreateNode(nil)
 				err = newNode.insert(curr, newIndex)
 				if err != nil {
@@ -239,12 +249,17 @@ func (p *parse) Insert(newIndex int, newVal []byte, path ...string) error {
 				}
 				newNode.value = newVal
 				curr.down = append(curr.down, newNode)
+				p.json, err = Insert(p.json, newIndex, newVal, path...)
 				newNode.up = curr
 				return nil
 			}
 			return ARRAY_EXPECTED_ERROR()
 		}
 		return BAD_JSON_ERROR(0)
+	}
+	curr, err = p.core.walk(path)
+	if err != nil {
+		return err
 	}
 	if len(json) >= 2 {
 		if json[0] == 91 && json[len(json)-1] == 93 {

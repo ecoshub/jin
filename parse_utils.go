@@ -65,7 +65,6 @@ func (n * node) insert(up *node, index int) error{
 			up.down[i].label = strconv.Itoa(i + 1)
 		}
 		n.label = strconv.Itoa(index)
-		up.down[index] = n
 		n.up = up
 		return nil
 	}
