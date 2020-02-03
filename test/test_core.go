@@ -5,6 +5,9 @@ import (
 	"io/ioutil"
 	"fmt"
 	"bytes"
+	"path/filepath"
+	"os"
+	"strings"
 )
 
 func WriteFile(filedir string, buffer []byte) {
@@ -33,4 +36,27 @@ func ExecuteNode(par string) (string, error){
 	}else{
 		return out.String(), nil
 	}
+}
+
+func Dir(dir string) []string{
+	files := make([]string, 0 ,100)
+	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+    if err != nil {
+        return err
+    }
+    files = append(files, strings.TrimPrefix(path, dir))
+    return nil})
+	if err != nil {
+		fmt.Println("Error walking true path", err)
+	}
+    return files[1:]
+}
+
+func GetCurrentDir() string {
+	wd, _ := os.Getwd()
+	return wd
+}
+
+func Sep() string{
+	return string(os.PathSeparator)
 }
