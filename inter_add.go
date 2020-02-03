@@ -65,7 +65,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 				}
 				return json, err
 			}
-			return json, KEY_ALREADY_EXIST_ERROR()
+			return json, KEY_ALREADY_EXISTS_ERROR()
 		}
 	} else {
 		return json, OBJECT_EXPECTED_ERROR()

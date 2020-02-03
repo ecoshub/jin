@@ -36,7 +36,7 @@ func BAD_JSON_ERROR(index int) error {
 func BAD_KEY_ERROR() error {
 	return errors.New("ERROR_CODE:10 Error: Key value cannot contain quote symbol.")
 }
-func KEY_ALREADY_EXIST_ERROR() error {
+func KEY_ALREADY_EXISTS_ERROR() error {
 	return errors.New("ERROR_CODE:11 Error: Key already exist.")
 }
 func PARSE_INT_ERROR(val string) error {
@@ -62,4 +62,7 @@ func PARSE_BOOL_ARRAY_ERROR(val string) error {
 }
 func END_OF_ITERATION() error {
 	return errors.New("ERROR_CODE:19 Iteration Ended. If you want to restart the iteration use Reset() function.")
+}
+func NULL_KEY_ERROR() error {
+	return errors.New("ERROR_CODE:01 Error: New key cannot be null.")
 }

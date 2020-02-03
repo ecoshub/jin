@@ -4,14 +4,13 @@ import "strconv"
 
 func (p *parse) Get(path ...string) ([]byte, error) {
 	if len(path) == 0 {
-		//later
-		return nil, NULL_PATH_ERROR()
+		return p.json, nil
 	}
 	curr, err := p.core.walk(path)
 	if err != nil {
 		return nil, err
 	}
-	return trim(curr.value), nil
+	return StripQuotesByte(trim(curr.value)), nil
 }
 
 func (p *parse) GetString(path ...string) (string, error) {
@@ -115,9 +114,9 @@ func (p * parse) GetIntArray(path ...string) ([]int, error) {
 					if curr == 93 {
 						if level == 0 {
 							element := val[start:i]
-							num, err := strconv.Atoi(TrimAndStripQuote(element))
+							num, err := strconv.Atoi(trimAndStripQuote(element))
 							if err != nil {
-								return nil, PARSE_INT_ERROR(TrimAndStripQuote(element))
+								return nil, PARSE_INT_ERROR(trimAndStripQuote(element))
 							}
 							newArray = append(newArray, num)
 							start = i + 1
@@ -128,9 +127,9 @@ func (p * parse) GetIntArray(path ...string) ([]int, error) {
 				if level == 1 {
 					if curr == 44 {
 						element := val[start:i]
-						num, err := strconv.Atoi(TrimAndStripQuote(element))
+						num, err := strconv.Atoi(trimAndStripQuote(element))
 						if err != nil {
-							return nil, PARSE_INT_ERROR(TrimAndStripQuote(element))
+							return nil, PARSE_INT_ERROR(trimAndStripQuote(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -180,9 +179,9 @@ func (p * parse) GetFloatArray(path ...string) ([]float64, error) {
 					if curr == 93 {
 						if level == 0 {
 							element := val[start:i]
-							num, err := strconv.ParseFloat(TrimAndStripQuote(element), 64)
+							num, err := strconv.ParseFloat(trimAndStripQuote(element), 64)
 							if err != nil {
-								return nil, PARSE_FLOAT_ERROR(TrimAndStripQuote(element))
+								return nil, PARSE_FLOAT_ERROR(trimAndStripQuote(element))
 							}
 							newArray = append(newArray, num)
 							start = i + 1
@@ -193,9 +192,9 @@ func (p * parse) GetFloatArray(path ...string) ([]float64, error) {
 				if level == 1 {
 					if curr == 44 {
 						element := val[start:i]
-						num, err := strconv.ParseFloat(TrimAndStripQuote(element), 64)
+						num, err := strconv.ParseFloat(trimAndStripQuote(element), 64)
 						if err != nil {
-							return nil, PARSE_FLOAT_ERROR(TrimAndStripQuote(element))
+							return nil, PARSE_FLOAT_ERROR(trimAndStripQuote(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -245,7 +244,7 @@ func (p * parse) GetBoolArray(path ...string) ([]bool, error) {
 					if curr == 93 {
 						if level == 0 {
 							element := val[start:i]
-							element = TrimAndStripQuote(element)
+							element = trimAndStripQuote(element)
 							if element == "true" || element == "false" {
 								if element == "true" {
 									newArray = append(newArray, true)
@@ -253,7 +252,7 @@ func (p * parse) GetBoolArray(path ...string) ([]bool, error) {
 									newArray = append(newArray, false)
 								}
 							}else{
-								return nil, PARSE_BOOL_ERROR(TrimAndStripQuote(element))
+								return nil, PARSE_BOOL_ERROR(trimAndStripQuote(element))
 							}
 							start = i + 1
 							break
@@ -263,7 +262,7 @@ func (p * parse) GetBoolArray(path ...string) ([]bool, error) {
 				if level == 1 {
 					if curr == 44 {
 						element := val[start:i]
-						element = TrimAndStripQuote(element)
+						element = trimAndStripQuote(element)
 						if element == "true" || element == "false" {
 							if element == "true" {
 								newArray = append(newArray, true)

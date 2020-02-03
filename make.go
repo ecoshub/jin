@@ -211,23 +211,3 @@ func MakeJsonString(keys, values []string) []byte {
 func MakeEmptyJson() []byte {
 	return []byte{123, 125}
 }
-
-func isBool(val string) bool {
-	return val == "true" || val == "false"
-}
-
-func isFloat(val string) bool {
-	_, err := strconv.ParseFloat(val, 64)
-	if err != nil {
-		return false
-	}
-	return true
-}
-
-func isInt(val string) bool {
-	_, err := strconv.ParseInt(val, 10, 32)
-	if err != nil {
-		return false
-	}
-	return true
-}

@@ -71,7 +71,7 @@ func SetKey(json []byte, newKey string, path ...string) ([]byte, error) {
 			}
 			return json, KEY_EXPECTED_ERROR()
 		}
-		return json, KEY_ALREADY_EXIST_ERROR()
+		return json, KEY_ALREADY_EXISTS_ERROR()
 	}
 	return json, BAD_JSON_ERROR(-1)
 }
