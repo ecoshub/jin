@@ -132,6 +132,43 @@ func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 	return json, BAD_JSON_ERROR(-1)
 }
 
+func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error) {
+	// lenpath == 0 and empty array control needed
+	var start int
+	var err error
+	if len(path) == 0 {
+		for i := 0; i < len(json); i++ {
+			if !space(json[i]) {
+				start = i
+				break
+			}
+		}
+	} else {
+		_, start, _, err = core(json, true, path...)
+		if err != nil {
+			return json, err
+		}
+	}
+	if json[start] != 91 {
+		return json, ARRAY_EXPECTED_ERROR()
+	}
+	indexStr := strconv.Itoa(index)
+	path = append(path, indexStr)
+	_, start, _, err = core(json, true, path...)
+	if err != nil {
+		return json, err
+	}
+	val := make([]byte, len(value)+1)
+	copy(val, value)
+	val[len(val)-1] = 44
+	if json[start-1] == 34 {
+		json = replace(json, val, start-1, start-1)
+		return json, nil
+	}
+	json = replace(json, val, start, start)
+	return json, nil
+}
+
 func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, error) {
 	return AddKeyValue(json, key, []byte(value), path...)
 }
@@ -171,43 +208,6 @@ func AddBool(json []byte, value bool, path ...string) ([]byte, error) {
 		return Add(json, []byte("true"), path...)
 	}
 	return Add(json, []byte("false"), path...)
-}
-
-func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error) {
-	// lenpath == 0 and empty array control needed
-	var start int
-	var err error
-	if len(path) == 0 {
-		for i := 0; i < len(json); i++ {
-			if !space(json[i]) {
-				start = i
-				break
-			}
-		}
-	} else {
-		_, start, _, err = core(json, true, path...)
-		if err != nil {
-			return json, err
-		}
-	}
-	if json[start] != 91 {
-		return json, ARRAY_EXPECTED_ERROR()
-	}
-	indexStr := strconv.Itoa(index)
-	path = append(path, indexStr)
-	_, start, _, err = core(json, true, path...)
-	if err != nil {
-		return json, err
-	}
-	val := make([]byte, len(value)+1)
-	copy(val, value)
-	val[len(val)-1] = 44
-	if json[start-1] == 34 {
-		json = replace(json, val, start-1, start-1)
-		return json, nil
-	}
-	json = replace(json, val, start, start)
-	return json, nil
 }
 
 func InsertString(json []byte, index int, value string, path ...string) ([]byte, error) {
