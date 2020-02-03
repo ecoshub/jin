@@ -1,7 +1,7 @@
 package jint
 
 func IsObject(json []byte, path ...string) (bool, error) {
-	state, _, err := typeControlcore(json, []byte{91, 123}, true, path...)
+	state, _, err := typeControlCore(json, []byte{91, 123}, true, path...)
 	if err != nil {
 		return false, err
 	}
@@ -9,7 +9,7 @@ func IsObject(json []byte, path ...string) (bool, error) {
 }
 
 func IsArray(json []byte, path ...string) (bool, error) {
-	state, _, err := typeControlcore(json, []byte{91}, true, path...)
+	state, _, err := typeControlCore(json, []byte{91}, true, path...)
 	if err != nil {
 		return false, err
 	}
@@ -17,7 +17,7 @@ func IsArray(json []byte, path ...string) (bool, error) {
 }
 
 func IsValue(json []byte, path ...string) (bool, error) {
-	state, _, err := typeControlcore(json, []byte{91, 123}, false, path...)
+	state, _, err := typeControlCore(json, []byte{91, 123}, false, path...)
 	if err != nil {
 		return false, err
 	}
@@ -25,7 +25,7 @@ func IsValue(json []byte, path ...string) (bool, error) {
 }
 
 func GetType(json []byte, path ...string) (string, error) {
-	_, start, err := typeControlcore(json, []byte{}, false, path...)
+	_, start, err := typeControlCore(json, []byte{}, false, path...)
 	if err != nil {
 		return "ERROR", err
 	}
@@ -84,7 +84,7 @@ func IsEmpty(json []byte, path ...string) (bool, error) {
 	return true, nil
 }
 
-func typeControlcore(json []byte, control []byte, equal bool, path ...string) (bool, int, error) {
+func typeControlCore(json []byte, control []byte, equal bool, path ...string) (bool, int, error) {
 	var start int
 	var err error
 	if len(path) == 0 {
