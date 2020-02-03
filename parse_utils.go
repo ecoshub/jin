@@ -3,11 +3,6 @@ package jint
 import "fmt"
 
 type node struct {
-	// type 0 is value
-	// type 1 is key&Value
-	// type 2 is object
-	// type 3 is array
-	typ         int
 	label       string
 	value       []byte
 	up          *node
@@ -78,86 +73,16 @@ func (n *node) walk(path []string) (*node, error) {
 	return curr, nil
 }
 
-func trim(json []byte) []byte {
-	if len(json) < 1 {
-		return nil
-	}
-	start := 0
-	for i := start; i < len(json); i++ {
-		if space(json[i]) {
-			start++
-		} else {
-			break
+func (n * node) getIndex() int {
+	for i, v := range n.up.down {
+		if v.label == n.label {
+			return i
 		}
 	}
-	end := len(json) - 1
-	for i := end; i > start; i-- {
-		if space(json[i]) {
-			end--
-		} else {
-			break
-		}
-	}
-	if json[start] == 34 {
-		start++
-	}
-	if json[end] == 34 {
-		end--
-	}
-	return json[start : end+1]
+	return -1
 }
 
-// func (n * node) getIndex() int {
-// 	for i, v := range n.up.down {
-// 		if v.label == n.label {
-// 			return i
-// 		}
-// 	}
-// 	return -1
-// }
-
-// func (n * node) setOffsetUp(off int){
-// 	index := n.getIndex() + 1
-// 	n = n.up
-// 	n.end += off
-// 	start := false
-// 	for i, d := range n.down{
-// 		if i == index {
-// 			start = true
-// 		}
-// 		if start {
-// 			d.start += off
-// 			d.end += off
-// 			d.hasValue = false
-// 			if len(d.down) > 0 {
-// 				d.setOffset(0, off)
-// 			}
-// 		}
-// 	}
-// 	if n.up != nil {
-// 		n.setOffsetUp(off)
-// 	}
-// }
-
-// func (n * node) setOffset(startIndex, off int){
-// 	start := false
-// 	for i, d := range n.down{
-// 		if i == startIndex {
-// 			start = true
-// 		}
-// 		if start {
-// 			d.start += off
-// 			d.end += off
-// 			d.hasValue = false
-// 			if len(d.down) > 0 {
-// 				d.setOffset(0, off)
-// 			}
-// 		}
-// 	}
-// }
-
-
-func (p *parse) Three(withValues bool) {
+func (p *parse) Tree(withValues bool) {
 	p.core.recursivePrint(p.json, 0, withValues)
 }
 

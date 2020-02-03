@@ -1,88 +1,105 @@
 package jint
 
-// func ( p * parse) Set(newVal []byte, path ... string) error{
-// 	if len(path) == 0 {
-// 		return BAD_JSON_ERROR(0)
-// 	}
-// 	curr, err := p.core.walk(path)
-// 	if err != nil {
-// 		return err
-// 	}
-// 	val := curr.getVal(p.json)
-// 	oldType := 0 //value
-// 	newType := 0 // value
-// 	if val[0] ==123 || val[0] == 91{
-// 		oldType = 1 // json
-// 	}
-// 	if newVal[0] ==123 || newVal[0] == 91{
-// 		newType = 1 // json
-// 	}
-// 	newJson := make([]byte, 0, len(p.json) - len(val) + len(newVal))
-// 	newJson = append(newJson, p.json[:curr.start]...)
-// 	newJson = append(newJson, newVal...) 
-// 	newJson = append(newJson, p.json[curr.start + len(val):]...)
-// 	p.json = newJson
-// 	newVal = Flatten(newVal)
-// 	delt := 0
-// 	switch oldType{
-// 	case 0:
-// 		switch newType{
-// 		case 0:
-// 			// value to value
-// 			curr.setVal(newVal)
-// 			delt = len(newVal) - len(val)
-// 		case 1:
-// 			// value to json/array
-// 			newCore := CreateNode(nil)
-// 			pCore(newVal, newCore)
-// 			if newCore.down[0] != nil {
-// 				newCore = newCore.down[0]
-// 			}
-// 			newCore.label = curr.label
-// 			newCore.up = curr.up
+import "strconv"
 
-// 			index := curr.getIndex()
-// 			curr.up.down[index] = newCore
-// 			delt = len(newVal) - len(val)
-// 			newCore.start += curr.start
-// 			newCore.end += curr.start
-// 			for _,d := range newCore.down {
-// 				d.start += curr.start
-// 				d.end += curr.start
-// 				d.hasValue = false
-// 			}
-// 			newCore.up.setOffset(index + 1, delt)
-// 		}
-// 	case 1:
-// 		switch newType{
-// 		case 0:
-// 			// json/array to value
-// 			off := curr.end - curr.start
-// 			delt = len(newVal) - off
-// 			curr.down = []*node{}
-// 			curr.end = curr.start + len(newVal)
-// 			curr.hasValue = false
-// 		case 1:
-// 			// json/array to json/array
-// 			delt = len(newVal) - len(val)
-// 			index := curr.getIndex()
-// 			newCore := CreateNode(nil)
-// 			pCore(newVal, newCore)
-// 			if newCore.down[0] != nil {
-// 				newCore = newCore.down[0]
-// 			}
-// 			newCore.label = curr.label
-// 			curr.up.down[index] = newCore
-// 			newCore.up = curr.up
-// 			newCore.up.setOffset(index, curr.start)
+func (p * parse) Set(newVal []byte, path...string) error{
+	lenp := len(path)
+	lenv := len(newVal)
+	var curr *node 
+	var err error
+	if lenp == 0 {
+		return NULL_PATH_ERROR()
+	}
+	if lenv == 0 {
+		return NULL_NEW_VALUE_ERROR()
+	}
+	curr, err = p.core.walk(path)
+	if err != nil {
+		return err
+	}
+	if lenv >= 2 {
+		if newVal[0] == 91 || newVal[0] == 123  {
+			newCore := CreateNode(nil)
+			pCore(newVal, newCore)
+			newCore.label = curr.label
+			newCore.up = curr.up
+			index := curr.getIndex()
+			curr.up.down[index] = newCore
+			newCore.value = newVal
+			p.json, _ = Set(p.json, newVal, path...)
+			for i := 0 ; i < lenp - 1; i ++ {
+				newCore = newCore.up
+				newCore.value, err = Get(p.json, path[:lenp - 1 - i]...)
+				if err != nil {
+					return err
+				}
+			}
+			return nil
+		}
+	}
+	curr.value = newVal
+	p.json, _ = Set(p.json, newVal, path...)
+	for i := 0 ; i < lenp - 1; i ++ {
+		curr = curr.up
+		curr.value, err = Get(p.json, path[:lenp - 1 - i]...)
+		if err != nil {
+			return err
+		}
 
-// 		}
-// 	}
-// 	curr.setOffsetUp(delt)
-// 	return nil
-// }
+	}
+	return nil
+}
 
-// func (n * node) setVal(val []byte){
-// 	n.value = val
-// 	n.hasValue = true
-// }
+func (p * parse) SetString(newValue string, path...string) error {
+	if newValue[0] != 34 && newValue[len(newValue)-1] != 34 {
+		return p.Set([]byte(`"`+newValue+`"`), path...)
+	}
+	return p.Set([]byte(newValue), path...)
+}
+
+func (p * parse) SetInt(newValue int, path ...string) error {
+	return p.Set([]byte(strconv.Itoa(newValue)), path...)
+}
+
+func (p * parse) SetFloat(newValue float64, path ...string) error {
+	return p.Set([]byte(strconv.FormatFloat(newValue, 'e', -1, 64)), path...)
+}
+
+func (p * parse) SetBool(newValue bool, path ...string) error {
+	if newValue {
+		return p.Set([]byte("true"), path...)
+	}
+	return p.Set([]byte("false"), path...)
+}
+
+func (p * parse) SetKey(newKey string, path...string) error {
+	lenp := len(path)
+	lenv := len(newKey)
+	var curr *node 
+	var err error
+	if lenp == 0 {
+		return NULL_PATH_ERROR()
+	}
+	if lenv == 0 {
+		return NULL_KEY_ERROR()
+	}
+	curr, err = p.core.walk(path)
+	if err != nil {
+		return err
+	}
+	for _,d := range curr.up.down {
+		if d.label == newKey {
+			return KEY_ALREADY_EXISTS_ERROR()
+		}
+	}
+	curr.label = newKey
+	p.json, _ = SetKey(p.json, newKey, path...)
+	for i := 0 ; i < lenp - 1; i ++ {
+		curr = curr.up
+		curr.value, _ = Get(p.json, path[:lenp - 1 - i]...)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}

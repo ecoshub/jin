@@ -1,5 +1,7 @@
 package jint
 
+import "strconv"
+
 func replace(json, newValue []byte, start, end int) []byte {
 	newJson := make([]byte, 0, len(json)-end+start+len(newValue))
 	newJson = append(newJson, json[:start]...)
@@ -205,7 +207,7 @@ func ParseArray(arr string) []string {
 					if curr == 93 {
 						if level == 0 {
 							val := arr[start:i]
-							val = TrimAndStripQuote(val)
+							val = trimAndStripQuote(val)
 							newArray = append(newArray, val)
 							start = i + 1
 							break
@@ -215,7 +217,7 @@ func ParseArray(arr string) []string {
 				if level == 1 {
 					if curr == 44 {
 						val := arr[start:i]
-						val = TrimAndStripQuote(val)
+						val = trimAndStripQuote(val)
 						newArray = append(newArray, val)
 						start = i + 1
 						continue
@@ -266,7 +268,46 @@ func formatType(val string) string {
 	return `""`
 }
 
-func TrimAndStripQuote(str string) string{
+func isBool(val string) bool {
+	return val == "true" || val == "false"
+}
+
+func isFloat(val string) bool {
+	_, err := strconv.ParseFloat(val, 64)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+func isInt(val string) bool {
+	_, err := strconv.ParseInt(val, 10, 32)
+	if err != nil {
+		return false
+	}
+	return true
+}
+
+func trim(str []byte) []byte {
+	start := 0
+	lens := len(str) - 1
+	for space(str[start]) {
+		if start > lens {
+			break
+		}
+		start++
+	}
+	end := lens
+	for space(str[end]) {
+		if end < 1 {
+			break
+		}
+		end--
+	}
+	return str[start:end + 1]
+}
+
+func trimAndStripQuote(str string) string{
 	start := 0
 	lens := len(str) - 1
 	for space(str[start]) {
