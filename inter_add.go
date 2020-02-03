@@ -55,7 +55,6 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 			return json, nil
 		} else {
 			path = append(path, key)
-			// key already exist control
 			_, _, _, err = core(json, false, path...)
 			if err != nil {
 				if err.Error() == KEY_NOT_FOUND_ERROR().Error() {

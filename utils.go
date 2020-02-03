@@ -263,6 +263,9 @@ func formatType(val string) string {
 		if isFloat(val) {
 			return val
 		}
+		if val[0] == 34 && val[len(val) - 1] == 34 {
+			return val
+		}
 		return `"` + val + `"`
 	}
 	return `""`
