@@ -6,37 +6,35 @@ func Delete(json []byte, path ...string) ([]byte, error) {
 		return json, NULL_PATH_ERROR()
 	}
 	var currBrace byte
-	if lenp > 1 {
-		_, valueStart, _, err := core(json, false, path[:lenp-1]...)
+	var start int
+	var err error
+	if lenp == 1 {
+		for space(json[start]) {
+			if start > len(json)-1 {
+				return nil, BAD_JSON_ERROR(start)
+			}
+			start++
+		}
+		currBrace = json[start]
+	}else{
+		_, start, _, err = core(json, true, path[:lenp-1]...)
 		if err != nil {
 			return json, err
 		}
-		currBrace = json[valueStart]
+		currBrace = json[start]
 	}
-	if lenp == 1 {
-		var offset int
-		for space(json[offset]) {
-			if offset > len(json)-1 {
-				return nil, BAD_JSON_ERROR(offset)
-			}
-			offset++
-		}
-		currBrace = json[offset]
-	}
-	var start int
 	var end int
-	var err error
-	if currBrace == 91 {
+	switch currBrace {
+	case 91:
 		_, start, end, err = core(json, false, path...)
 		if err != nil {
 			return json, err
 		}
-		if json[end] == 34 {
+		if json[start-1] == 34 && json[end] == 34 {
 			end++
 			start--
 		}
-	}
-	if currBrace == 123 {
+	case 123:
 		start, _, end, err = core(json, false, path...)
 		if err != nil {
 			return json, err
@@ -45,6 +43,8 @@ func Delete(json []byte, path ...string) ([]byte, error) {
 			end++
 		}
 		start--
+	default:
+		return nil, BAD_JSON_ERROR(-1)
 	}
 	for i := end; i < len(json); i++ {
 		curr := json[i]
