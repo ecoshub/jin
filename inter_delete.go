@@ -5,70 +5,47 @@ func Delete(json []byte, path ...string) ([]byte, error) {
 	if lenp == 0 {
 		return json, NULL_PATH_ERROR()
 	}
-	var currBrace byte
-	var start int
-	var err error
-	if lenp == 1 {
-		for space(json[start]) {
-			if start > len(json)-1 {
-				return nil, BAD_JSON_ERROR(start)
-			}
-			start++
-		}
-		currBrace = json[start]
-	} else {
-		_, start, _, err = core(json, true, path[:lenp-1]...)
-		if err != nil {
-			return json, err
-		}
-		currBrace = json[start]
+	ks, s, e, err := core(json, false, path...)
+	if err != nil {
+		return json, err
 	}
-	var end int
-	switch currBrace {
-	case 91:
-		_, start, end, err = core(json, false, path...)
-		if err != nil {
-			return json, err
-		}
-		if json[start-1] == 34 && json[end] == 34 {
-			end++
-			start--
-		}
-	case 123:
-		start, _, end, err = core(json, false, path...)
-		if err != nil {
-			return json, err
-		}
-		if json[end] == 34 {
-			end++
-		}
+	start := 0
+	if ks == -1 {
+		start = s
+	}else{
+		start = ks -1
+	}
+	if json[start-1] == 34 {
 		start--
-	default:
-		return nil, BAD_JSON_ERROR(-1)
 	}
-	for i := end; i < len(json); i++ {
-		curr := json[i]
-		if !space(curr) {
-			if curr == currBrace+2 {
-				for j := start - 1; j > -1; j-- {
-					curr = json[j]
-					if !space(curr) {
-						if curr == 44 {
-							return replace(json, []byte{}, j, end), nil
-						}
-						if curr == currBrace {
-							return replace(json, []byte{}, j+1, end), nil
-						}
-						break
-					}
-				}
-				break
-			}
-			if curr == 44 {
-				return replace(json, []byte{}, start, i+1), nil
-			}
+	if json[e] == 34 {
+		e++
+	}
+	var startEdge int
+	var endEdge int
+	for i := start-1 ; i > 0 ; i -- {
+		if !space(json[i]) {
+			startEdge = i
 			break
 		}
 	}
-	return json, BAD_JSON_ERROR(-1)
+	for i := e ; i < len(json) ; i ++ {
+		if !space(json[i]) {
+			endEdge = i
+			break
+		}
+	}
+	if (json[startEdge] == 91 || json[startEdge] == 123) && json[startEdge]+2 == json[endEdge] {
+		json = replace(json, []byte{}, start, e)
+		return json, nil
+	}
+	if json[endEdge] == 44 {
+		json = replace(json, []byte{}, start, endEdge+1)
+		return json, nil
+	}
+	if json[startEdge] == 44 {
+		json = replace(json, []byte{}, startEdge, e)
+		return json, nil
+	}
+	return nil, BAD_JSON_ERROR(start)
 }
