@@ -57,638 +57,638 @@ func InitValues(t *testing.T, flat bool, scenario string, fileName string) {
 	}
 }
 
-// func TestInterperterGet(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, false, "get", file)
-// 		for i, _ := range paths {
-// 			_, start, end, err := core(json, false, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Test Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			value := json[start:end]
-// 			if json[start-1] != 34 {
-// 				value = Flatten(value)
-// 			}
-// 			if string(value) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail (Test Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), StripQuotes(values[i]), i)
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterGet(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, false, "get", file)
+		for i, _ := range paths {
+			_, start, end, err := core(json, false, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Test Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			value := json[start:end]
+			if json[start-1] != 34 {
+				value = Flatten(value)
+			}
+			if string(value) != StripQuotes(values[i]) {
+				t.Errorf("Fail (Test Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), StripQuotes(values[i]), i)
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterSet(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, false, "set", file)
-// 		for i, _ := range paths {
-// 			value, err := Set(json, []byte(`"test-string"`), paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			value, err = Get(value, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			if string(value) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterSet(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, false, "set", file)
+		for i, _ := range paths {
+			value, err := Set(json, []byte(`"test-string"`), paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			value, err = Get(value, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if string(value) != StripQuotes(values[i]) {
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterSetKey(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, false, "get", file)
-// 		for i, _ := range paths {
-// 			keyStart, _, _, err1 := core(json, true, paths[i]...)
-// 			if err1 != nil {
-// 				t.Errorf("Total Fail(Core), path:%v\n", paths[i])
-// 				return
-// 			}
-// 			newJson, err2 := SetKey(json, "test-key", paths[i]...)
-// 			// it is a number
-// 			if keyStart == -1 {
-// 				if err2 == nil {
-// 					t.Errorf("It is an element of an array cannot be set a new key %v", paths[i])
-// 					return
-// 				}
-// 			} else {
-// 				if err2 != nil {
-// 					t.Errorf("It is a key it can be set a new key %v", paths[i])
-// 					return
-// 				}
-// 				newPath := make([]string, len(paths[i]))
-// 				copy(newPath, paths[i][:len(paths[i])-1])
-// 				newPath[len(newPath)-1] = "test-key"
-// 				_, start, end, err := core(newJson, false, newPath...)
-// 				if err != nil {
-// 					t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 					return
-// 				}
-// 				value := newJson[start:end]
-// 				if newJson[start-1] != 34 {
-// 					value = Flatten(value)
-// 				}
-// 				if string(value) != StripQuotes(values[i]) {
-// 					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), values[i])
-// 					return
-// 				}
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterSetKey(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, false, "get", file)
+		for i, _ := range paths {
+			keyStart, _, _, err1 := core(json, true, paths[i]...)
+			if err1 != nil {
+				t.Errorf("Total Fail(Core), path:%v\n", paths[i])
+				return
+			}
+			newJson, err2 := SetKey(json, "test-key", paths[i]...)
+			// it is a number
+			if keyStart == -1 {
+				if err2 == nil {
+					t.Errorf("It is an element of an array cannot be set a new key %v", paths[i])
+					return
+				}
+			} else {
+				if err2 != nil {
+					t.Errorf("It is a key it can be set a new key %v", paths[i])
+					return
+				}
+				newPath := make([]string, len(paths[i]))
+				copy(newPath, paths[i][:len(paths[i])-1])
+				newPath[len(newPath)-1] = "test-key"
+				_, start, end, err := core(newJson, false, newPath...)
+				if err != nil {
+					t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+					return
+				}
+				value := newJson[start:end]
+				if newJson[start-1] != 34 {
+					value = Flatten(value)
+				}
+				if string(value) != StripQuotes(values[i]) {
+					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), values[i])
+					return
+				}
+			}
+		}
+	}
+}
 
-// func TestInterperterAddKV(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, false, "addkv", file)
-// 		for i, _ := range paths {
-// 			value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			var start int
-// 			var end int
-// 			var val []byte
-// 			if len(paths[i]) == 0 {
-// 				start = 0
-// 				end = len(value)
-// 				val = value
-// 				val = Flatten(val)
-// 			}else{
-// 				_, start, end, err = core(value, false, paths[i]...)
-// 				if err != nil {
-// 					t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 					return
-// 				}
-// 				val = value[start:end]
-// 				if value[start-1] != 34 {
-// 					val = Flatten(val)
-// 				}
-// 			}
-// 			if string(val) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(val), values[i])
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterAddKV(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, false, "addkv", file)
+		for i, _ := range paths {
+			value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			var start int
+			var end int
+			var val []byte
+			if len(paths[i]) == 0 {
+				start = 0
+				end = len(value)
+				val = value
+				val = Flatten(val)
+			}else{
+				_, start, end, err = core(value, false, paths[i]...)
+				if err != nil {
+					t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+					return
+				}
+				val = value[start:end]
+				if value[start-1] != 34 {
+					val = Flatten(val)
+				}
+			}
+			if string(val) != StripQuotes(values[i]) {
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(val), values[i])
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterAdd(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, false, "add", file)
-// 		for i, _ := range paths {
-// 			value, err := Add(json, []byte(`"test-value"`), paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			value, err = Get(value, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			if string(Flatten(value)) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(Flatten(value)), values[i])
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterAdd(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, false, "add", file)
+		for i, _ := range paths {
+			value, err := Add(json, []byte(`"test-value"`), paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			value, err = Get(value, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if string(Flatten(value)) != StripQuotes(values[i]) {
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(Flatten(value)), values[i])
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterInsert(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, false, "insert", file)
-// 		var err error
-// 		var value []byte
-// 		for i, _ := range paths {
-// 			json, err = Insert(json, 0, []byte(`"test-value"`), paths[i]...)
-// 			if err != nil {
-// 				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
-// 					t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 					return
-// 				} else {
-// 					continue
-// 				}
-// 			}
-// 			value, err = Get(json, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			if string(Flatten(value)) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterInsert(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, false, "insert", file)
+		var err error
+		var value []byte
+		for i, _ := range paths {
+			json, err = Insert(json, 0, []byte(`"test-value"`), paths[i]...)
+			if err != nil {
+				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
+					t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+					return
+				} else {
+					continue
+				}
+			}
+			value, err = Get(json, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if string(Flatten(value)) != StripQuotes(values[i]) {
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterDeleteKV(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, false, "deleteKV", file)
-// 		for i, _ := range paths {
-// 			value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			newPath := make([]string, len(paths[i]))
-// 			copy(newPath, paths[i])
-// 			newPath = append(newPath, "test-key")
-// 			value, err = Delete(value, newPath...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			value, err = Get(value, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			if string(Flatten(value)) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterDeleteKV(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, false, "deleteKV", file)
+		for i, _ := range paths {
+			value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			newPath := make([]string, len(paths[i]))
+			copy(newPath, paths[i])
+			newPath = append(newPath, "test-key")
+			value, err = Delete(value, newPath...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			value, err = Get(value, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if string(Flatten(value)) != StripQuotes(values[i]) {
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterDeleteV(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, false, "deleteV", file)
-// 		for i, _ := range paths {
-// 			value, err := Get(json, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			arr := ParseArray(string(value))
-// 			value, err = Add(json, []byte(`"test-value"`), paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			newPath := make([]string, len(paths[i]))
-// 			copy(newPath, paths[i])
-// 			newPath = append(newPath, strconv.Itoa(len(arr)))
-// 			value, err = Delete(value, newPath...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			value, err = Get(value, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			if string(Flatten(value)) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterDeleteV(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, false, "deleteV", file)
+		for i, _ := range paths {
+			value, err := Get(json, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			arr := ParseArray(string(value))
+			value, err = Add(json, []byte(`"test-value"`), paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			newPath := make([]string, len(paths[i]))
+			copy(newPath, paths[i])
+			newPath = append(newPath, strconv.Itoa(len(arr)))
+			value, err = Delete(value, newPath...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			value, err = Get(value, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if string(Flatten(value)) != StripQuotes(values[i]) {
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterArrayIter(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, false, "arrayiter", file)
-// 		for _, path := range paths {
-// 			count := 0
-// 			err := IterateArray(json, func(value []byte) bool {
-// 				newPath := make([]string, len(path))
-// 				copy(newPath, path)
-// 				newPath = append(newPath, strconv.Itoa(count))
-// 				value2, err := Get(json, newPath...)
-// 				if err != nil {
-// 					t.Errorf("Total Fail (Iter Array Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value2), string(value))
-// 				}
-// 				if string(value) != string(value2) {
-// 					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value2), string(value))
-// 					return false
-// 				} else {
-// 					count++
-// 					return true
-// 				}
-// 			}, path...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterArrayIter(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, false, "arrayiter", file)
+		for _, path := range paths {
+			count := 0
+			err := IterateArray(json, func(value []byte) bool {
+				newPath := make([]string, len(path))
+				copy(newPath, path)
+				newPath = append(newPath, strconv.Itoa(count))
+				value2, err := Get(json, newPath...)
+				if err != nil {
+					t.Errorf("Total Fail (Iter Array Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value2), string(value))
+				}
+				if string(value) != string(value2) {
+					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value2), string(value))
+					return false
+				} else {
+					count++
+					return true
+				}
+			}, path...)
+			if err != nil {
+				t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterKeyValueIter(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, false, "objectiter", file)
-// 		for _, path := range paths {
-// 			err := IterateKeyValue(json, func(key []byte, value []byte) bool {
-// 				newPath := make([]string, len(path))
-// 				copy(newPath, path)
-// 				newPath = append(newPath, string(key))
-// 				value2, err := Get(json, newPath...)
-// 				if err != nil {
-// 					t.Errorf("Total Fail (Iter Key Value Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), string(value2))
-// 				}
-// 				if string(value) != string(value2) {
-// 					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), string(value2))
-// 					return false
-// 				} else {
-// 					return true
-// 				}
-// 			}, path...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterKeyValueIter(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, false, "objectiter", file)
+		for _, path := range paths {
+			err := IterateKeyValue(json, func(key []byte, value []byte) bool {
+				newPath := make([]string, len(path))
+				copy(newPath, path)
+				newPath = append(newPath, string(key))
+				value2, err := Get(json, newPath...)
+				if err != nil {
+					t.Errorf("Total Fail (Iter Key Value Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), string(value2))
+				}
+				if string(value) != string(value2) {
+					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), string(value2))
+					return false
+				} else {
+					return true
+				}
+			}, path...)
+			if err != nil {
+				t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterGetFlatten(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, true, "get", file)
-// 		for i, _ := range paths {
-// 			_, start, end, err := core(json, false, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Test Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			// t.Logf("val:>%v<\n", string(value))
-// 			value := json[start:end]
-// 			if json[start-1] != 34 {
-// 				value = Flatten(value)
-// 			}
-// 			if string(value) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail (Test Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), StripQuotes(values[i]), i)
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterGetFlatten(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, true, "get", file)
+		for i, _ := range paths {
+			_, start, end, err := core(json, false, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Test Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			// t.Logf("val:>%v<\n", string(value))
+			value := json[start:end]
+			if json[start-1] != 34 {
+				value = Flatten(value)
+			}
+			if string(value) != StripQuotes(values[i]) {
+				t.Errorf("Fail (Test Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), StripQuotes(values[i]), i)
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterSetFlatten(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, true, "set", file)
-// 		for i, _ := range paths {
-// 			value, err := Set(json, []byte(`"test-string"`), paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			value, err = Get(value, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			if string(value) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterSetFlatten(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, true, "set", file)
+		for i, _ := range paths {
+			value, err := Set(json, []byte(`"test-string"`), paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			value, err = Get(value, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if string(value) != StripQuotes(values[i]) {
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterSetKeyFlatten(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, true, "get", file)
-// 		for i, _ := range paths {
-// 			keyStart, _, _, err1 := core(json, true, paths[i]...)
-// 			if err1 != nil {
-// 				t.Errorf("Total Fail(Core), path:%v\n", paths[i])
-// 				return
-// 			}
-// 			newJson, err2 := SetKey(json, "test-key", paths[i]...)
-// 			// it is a number
-// 			if keyStart == -1 {
-// 				if err2 == nil {
-// 					t.Errorf("It is an element of an array cannot be set a new key %v", paths[i])
-// 					return
-// 				}
-// 			} else {
-// 				if err2 != nil {
-// 					t.Errorf("It is a key it can be set a new key %v", paths[i])
-// 					return
-// 				}
-// 				newPath := make([]string, len(paths[i]))
-// 				copy(newPath, paths[i][:len(paths[i])-1])
-// 				newPath[len(newPath)-1] = "test-key"
-// 				_, start, end, err := core(newJson, false, newPath...)
-// 				if err != nil {
-// 					t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 					return
-// 				}
-// 				value := newJson[start:end]
-// 				if newJson[start-1] != 34 {
-// 					value = Flatten(value)
-// 				}
-// 				if string(value) != StripQuotes(values[i]) {
-// 					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), values[i])
-// 					return
-// 				}
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterSetKeyFlatten(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, true, "get", file)
+		for i, _ := range paths {
+			keyStart, _, _, err1 := core(json, true, paths[i]...)
+			if err1 != nil {
+				t.Errorf("Total Fail(Core), path:%v\n", paths[i])
+				return
+			}
+			newJson, err2 := SetKey(json, "test-key", paths[i]...)
+			// it is a number
+			if keyStart == -1 {
+				if err2 == nil {
+					t.Errorf("It is an element of an array cannot be set a new key %v", paths[i])
+					return
+				}
+			} else {
+				if err2 != nil {
+					t.Errorf("It is a key it can be set a new key %v", paths[i])
+					return
+				}
+				newPath := make([]string, len(paths[i]))
+				copy(newPath, paths[i][:len(paths[i])-1])
+				newPath[len(newPath)-1] = "test-key"
+				_, start, end, err := core(newJson, false, newPath...)
+				if err != nil {
+					t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+					return
+				}
+				value := newJson[start:end]
+				if newJson[start-1] != 34 {
+					value = Flatten(value)
+				}
+				if string(value) != StripQuotes(values[i]) {
+					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), values[i])
+					return
+				}
+			}
+		}
+	}
+}
 
-// func TestInterperterAddKVFlatten(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, true, "addkv", file)
-// 		for i, _ := range paths {
-// 			value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			value, err = Get(value, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			if string(Flatten(value)) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterAddKVFlatten(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, true, "addkv", file)
+		for i, _ := range paths {
+			value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			value, err = Get(value, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if string(Flatten(value)) != StripQuotes(values[i]) {
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterAddFlatten(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, true, "add", file)
-// 		for i, _ := range paths {
-// 			value, err := Add(json, []byte(`"test-value"`), paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			value, err = Get(value, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			if string(Flatten(value)) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(Flatten(value)), values[i])
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterAddFlatten(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, true, "add", file)
+		for i, _ := range paths {
+			value, err := Add(json, []byte(`"test-value"`), paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			value, err = Get(value, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if string(Flatten(value)) != StripQuotes(values[i]) {
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(Flatten(value)), values[i])
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterInsertFlatten(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, true, "insert", file)
-// 		var err error
-// 		var value []byte
-// 		for i, _ := range paths {
-// 			json, err = Insert(json, 0, []byte(`"test-value"`), paths[i]...)
-// 			if err != nil {
-// 				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
-// 					t.Errorf("Total Fail(Insert), path:%v err:%v\n", paths[i], err)
-// 					return
-// 				} else {
-// 					continue
-// 				}
-// 			}
-// 			value, err = Get(json, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Insert Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			if string(Flatten(value)) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterInsertFlatten(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, true, "insert", file)
+		var err error
+		var value []byte
+		for i, _ := range paths {
+			json, err = Insert(json, 0, []byte(`"test-value"`), paths[i]...)
+			if err != nil {
+				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
+					t.Errorf("Total Fail(Insert), path:%v err:%v\n", paths[i], err)
+					return
+				} else {
+					continue
+				}
+			}
+			value, err = Get(json, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Insert Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if string(Flatten(value)) != StripQuotes(values[i]) {
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterDeleteKVFlatten(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, true, "deleteKV", file)
-// 		for i, _ := range paths {
-// 			value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			newPath := make([]string, len(paths[i]))
-// 			copy(newPath, paths[i])
-// 			newPath = append(newPath, "test-key")
-// 			value, err = Delete(value, newPath...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			value, err = Get(value, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			if string(Flatten(value)) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterDeleteKVFlatten(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, true, "deleteKV", file)
+		for i, _ := range paths {
+			value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			newPath := make([]string, len(paths[i]))
+			copy(newPath, paths[i])
+			newPath = append(newPath, "test-key")
+			value, err = Delete(value, newPath...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			value, err = Get(value, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if string(Flatten(value)) != StripQuotes(values[i]) {
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterDeleteVFlatten(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, true, "deleteV", file)
-// 		for i, _ := range paths {
-// 			value, err := Get(json, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			arr := ParseArray(string(value))
-// 			value, err = Add(json, []byte(`"test-value"`), paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			newPath := make([]string, len(paths[i]))
-// 			copy(newPath, paths[i])
-// 			newPath = append(newPath, strconv.Itoa(len(arr)))
-// 			value, err = Delete(value, newPath...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			value, err = Get(value, paths[i]...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
-// 				return
-// 			}
-// 			if string(Flatten(value)) != StripQuotes(values[i]) {
-// 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterDeleteVFlatten(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, true, "deleteV", file)
+		for i, _ := range paths {
+			value, err := Get(json, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			arr := ParseArray(string(value))
+			value, err = Add(json, []byte(`"test-value"`), paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			newPath := make([]string, len(paths[i]))
+			copy(newPath, paths[i])
+			newPath = append(newPath, strconv.Itoa(len(arr)))
+			value, err = Delete(value, newPath...)
+			if err != nil {
+				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			value, err = Get(value, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if string(Flatten(value)) != StripQuotes(values[i]) {
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterArrayIterFlatten(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, true, "arrayiter", file)
-// 		for _, path := range paths {
-// 			count := 0
-// 			err := IterateArray(json, func(value []byte) bool {
-// 				newPath := make([]string, len(path))
-// 				copy(newPath, path)
-// 				newPath = append(newPath, strconv.Itoa(count))
-// 				value2, err := Get(json, newPath...)
-// 				if err != nil {
-// 					t.Errorf("Total Fail (Iter Array Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value2), string(value))
-// 				}
-// 				if string(value) != string(value2) {
-// 					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value2), string(value))
-// 					return false
-// 				} else {
-// 					count++
-// 					return true
-// 				}
-// 			}, path...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterArrayIterFlatten(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, true, "arrayiter", file)
+		for _, path := range paths {
+			count := 0
+			err := IterateArray(json, func(value []byte) bool {
+				newPath := make([]string, len(path))
+				copy(newPath, path)
+				newPath = append(newPath, strconv.Itoa(count))
+				value2, err := Get(json, newPath...)
+				if err != nil {
+					t.Errorf("Total Fail (Iter Array Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value2), string(value))
+				}
+				if string(value) != string(value2) {
+					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value2), string(value))
+					return false
+				} else {
+					count++
+					return true
+				}
+			}, path...)
+			if err != nil {
+				t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
+				return
+			}
+		}
+	}
+}
 
-// func TestInterperterKeyValueIterFlatten(t *testing.T) {
-// 	t.Logf("test files:")
-// 	for f := 0 ; f < len(tests) ; f ++ {
-// 		file := "tests" + tests[f]
-// 		t.Logf("%v", file)
-// 		InitValues(t, true, "objectiter", file)
-// 		for _, path := range paths {
-// 			err := IterateKeyValue(json, func(key []byte, value []byte) bool {
-// 				newPath := make([]string, len(path))
-// 				copy(newPath, path)
-// 				newPath = append(newPath, string(key))
-// 				value2, err := Get(json, newPath...)
-// 				if err != nil {
-// 					t.Errorf("Total Fail (Iter Key Value Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), string(value2))
-// 				}
-// 				if string(value) != string(value2) {
-// 					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), string(value2))
-// 					return false
-// 				} else {
-// 					return true
-// 				}
-// 			}, path...)
-// 			if err != nil {
-// 				t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
-// 				return
-// 			}
-// 		}
-// 	}
-// }
+func TestInterperterKeyValueIterFlatten(t *testing.T) {
+	t.Logf("test files:")
+	for f := 0 ; f < len(tests) ; f ++ {
+		file := "tests" + tests[f]
+		t.Logf("%v", file)
+		InitValues(t, true, "objectiter", file)
+		for _, path := range paths {
+			err := IterateKeyValue(json, func(key []byte, value []byte) bool {
+				newPath := make([]string, len(path))
+				copy(newPath, path)
+				newPath = append(newPath, string(key))
+				value2, err := Get(json, newPath...)
+				if err != nil {
+					t.Errorf("Total Fail (Iter Key Value Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), string(value2))
+				}
+				if string(value) != string(value2) {
+					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), string(value2))
+					return false
+				} else {
+					return true
+				}
+			}, path...)
+			if err != nil {
+				t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
+				return
+			}
+		}
+	}
+}
 
 func TestParserGet(t *testing.T) {
 	t.Logf("test files:")
