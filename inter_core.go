@@ -9,7 +9,7 @@ import "strconv"
 // Not for public usage
 func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 	// null json control.
-	if len(json) == 0 {
+	if len(json) < 2 {
 		return -1, -1, -1, BAD_JSON_ERROR(0)
 	}
 	// main offset track of this search.
@@ -107,7 +107,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 					if curr == 34 {
 						for n := i - 1; n > -1; n-- {
 							if json[n] != 92 {
-								if (i-1-n)%2 == 0 {
+								if (i-n)%2 != 0 {
 									inQuote = !inQuote
 									break
 								} else {
@@ -221,7 +221,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 					// escape char ccontrol algorithm
 					for n := i - 1; n > -1; n-- {
 						if json[n] != 92 {
-							if (i-1-n)%2 == 0 {
+							if (i-n)%2 != 0 {
 								inQuote = !inQuote
 								break
 							} else {
@@ -426,7 +426,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 				// escape char ccontrol algorithm
 				for n := i - 1; n > -1; n-- {
 					if json[n] != 92 {
-						if (i-1-n)%2 == 0 {
+						if (i-n)%2 != 0 {
 							inQuote = !inQuote
 							break
 						} else {
