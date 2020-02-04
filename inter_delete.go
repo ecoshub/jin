@@ -16,7 +16,7 @@ func Delete(json []byte, path ...string) ([]byte, error) {
 			start++
 		}
 		currBrace = json[start]
-	}else{
+	} else {
 		_, start, _, err = core(json, true, path[:lenp-1]...)
 		if err != nil {
 			return json, err

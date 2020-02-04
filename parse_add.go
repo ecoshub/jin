@@ -314,63 +314,63 @@ func (p *parse) Insert(newIndex int, newVal []byte, path ...string) error {
 	return BAD_JSON_ERROR(0)
 }
 
-func (p * parse) AddKeyValueString(key, value string, path ...string) error {
+func (p *parse) AddKeyValueString(key, value string, path ...string) error {
 	return p.AddKeyValue(key, []byte(value), path...)
 }
 
-func (p * parse) AddKeyValueInt(key string, value int, path ...string) error {
+func (p *parse) AddKeyValueInt(key string, value int, path ...string) error {
 	return p.AddKeyValue(key, []byte(strconv.Itoa(value)), path...)
 }
 
-func (p * parse) AddKeyValueFloat(key string, value float64, path ...string) error {
+func (p *parse) AddKeyValueFloat(key string, value float64, path ...string) error {
 	return p.AddKeyValue(key, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
-func (p * parse) AddKeyValueBool(key string, value bool, path ...string) error {
+func (p *parse) AddKeyValueBool(key string, value bool, path ...string) error {
 	if value {
 		return p.AddKeyValue(key, []byte("true"), path...)
 	}
 	return p.AddKeyValue(key, []byte("false"), path...)
 }
 
-func (p * parse) AddString(value string, path ...string) error {
+func (p *parse) AddString(value string, path ...string) error {
 	if value[0] != 34 && value[len(value)-1] != 34 {
 		return p.Add([]byte(`"`+value+`"`), path...)
 	}
 	return p.Add([]byte(value), path...)
 }
 
-func (p * parse) AddInt(value int, path ...string) error {
+func (p *parse) AddInt(value int, path ...string) error {
 	return p.Add([]byte(strconv.Itoa(value)), path...)
 }
 
-func (p * parse) AddFloat(value float64, path ...string) error {
+func (p *parse) AddFloat(value float64, path ...string) error {
 	return p.Add([]byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
-func (p * parse) AddBool(value bool, path ...string) error {
+func (p *parse) AddBool(value bool, path ...string) error {
 	if value {
 		return p.Add([]byte("true"), path...)
 	}
 	return p.Add([]byte("false"), path...)
 }
 
-func (p * parse) InsertString(index int, value string, path ...string) error {
+func (p *parse) InsertString(index int, value string, path ...string) error {
 	if value[0] != 34 && value[len(value)-1] != 34 {
 		return p.Insert(index, []byte(`"`+value+`"`), path...)
 	}
 	return p.Insert(index, []byte(value), path...)
 }
 
-func (p * parse) InsertInt(index, value int, path ...string) error {
+func (p *parse) InsertInt(index, value int, path ...string) error {
 	return p.Insert(index, []byte(strconv.Itoa(value)), path...)
 }
 
-func (p * parse) InsertFloat(index int, value float64, path ...string) error {
+func (p *parse) InsertFloat(index int, value float64, path ...string) error {
 	return p.Insert(index, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
-func (p * parse) InsertBool(index int, value bool, path ...string) error {
+func (p *parse) InsertBool(index int, value bool, path ...string) error {
 	if value {
 		return p.Insert(index, []byte("true"), path...)
 	}
