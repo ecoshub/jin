@@ -42,21 +42,15 @@ func pCore(json []byte, core *node) error {
 			continue
 		}
 		if curr == 34 {
-			if inQuote {
-				for n := i - 1; n > -1; n-- {
-					if json[n] != 92 {
-						if (i-1-n)%2 == 0 {
-							inQuote = !inQuote
-							break
-						} else {
-							break
-						}
+			for n := i - 1; n > -1; n-- {
+				if json[n] != 92 {
+					if (i-1-n)%2 == 0 {
+						inQuote = !inQuote
+						break
+					} else {
+						break
 					}
-					continue
 				}
-				continue
-			} else {
-				inQuote = !inQuote
 				continue
 			}
 			continue
@@ -70,9 +64,13 @@ func pCore(json []byte, core *node) error {
 				// { , -> :
 				case 123, 44:
 					key = trimAndStripQuote(string(json[lastIndex:i]))
-					break
+					last = curr
+					lastIndex = i + 1
+					continue
 				}
-				break
+				last = curr
+				lastIndex = i + 1
+				continue
 			case 44:
 				switch last {
 				// [ : , -> ,
@@ -87,7 +85,9 @@ func pCore(json []byte, core *node) error {
 					core = core.up
 				}
 				indexLevel[len(indexLevel)-1]++
-				break
+				last = curr
+				lastIndex = i + 1
+				continue
 			case 93:
 				// , -> ]
 				// last value area
@@ -108,8 +108,9 @@ func pCore(json []byte, core *node) error {
 				path = path[:len(path)-1]
 				indexLevel = indexLevel[:len(indexLevel)-1]
 				brace = brace[:len(brace)-1]
-				level--
-				break
+				last = curr
+				lastIndex = i + 1
+				continue
 			case 125:
 				// : -> }
 				// last value area
@@ -131,7 +132,9 @@ func pCore(json []byte, core *node) error {
 				indexLevel = indexLevel[:len(indexLevel)-1]
 				brace = brace[:len(brace)-1]
 				level--
-				break
+				last = curr
+				lastIndex = i + 1
+				continue
 			case 91:
 				switch last {
 				// : -> [
@@ -145,7 +148,9 @@ func pCore(json []byte, core *node) error {
 				indexLevel = append(indexLevel, 0)
 				brace = append(brace, i)
 				level++
-				break
+				last = curr
+				lastIndex = i + 1
+				continue
 			case 123:
 				switch last {
 				// : -> {
@@ -159,11 +164,13 @@ func pCore(json []byte, core *node) error {
 				indexLevel = append(indexLevel, 0)
 				brace = append(brace, i)
 				level++
-				break
+				last = curr
+				lastIndex = i + 1
+				continue
 			}
-			last = curr
-			lastIndex = i + 1
-			continue
+			// last = curr
+			// lastIndex = i + 1
+			// continue
 		}
 	}
 	return nil
