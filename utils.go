@@ -2,6 +2,48 @@ package jint
 
 import "strconv"
 
+type sequance struct {
+	list []int
+	index int
+	length int
+}
+
+func MakeSeq(length int) *sequance{
+	s := sequance{list:make([]int, length), index:0, length:length}
+	return &s
+}
+
+func (s *sequance) Push(element int) {
+	if s.index > s.length - 1 {
+		newList := make([]int, s.length + 4)
+		copy(newList, s.list)
+		s.list = newList
+		s.length = s.length + 4
+	}
+	s.list[s.index] = element
+	s.index++
+}
+
+func (s *sequance) Pop() int{
+	if s.index > -1 {
+		s.index--
+		return s.list[s.index]
+	}
+	return 0
+}
+
+func (s *sequance) Last() int{
+	return s.list[s.index-1]
+}
+
+func (s *sequance) GetList() []int {
+	return s.list[:s.index]
+}
+
+func (s *sequance) Inc() {
+	s.list[s.index-1]++
+}
+
 func replace(json, newValue []byte, start, end int) []byte {
 	newJson := make([]byte, 0, len(json)-end+start+len(newValue))
 	newJson = append(newJson, json[:start]...)

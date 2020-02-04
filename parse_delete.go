@@ -1,6 +1,6 @@
 package jint
 
-func (p *parse) Delete(path...string) error {
+func (p *parse) Delete(path ...string) error {
 	var err error
 	var curr *node
 	lenp := len(path)
@@ -16,9 +16,9 @@ func (p *parse) Delete(path...string) error {
 	if err != nil {
 		return err
 	}
-	for i := 0; i < lenp - 1; i++ {
+	for i := 0; i < lenp-1; i++ {
 		curr = curr.up
-		curr.value, err = Get(p.json, path[:lenp-i - 1]...)
+		curr.value, err = Get(p.json, path[:lenp-i-1]...)
 		if err != nil {
 			return err
 		}

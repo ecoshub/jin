@@ -19,6 +19,9 @@ type parse struct {
 
 func CreateNode(up *node) *node {
 	Node := node{up: up, down: []*node{}}
+	if up != nil {
+		up.down = append(up.down, &Node)
+	}
 	return &Node
 }
 
@@ -28,6 +31,10 @@ func Parse(json []byte) (*parse, error) {
 	if err != nil {
 		return nil, err
 	}
+	if core.down == nil {
+		return nil, BAD_JSON_ERROR(0)
+	}
+	core = core.down[0]
 	pars := parse{core: core, json: json}
 	return &pars, nil
 }
@@ -55,13 +62,13 @@ func (n *node) attach(other *node) {
 	n.down = append(n.down, other)
 }
 
-func (n * node) insert(up *node, index int) error{
+func (n *node) insert(up *node, index int) error {
 	lend := len(up.down)
 	if lend != 0 {
-		if lend - 1 < index {
+		if lend-1 < index {
 			return INDEX_OUT_OF_RANGE_ERROR()
 		}
-		for i := index ; i < lend ; i ++ {
+		for i := index; i < lend; i++ {
 			up.down[i].label = strconv.Itoa(i + 1)
 		}
 		n.label = strconv.Itoa(index)
@@ -72,8 +79,8 @@ func (n * node) insert(up *node, index int) error{
 }
 
 func (n *node) deAttach() {
-	newDown := make([]*node, 0, len(n.up.down) - 1)
-	for _,d := range n.up.down {
+	newDown := make([]*node, 0, len(n.up.down)-1)
+	for _, d := range n.up.down {
 		if d.label != n.label {
 			newDown = append(newDown, d)
 		}
@@ -84,7 +91,7 @@ func (n *node) deAttach() {
 func (n *node) walk(path []string) (*node, error) {
 	lenp := len(path)
 	curr := n
-	if len(path) == 0 {
+	if lenp == 0 {
 		return curr, nil
 	}
 	for i := 0; i < lenp; i++ {
