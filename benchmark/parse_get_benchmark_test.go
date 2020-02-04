@@ -30,7 +30,7 @@ func BenchmarkFastjsonGetSmall(b *testing.B) {
 	}
 }
 
-func BenchmarkJintGetSmall(b *testing.B) {
+func BenchmarkJintParseGetSmall(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		prs, _ := jint.Parse(SmallFixture)
@@ -62,7 +62,7 @@ func BenchmarkFastjsonGetMedium(b *testing.B) {
 	}
 }
 
-func BenchmarkJintGetMedium(b *testing.B) {
+func BenchmarkJintParseGetMedium(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		prs, _ := jint.Parse(MediumFixture)
@@ -95,7 +95,7 @@ func BenchmarkFastjsonGetLarge(b *testing.B) {
 	}
 }
 
-func BenchmarkJintGetLarge(b *testing.B) {
+func BenchmarkJintParseGetLarge(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		prs, _ := jint.Parse(LargeFixture)

@@ -47,7 +47,9 @@ func BenchmarkJintDeleteMedium(b *testing.B) {
 func BenchmarkJsonParserDeleteLarge(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
+		jsonparser.Delete(LargeFixture, "users", "[0]", "id")
 		jsonparser.Delete(LargeFixture, "users", "[31]", "id")
+		jsonparser.Delete(LargeFixture, "topics", "topics", "[0]", "id")
 		jsonparser.Delete(LargeFixture, "topics", "topics", "[29]", "id")
 	}
 }
@@ -55,7 +57,9 @@ func BenchmarkJsonParserDeleteLarge(b *testing.B) {
 func BenchmarkJintDeleteLarge(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
+		jint.Delete(LargeFixture, "users", "0", "id")
 		jint.Delete(LargeFixture, "users", "31", "id")
+		jint.Delete(LargeFixture, "topics", "topics", "0", "id")
 		jint.Delete(LargeFixture, "topics", "topics", "29", "id")
 	}
 }
