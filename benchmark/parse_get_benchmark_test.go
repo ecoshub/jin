@@ -1,9 +1,9 @@
-package jint
+package jin
 
 import (
 	"github.com/json-iterator/go"
 	"github.com/valyala/fastjson"
-	"jint"
+	"jin"
 	"testing"
 )
 
@@ -11,10 +11,10 @@ func BenchmarkJsoniteratorGetSmall(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		prs := jsoniter.Get(SmallFixture)
-		prs.Get("uuid").ToString()
-		prs.Get("tz").ToString()
-		prs.Get("ua").ToString()
-		prs.Get("st").ToString()
+		prs.Get("uuid")
+		prs.Get("tz")
+		prs.Get("ua")
+		prs.Get("st")
 	}
 }
 
@@ -33,7 +33,7 @@ func BenchmarkFastjsonGetSmall(b *testing.B) {
 func BenchmarkJintParseGetSmall(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		prs, _ := jint.Parse(SmallFixture)
+		prs, _ := jin.Parse(SmallFixture)
 		prs.Get("uuid")
 		prs.Get("tz")
 		prs.Get("ua")
@@ -65,7 +65,7 @@ func BenchmarkFastjsonGetMedium(b *testing.B) {
 func BenchmarkJintParseGetMedium(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		prs, _ := jint.Parse(MediumFixture)
+		prs, _ := jin.Parse(MediumFixture)
 		prs.Get("person", "name", "fullName")
 		prs.Get("person", "github", "followers")
 		prs.Get("company")
@@ -98,7 +98,7 @@ func BenchmarkFastjsonGetLarge(b *testing.B) {
 func BenchmarkJintParseGetLarge(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		prs, _ := jint.Parse(LargeFixture)
+		prs, _ := jin.Parse(LargeFixture)
 		prs.Get("users", "0", "id")
 		prs.Get("users", "31", "id")
 		prs.Get("topics", "topics", "0", "id")

@@ -1,9 +1,9 @@
-package jint
+package jin
 
 import(
 	"github.com/buger/jsonparser"
 	"testing"
-	"jint"
+	"jin"
 )
 
 func BenchmarkJsonParserDeleteSmall(b *testing.B) {
@@ -19,10 +19,10 @@ func BenchmarkJsonParserDeleteSmall(b *testing.B) {
 func BenchmarkJintDeleteSmall(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jint.Delete(SmallFixture, "uuid")
-		jint.Delete(SmallFixture, "tz")
-		jint.Delete(SmallFixture, "ua")
-		jint.Delete(SmallFixture, "st")
+		jin.Delete(SmallFixture, "uuid")
+		jin.Delete(SmallFixture, "tz")
+		jin.Delete(SmallFixture, "ua")
+		jin.Delete(SmallFixture, "st")
 	}
 }
 
@@ -38,9 +38,9 @@ func BenchmarkJsonParserDeleteMedium(b *testing.B) {
 func BenchmarkJintDeleteMedium(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jint.Delete(MediumFixture, "person", "name", "fullName")
-		jint.Delete(MediumFixture, "person", "github", "followers")
-		jint.Delete(MediumFixture, "company")
+		jin.Delete(MediumFixture, "person", "name", "fullName")
+		jin.Delete(MediumFixture, "person", "github", "followers")
+		jin.Delete(MediumFixture, "company")
 	}
 }
 
@@ -57,9 +57,9 @@ func BenchmarkJsonParserDeleteLarge(b *testing.B) {
 func BenchmarkJintDeleteLarge(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jint.Delete(LargeFixture, "users", "0", "id")
-		jint.Delete(LargeFixture, "users", "31", "id")
-		jint.Delete(LargeFixture, "topics", "topics", "0", "id")
-		jint.Delete(LargeFixture, "topics", "topics", "29", "id")
+		jin.Delete(LargeFixture, "users", "0", "id")
+		jin.Delete(LargeFixture, "users", "31", "id")
+		jin.Delete(LargeFixture, "topics", "topics", "0", "id")
+		jin.Delete(LargeFixture, "topics", "topics", "29", "id")
 	}
 }

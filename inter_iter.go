@@ -1,4 +1,4 @@
-package jint
+package jin
 
 func IterateArray(json []byte, callback func([]byte) bool, path ...string) error {
 	var start int

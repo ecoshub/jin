@@ -1,7 +1,7 @@
-package jint
+package jin
 
 import (
-	test "jint/test"
+	test "jin/test"
 	"strconv"
 	"strings"
 	"testing"

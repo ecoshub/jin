@@ -1,4 +1,4 @@
-package jint
+package jin
 
 import "errors"
 import "fmt"

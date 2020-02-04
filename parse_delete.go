@@ -1,4 +1,4 @@
-package jint
+package jin
 
 func (p *parse) Delete(path ...string) error {
 	var err error

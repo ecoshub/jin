@@ -1,4 +1,4 @@
-package jint
+package jin
 
 func Delete(json []byte, path ...string) ([]byte, error) {
 	lenp := len(path)

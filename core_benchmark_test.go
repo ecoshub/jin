@@ -1,9 +1,9 @@
-package jint
+package jin
 
 // import (
 // 	"fmt"
 // 	jsonparser "github.com/buger/jsonparser"
-// 	test "jint/test"
+// 	test "jin/test"
 // 	"strconv"
 // 	"strings"
 // 	"testing"
@@ -57,7 +57,7 @@ package jint
 // 		val, _ := Get(json, paths[i]...)
 // 		val2, _, _, err := jsonparser.Get(json, newPaths[i]...)
 // 		if string(val) != string(val2) {
-// 			b.Errorf("Fail (Bench Same Answer Check), not same answer path:%v\n, jint:\t\t>%v<\n, jsonparser:\t>%v<  i:%v\nerr:%v\n", newPaths, string(val), string(val2), i, err)
+// 			b.Errorf("Fail (Bench Same Answer Check), not same answer path:%v\n, jin:\t\t>%v<\n, jsonparser:\t>%v<  i:%v\nerr:%v\n", newPaths, string(val), string(val2), i, err)
 // 		}
 // 	}
 // }
@@ -113,7 +113,7 @@ package jint
 // 		val, _ := Get(json, paths[i]...)
 // 		val2, _, _, err := jsonparser.Get(json, newPaths[i]...)
 // 		if string(val) != string(val2) {
-// 			b.Errorf("Fail (Bench Same Answer Check), not same answer path:%v\n, jint:\t\t>%v<\n, jsonparser:\t>%v<  i:%v\nerr:%v\n", newPaths, string(val), string(val2), i, err)
+// 			b.Errorf("Fail (Bench Same Answer Check), not same answer path:%v\n, jin:\t\t>%v<\n, jsonparser:\t>%v<  i:%v\nerr:%v\n", newPaths, string(val), string(val2), i, err)
 // 		}
 // 	}
 // }
@@ -169,7 +169,7 @@ package jint
 // 		val, _ := Get(json, paths[i]...)
 // 		val2, _, _, err := jsonparser.Get(json, newPaths[i]...)
 // 		if string(val) != string(val2) {
-// 			b.Errorf("Fail (Bench Same Answer Check), not same answer path:%v\n, jint:\t\t>%v<\n, jsonparser:\t>%v<  i:%v\nerr:%v\n", newPaths, string(val), string(val2), i, err)
+// 			b.Errorf("Fail (Bench Same Answer Check), not same answer path:%v\n, jin:\t\t>%v<\n, jsonparser:\t>%v<  i:%v\nerr:%v\n", newPaths, string(val), string(val2), i, err)
 // 		}
 // 	}
 // }

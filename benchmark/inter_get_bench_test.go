@@ -1,9 +1,9 @@
-package jint
+package jin
 
 import(
 	"github.com/buger/jsonparser"
 	"testing"
-	"jint"
+	"jin"
 )
 
 func nop(_ ...interface{}) {}
@@ -21,10 +21,10 @@ func BenchmarkJsonparserGetSmall(b *testing.B) {
 func BenchmarkJintGetSmall(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jint.Get(SmallFixture, "uuid")
-		jint.Get(SmallFixture, "tz")
-		jint.Get(SmallFixture, "ua")
-		jint.Get(SmallFixture, "st")
+		jin.Get(SmallFixture, "uuid")
+		jin.Get(SmallFixture, "tz")
+		jin.Get(SmallFixture, "ua")
+		jin.Get(SmallFixture, "st")
 	}
 }
 
@@ -45,12 +45,12 @@ func BenchmarkJsonparserGetMedium(b *testing.B) {
 func BenchmarkJintGetMedium(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jint.Get(MediumFixture, "person", "name", "fullName")
-		jint.Get(MediumFixture, "person", "github", "followers")
-		jint.Get(MediumFixture, "company")
+		jin.Get(MediumFixture, "person", "name", "fullName")
+		jin.Get(MediumFixture, "person", "github", "followers")
+		jin.Get(MediumFixture, "company")
 
-		jint.IterateArray(MediumFixture, func(value []byte) bool {
-			jint.Get(value, "url")
+		jin.IterateArray(MediumFixture, func(value []byte) bool {
+			jin.Get(value, "url")
 			nop()
 			return true
 		}, "person", "gravatar", "avatars")
@@ -76,14 +76,14 @@ func BenchmarkJsonparserGetLarge(b *testing.B) {
 func BenchmarkJintGetLarge(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jint.IterateArray(LargeFixture, func(value []byte) bool {
-			jint.Get(value, "username")
+		jin.IterateArray(LargeFixture, func(value []byte) bool {
+			jin.Get(value, "username")
 			return true
 		}, "users")
 
-		jint.IterateArray(LargeFixture, func(value []byte) bool {
-			jint.Get(value, "id")
-			jint.Get(value, "slug")
+		jin.IterateArray(LargeFixture, func(value []byte) bool {
+			jin.Get(value, "id")
+			jin.Get(value, "slug")
 			return true
 		}, "topics", "topics")
 	}
@@ -103,7 +103,7 @@ func BenchmarkIterateArrayGetJint(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		jint.IterateArray(FakeArray, func(value []byte) bool {
+		jin.IterateArray(FakeArray, func(value []byte) bool {
 			nop(value)
 			return true
 		})
@@ -125,7 +125,7 @@ func BenchmarkIterateObjectGetJint(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		jint.IterateKeyValue(FakeObject, func(key []byte, value []byte) bool {
+		jin.IterateKeyValue(FakeObject, func(key []byte, value []byte) bool {
 			nop(key, value)
 			return true
 		})

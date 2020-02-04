@@ -1,9 +1,9 @@
-package jint
+package jin
 
 import(
 	"github.com/buger/jsonparser"
 	"testing"
-	"jint"
+	"jin"
 )
 
 func BenchmarkJsonParserSetSmall(b *testing.B) {
@@ -19,10 +19,10 @@ func BenchmarkJsonParserSetSmall(b *testing.B) {
 func BenchmarkJintSetSmall(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jint.Set(SmallFixture, []byte(`"c90927dd-1588-4fe7-a14f-8a8950cfcbd8"`), "uuid")
-		jint.Set(SmallFixture, []byte("-3"), "tz")
-		jint.Set(SmallFixture, []byte(`"server_agent"`), "ua")
-		jint.Set(SmallFixture, []byte("3"), "st")
+		jin.Set(SmallFixture, []byte(`"c90927dd-1588-4fe7-a14f-8a8950cfcbd8"`), "uuid")
+		jin.Set(SmallFixture, []byte("-3"), "tz")
+		jin.Set(SmallFixture, []byte(`"server_agent"`), "ua")
+		jin.Set(SmallFixture, []byte("3"), "st")
 	}
 }
 
@@ -38,9 +38,9 @@ func BenchmarkJsonParserSetMedium(b *testing.B) {
 func BenchmarkJintSetMedium(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jint.Set(MediumFixture, []byte(`"c90927dd-1588-4fe7-a14f-8a8950cfcbd8"`), "person", "name", "fullName")
-		jint.Set(MediumFixture, []byte("-3"), "person", "github", "followers")
-		jint.Set(MediumFixture, []byte(`"server_agent"`), "company")
+		jin.Set(MediumFixture, []byte(`"c90927dd-1588-4fe7-a14f-8a8950cfcbd8"`), "person", "name", "fullName")
+		jin.Set(MediumFixture, []byte("-3"), "person", "github", "followers")
+		jin.Set(MediumFixture, []byte(`"server_agent"`), "company")
 	}
 }
 
@@ -55,7 +55,7 @@ func BenchmarkJsonParserSetLarge(b *testing.B) {
 func BenchmarkJintSetLarge(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jint.Set(LargeFixture, []byte(`"c90927dd-1588-4fe7-a14f-8a8950cfcbd8"`), "users", "31", "id")
-		jint.Set(LargeFixture, []byte("-3"), "topics", "topics", "29", "id")
+		jin.Set(LargeFixture, []byte(`"c90927dd-1588-4fe7-a14f-8a8950cfcbd8"`), "users", "31", "id")
+		jin.Set(LargeFixture, []byte("-3"), "topics", "topics", "29", "id")
 	}
 }
