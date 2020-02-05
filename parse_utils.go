@@ -12,7 +12,7 @@ type node struct {
 	down  []*node
 }
 
-type parse struct {
+type Parser struct {
 	core *node
 	json []byte
 }
@@ -22,17 +22,17 @@ func createNode(up *node) *node {
 	return &Node
 }
 
-func Parse(json []byte) (*parse, error) {
+func Parse(json []byte) (*Parser, error) {
 	core := &node{up: nil}
 	err := pCore(json, core)
 	if err != nil {
 		return nil, err
 	}
 	if core.down == nil {
-		return nil, ERROR_BAD_JSON(0)
+		return nil, error_bad_json(0)
 	}
 	core = core.down[0]
-	pars := parse{core: core, json: json}
+	pars := Parser{core: core, json: json}
 	return &pars, nil
 }
 
@@ -40,7 +40,7 @@ func (n *node) insert(up *node, index int) error {
 	lend := len(up.down)
 	if lend != 0 {
 		if lend-1 < index {
-			return ERROR_INDEX_OUT_OF_RANGE()
+			return error_index_out_of_range()
 		}
 		for i := index; i < lend; i++ {
 			up.down[i].label = strconv.Itoa(i + 1)
@@ -49,7 +49,7 @@ func (n *node) insert(up *node, index int) error {
 		n.up = up
 		return nil
 	}
-	return ERROR_INDEX_OUT_OF_RANGE()
+	return error_index_out_of_range()
 }
 
 func (n *node) deAttach() {
@@ -70,7 +70,7 @@ func (n *node) walk(path []string) (*node, error) {
 				goto cont
 			}
 		}
-		return nil, ERROR_KEY_NOT_FOUND()
+		return nil, error_key_not_found()
 	cont:
 		continue
 	}
@@ -86,7 +86,7 @@ func (n *node) getIndex() int {
 	return -1
 }
 
-func (p *parse) Tree(withValues bool) string {
+func (p *Parser) Tree(withValues bool) string {
 	str := ""
 	p.core.createTree(p.json, 0, withValues, &str)
 	return str

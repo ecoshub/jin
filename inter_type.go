@@ -47,14 +47,14 @@ func IsEmpty(json []byte, path ...string) (bool, error) {
 	if len(path) == 0 {
 		for space(json[start]) {
 			if start > len(json)-1 {
-				return false, ERROR_BAD_JSON(start)
+				return false, error_bad_json(start)
 			}
 			start++
 			continue
 		}
 		for space(json[end]) {
 			if end < 1 {
-				return false, ERROR_BAD_JSON(end)
+				return false, error_bad_json(end)
 			}
 			end--
 			continue
@@ -70,7 +70,7 @@ func IsEmpty(json []byte, path ...string) (bool, error) {
 	braceEnd := json[end]
 	if braceStart == 91 || braceStart == 123 {
 		if braceStart+2 != braceEnd {
-			return false, ERROR_BAD_JSON(end)
+			return false, error_bad_json(end)
 		}
 		for i := start + 1; i < end-1; i++ {
 			if !space(json[i]) {
@@ -78,7 +78,7 @@ func IsEmpty(json []byte, path ...string) (bool, error) {
 			}
 		}
 	} else {
-		return false, ERROR_OBJECT_EXPECTED()
+		return false, error_object_expected()
 	}
 	return true, nil
 }
@@ -89,7 +89,7 @@ func typeControlCore(json []byte, control []byte, equal bool, path ...string) (b
 	if len(path) == 0 {
 		for space(json[start]) {
 			if start > len(json)-1 {
-				return false, -1, ERROR_BAD_JSON(start)
+				return false, -1, error_bad_json(start)
 			}
 			start++
 			continue

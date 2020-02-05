@@ -2,13 +2,13 @@ package jin
 
 import "strconv"
 
-func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
+func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 	lenp := len(path)
 	lenv := len(key)
 	var curr *node
 	var err error
 	if lenv == 0 {
-		return ERROR_NULL_KEY()
+		return error_null_key()
 	}
 	json, err := p.Get(path...)
 	if err != nil {
@@ -18,7 +18,7 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 	if lenp == 0 {
 		for _, d := range curr.down {
 			if d.label == key {
-				return ERROR_KEY_ALREADY_EXISTS()
+				return error_key_already_exists()
 			}
 		}
 		if len(json) >= 2 {
@@ -48,9 +48,9 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 				newNode.up = curr
 				return nil
 			}
-			return ERROR_OBJECT_EXPECTED()
+			return error_object_expected()
 		}
-		return ERROR_BAD_JSON(0)
+		return error_bad_json(0)
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
@@ -58,7 +58,7 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 	}
 	for _, d := range curr.up.down {
 		if d.label == key {
-			return ERROR_KEY_ALREADY_EXISTS()
+			return error_key_already_exists()
 		}
 	}
 	if len(json) >= 2 {
@@ -103,18 +103,18 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 			}
 			return nil
 		}
-		return ERROR_OBJECT_EXPECTED()
+		return error_object_expected()
 	}
-	return ERROR_BAD_JSON(0)
+	return error_bad_json(0)
 }
 
-func (p *parse) Add(newVal []byte, path ...string) error {
+func (p *Parser) Add(newVal []byte, path ...string) error {
 	lenp := len(path)
 	lenv := len(newVal)
 	var curr *node
 	var err error
 	if lenv == 0 {
-		return ERROR_NULL_KEY()
+		return error_null_key()
 	}
 	json, err := p.Get(path...)
 	if err != nil {
@@ -154,9 +154,9 @@ func (p *parse) Add(newVal []byte, path ...string) error {
 				newNode.up = curr
 				return nil
 			}
-			return ERROR_ARRAY_EXPECTED()
+			return error_array_expected()
 		}
-		return ERROR_BAD_JSON(0)
+		return error_bad_json(0)
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
@@ -206,18 +206,18 @@ func (p *parse) Add(newVal []byte, path ...string) error {
 			}
 			return nil
 		}
-		return ERROR_ARRAY_EXPECTED()
+		return error_array_expected()
 	}
-	return ERROR_BAD_JSON(0)
+	return error_bad_json(0)
 }
 
-func (p *parse) Insert(newIndex int, newVal []byte, path ...string) error {
+func (p *Parser) Insert(newIndex int, newVal []byte, path ...string) error {
 	lenp := len(path)
 	lenv := len(newVal)
 	var curr *node
 	var err error
 	if lenv == 0 {
-		return ERROR_NULL_KEY()
+		return error_null_key()
 	}
 	json, err := p.Get(path...)
 	if err != nil {
@@ -266,9 +266,9 @@ func (p *parse) Insert(newIndex int, newVal []byte, path ...string) error {
 				newNode.up = curr
 				return nil
 			}
-			return ERROR_ARRAY_EXPECTED()
+			return error_array_expected()
 		}
-		return ERROR_BAD_JSON(0)
+		return error_bad_json(0)
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
@@ -322,68 +322,68 @@ func (p *parse) Insert(newIndex int, newVal []byte, path ...string) error {
 			}
 			return nil
 		}
-		return ERROR_ARRAY_EXPECTED()
+		return error_array_expected()
 	}
-	return ERROR_BAD_JSON(0)
+	return error_bad_json(0)
 }
 
-func (p *parse) AddKeyValueString(key, value string, path ...string) error {
+func (p *Parser) AddKeyValueString(key, value string, path ...string) error {
 	return p.AddKeyValue(key, []byte(value), path...)
 }
 
-func (p *parse) AddKeyValueInt(key string, value int, path ...string) error {
+func (p *Parser) AddKeyValueInt(key string, value int, path ...string) error {
 	return p.AddKeyValue(key, []byte(strconv.Itoa(value)), path...)
 }
 
-func (p *parse) AddKeyValueFloat(key string, value float64, path ...string) error {
+func (p *Parser) AddKeyValueFloat(key string, value float64, path ...string) error {
 	return p.AddKeyValue(key, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
-func (p *parse) AddKeyValueBool(key string, value bool, path ...string) error {
+func (p *Parser) AddKeyValueBool(key string, value bool, path ...string) error {
 	if value {
 		return p.AddKeyValue(key, []byte("true"), path...)
 	}
 	return p.AddKeyValue(key, []byte("false"), path...)
 }
 
-func (p *parse) AddString(value string, path ...string) error {
+func (p *Parser) AddString(value string, path ...string) error {
 	if value[0] != 34 && value[len(value)-1] != 34 {
 		return p.Add([]byte(`"`+value+`"`), path...)
 	}
 	return p.Add([]byte(value), path...)
 }
 
-func (p *parse) AddInt(value int, path ...string) error {
+func (p *Parser) AddInt(value int, path ...string) error {
 	return p.Add([]byte(strconv.Itoa(value)), path...)
 }
 
-func (p *parse) AddFloat(value float64, path ...string) error {
+func (p *Parser) AddFloat(value float64, path ...string) error {
 	return p.Add([]byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
-func (p *parse) AddBool(value bool, path ...string) error {
+func (p *Parser) AddBool(value bool, path ...string) error {
 	if value {
 		return p.Add([]byte("true"), path...)
 	}
 	return p.Add([]byte("false"), path...)
 }
 
-func (p *parse) InsertString(index int, value string, path ...string) error {
+func (p *Parser) InsertString(index int, value string, path ...string) error {
 	if value[0] != 34 && value[len(value)-1] != 34 {
 		return p.Insert(index, []byte(`"`+value+`"`), path...)
 	}
 	return p.Insert(index, []byte(value), path...)
 }
 
-func (p *parse) InsertInt(index, value int, path ...string) error {
+func (p *Parser) InsertInt(index, value int, path ...string) error {
 	return p.Insert(index, []byte(strconv.Itoa(value)), path...)
 }
 
-func (p *parse) InsertFloat(index int, value float64, path ...string) error {
+func (p *Parser) InsertFloat(index int, value float64, path ...string) error {
 	return p.Insert(index, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
-func (p *parse) InsertBool(index int, value bool, path ...string) error {
+func (p *Parser) InsertBool(index int, value bool, path ...string) error {
 	if value {
 		return p.Insert(index, []byte("true"), path...)
 	}

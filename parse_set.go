@@ -2,16 +2,16 @@ package jin
 
 import "strconv"
 
-func (p *parse) Set(newVal []byte, path ...string) error {
+func (p *Parser) Set(newVal []byte, path ...string) error {
 	lenp := len(path)
 	lenv := len(newVal)
 	var curr *node
 	var err error
 	if lenp == 0 {
-		return ERROR_NULL_PATH()
+		return error_null_path()
 	}
 	if lenv == 0 {
-		return ERROR_NULL_NEW_VALUE()
+		return error_null_new_value()
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
@@ -49,38 +49,38 @@ func (p *parse) Set(newVal []byte, path ...string) error {
 	return nil
 }
 
-func (p *parse) SetString(newValue string, path ...string) error {
+func (p *Parser) SetString(newValue string, path ...string) error {
 	if newValue[0] != 34 && newValue[len(newValue)-1] != 34 {
 		return p.Set([]byte(`"`+newValue+`"`), path...)
 	}
 	return p.Set([]byte(newValue), path...)
 }
 
-func (p *parse) SetInt(newValue int, path ...string) error {
+func (p *Parser) SetInt(newValue int, path ...string) error {
 	return p.Set([]byte(strconv.Itoa(newValue)), path...)
 }
 
-func (p *parse) SetFloat(newValue float64, path ...string) error {
+func (p *Parser) SetFloat(newValue float64, path ...string) error {
 	return p.Set([]byte(strconv.FormatFloat(newValue, 'e', -1, 64)), path...)
 }
 
-func (p *parse) SetBool(newValue bool, path ...string) error {
+func (p *Parser) SetBool(newValue bool, path ...string) error {
 	if newValue {
 		return p.Set([]byte("true"), path...)
 	}
 	return p.Set([]byte("false"), path...)
 }
 
-func (p *parse) SetKey(newKey string, path ...string) error {
+func (p *Parser) SetKey(newKey string, path ...string) error {
 	lenp := len(path)
 	lenv := len(newKey)
 	var curr *node
 	var err error
 	if lenp == 0 {
-		return ERROR_NULL_PATH()
+		return error_null_path()
 	}
 	if lenv == 0 {
-		return ERROR_NULL_KEY()
+		return error_null_key()
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
@@ -88,7 +88,7 @@ func (p *parse) SetKey(newKey string, path ...string) error {
 	}
 	for _, d := range curr.up.down {
 		if d.label == newKey {
-			return ERROR_KEY_ALREADY_EXISTS()
+			return error_key_already_exists()
 		}
 	}
 	curr.label = newKey

@@ -2,7 +2,7 @@ package jin
 
 import "strconv"
 
-func (p *parse) Get(path ...string) ([]byte, error) {
+func (p *Parser) Get(path ...string) ([]byte, error) {
 	if len(path) == 0 {
 		return p.json, nil
 	}
@@ -13,7 +13,7 @@ func (p *parse) Get(path ...string) ([]byte, error) {
 	return cleanValue(curr.value), nil
 }
 
-func (p *parse) GetString(path ...string) (string, error) {
+func (p *Parser) GetString(path ...string) (string, error) {
 	val, err := p.Get(path...)
 	if err != nil {
 		return "", err
@@ -21,31 +21,31 @@ func (p *parse) GetString(path ...string) (string, error) {
 	return string(val), err
 }
 
-func (p *parse) GetInt(path ...string) (int, error) {
+func (p *Parser) GetInt(path ...string) (int, error) {
 	val, err := p.GetString(path...)
 	if err != nil {
 		return -1, err
 	}
 	intVal, err := strconv.Atoi(val)
 	if err != nil {
-		return -1, ERROR_PARSE_INT(val)
+		return -1, error_parse_int(val)
 	}
 	return intVal, nil
 }
 
-func (p *parse) GetFloat(path ...string) (float64, error) {
+func (p *Parser) GetFloat(path ...string) (float64, error) {
 	val, err := p.GetString(path...)
 	if err != nil {
 		return -1, err
 	}
 	floatVal, err := strconv.ParseFloat(val, 64)
 	if err != nil {
-		return -1, ERROR_PARSE_FLOAT(val)
+		return -1, error_parse_float(val)
 	}
 	return floatVal, nil
 }
 
-func (p *parse) GetBool(path ...string) (bool, error) {
+func (p *Parser) GetBool(path ...string) (bool, error) {
 	val, err := p.GetString(path...)
 	if err != nil {
 		return false, err
@@ -56,36 +56,36 @@ func (p *parse) GetBool(path ...string) (bool, error) {
 	if val == "false" {
 		return false, nil
 	}
-	return false, ERROR_PARSE_BOOL(val)
+	return false, error_parse_bool(val)
 }
 
-func (p *parse) GetStringArray(path ...string) ([]string, error) {
+func (p *Parser) GetStringArray(path ...string) ([]string, error) {
 	val, err := p.GetString(path...)
 	if err != nil {
 		return nil, err
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, ERROR_PARSE_STRING_ARRAY(val)
+		return nil, error_parse_string_array(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		arr := ParseArray(val)
 		if arr == nil {
-			return nil, ERROR_PARSE_STRING_ARRAY(val)
+			return nil, error_parse_string_array(val)
 		}
 		return arr, nil
 	}
-	return nil, ERROR_PARSE_STRING_ARRAY(val)
+	return nil, error_parse_string_array(val)
 }
 
-func (p *parse) GetIntArray(path ...string) ([]int, error) {
+func (p *Parser) GetIntArray(path ...string) ([]int, error) {
 	val, err := p.GetString(path...)
 	if err != nil {
 		return nil, err
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, ERROR_PARSE_INT_ARRAY(val)
+		return nil, error_parse_int_array(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]int, 0, 16)
@@ -115,7 +115,7 @@ func (p *parse) GetIntArray(path ...string) ([]int, error) {
 							element := val[start:i]
 							num, err := strconv.Atoi(cleanValueString(element))
 							if err != nil {
-								return nil, ERROR_PARSE_INT(cleanValueString(element))
+								return nil, error_parse_int(cleanValueString(element))
 							}
 							newArray = append(newArray, num)
 							break
@@ -127,7 +127,7 @@ func (p *parse) GetIntArray(path ...string) ([]int, error) {
 						element := val[start:i]
 						num, err := strconv.Atoi(cleanValueString(element))
 						if err != nil {
-							return nil, ERROR_PARSE_INT(cleanValueString(element))
+							return nil, error_parse_int(cleanValueString(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -138,17 +138,17 @@ func (p *parse) GetIntArray(path ...string) ([]int, error) {
 		}
 		return newArray, nil
 	}
-	return nil, ERROR_PARSE_INT_ARRAY(val)
+	return nil, error_parse_int_array(val)
 }
 
-func (p *parse) GetFloatArray(path ...string) ([]float64, error) {
+func (p *Parser) GetFloatArray(path ...string) ([]float64, error) {
 	val, err := p.GetString(path...)
 	if err != nil {
 		return nil, err
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, ERROR_PARSE_FLOAT_ARRAY(val)
+		return nil, error_parse_float_array(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]float64, 0, 16)
@@ -178,7 +178,7 @@ func (p *parse) GetFloatArray(path ...string) ([]float64, error) {
 							element := val[start:i]
 							num, err := strconv.ParseFloat(cleanValueString(element), 64)
 							if err != nil {
-								return nil, ERROR_PARSE_FLOAT(cleanValueString(element))
+								return nil, error_parse_float(cleanValueString(element))
 							}
 							newArray = append(newArray, num)
 							break
@@ -190,7 +190,7 @@ func (p *parse) GetFloatArray(path ...string) ([]float64, error) {
 						element := val[start:i]
 						num, err := strconv.ParseFloat(cleanValueString(element), 64)
 						if err != nil {
-							return nil, ERROR_PARSE_FLOAT(cleanValueString(element))
+							return nil, error_parse_float(cleanValueString(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -201,17 +201,17 @@ func (p *parse) GetFloatArray(path ...string) ([]float64, error) {
 		}
 		return newArray, nil
 	}
-	return nil, ERROR_PARSE_FLOAT_ARRAY(val)
+	return nil, error_parse_float_array(val)
 }
 
-func (p *parse) GetBoolArray(path ...string) ([]bool, error) {
+func (p *Parser) GetBoolArray(path ...string) ([]bool, error) {
 	val, err := p.GetString(path...)
 	if err != nil {
 		return nil, err
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, ERROR_PARSE_BOOL_ARRAY(val)
+		return nil, error_parse_bool_array(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]bool, 0, 16)
@@ -247,7 +247,7 @@ func (p *parse) GetBoolArray(path ...string) ([]bool, error) {
 									newArray = append(newArray, false)
 								}
 							} else {
-								return nil, ERROR_PARSE_BOOL(cleanValueString(element))
+								return nil, error_parse_bool(cleanValueString(element))
 							}
 							break
 						}
@@ -264,7 +264,7 @@ func (p *parse) GetBoolArray(path ...string) ([]bool, error) {
 								newArray = append(newArray, false)
 							}
 						} else {
-							return nil, ERROR_PARSE_BOOL(element)
+							return nil, error_parse_bool(element)
 						}
 						start = i + 1
 						continue
@@ -274,5 +274,5 @@ func (p *parse) GetBoolArray(path ...string) ([]bool, error) {
 		}
 		return newArray, nil
 	}
-	return nil, ERROR_PARSE_BOOL_ARRAY(val)
+	return nil, error_parse_bool_array(val)
 }

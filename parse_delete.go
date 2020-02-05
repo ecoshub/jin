@@ -1,11 +1,11 @@
 package jin
 
-func (p *parse) Delete(path ...string) error {
+func (p *Parser) Delete(path ...string) error {
 	var err error
 	var curr *node
 	lenp := len(path)
 	if lenp == 0 {
-		return ERROR_NULL_PATH()
+		return error_null_path()
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
