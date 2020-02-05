@@ -8,7 +8,7 @@ type sequance struct {
 	length int
 }
 
-func MakeSeq(length int) *sequance{
+func makeSeq(length int) *sequance{
 	s := sequance{list:make([]int, length), index:0, length:length}
 	return &s
 }
@@ -273,7 +273,7 @@ func ParseArray(arr string) []string {
 }
 
 // make private after
-func StripQuotes(str string) string {
+func stripQuotes(str string) string {
 	if len(str) > 1 {
 		if str[0] == 34 && str[len(str)-1] == 34 {
 			str = str[1 : len(str)-1]
@@ -282,7 +282,7 @@ func StripQuotes(str string) string {
 	return str
 }
 
-func StripQuotesByte(str []byte) []byte {
+func stripQuotesByte(str []byte) []byte {
 	if len(str) > 1 {
 		if str[0] == 34 && str[len(str)-1] == 34 {
 			str = str[1 : len(str)-1]

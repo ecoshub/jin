@@ -26,7 +26,7 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 				newKV := []byte(`,"` + key + `":` + string(newVal))
 				if lenv >= 2 {
 					if newVal[0] == 91 || newVal[0] == 123 {
-						newNode := CreateNode(nil)
+						newNode := createNode(nil)
 						pCore(newVal, newNode)
 						newNode.label = key
 						newNode.value = newVal
@@ -41,7 +41,7 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 					}
 				}
 				p.json = replace(p.json, newKV, len(p.json)-1, len(p.json)-1)
-				newNode := CreateNode(nil)
+				newNode := createNode(nil)
 				newNode.label = key
 				newNode.value = newVal
 				curr.down = append(curr.down, newNode)
@@ -65,7 +65,7 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 		if json[0] == 123 && json[len(json)-1] == 125 {
 			if lenv >= 2 {
 				if newVal[0] == 91 || newVal[0] == 123 {
-					newNode := CreateNode(nil)
+					newNode := createNode(nil)
 					pCore(newVal, newNode)
 					newNode.label = key
 					newNode.value = newVal
@@ -85,7 +85,7 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 					return nil
 				}
 			}
-			newNode := CreateNode(nil)
+			newNode := createNode(nil)
 			newNode.label = key
 			newNode.value = newVal
 			curr.down = append(curr.down, newNode)
@@ -130,7 +130,7 @@ func (p *parse) Add(newVal []byte, path ...string) error {
 				newValue := []byte(`,` + string(newVal))
 				if lenv >= 2 {
 					if newVal[0] == 91 || newVal[0] == 123 {
-						newNode := CreateNode(nil)
+						newNode := createNode(nil)
 						pCore(newVal, newNode)
 						index := len(curr.down)
 						newNode.label = strconv.Itoa(index)
@@ -146,7 +146,7 @@ func (p *parse) Add(newVal []byte, path ...string) error {
 					}
 				}
 				p.json = replace(p.json, newValue, len(p.json)-1, len(p.json)-1)
-				newNode := CreateNode(nil)
+				newNode := createNode(nil)
 				index := len(curr.down)
 				newNode.label = strconv.Itoa(index)
 				newNode.value = newVal
@@ -166,7 +166,7 @@ func (p *parse) Add(newVal []byte, path ...string) error {
 		if json[0] == 91 && json[len(json)-1] == 93 {
 			if lenv >= 2 {
 				if newVal[0] == 91 || newVal[0] == 123 {
-					newNode := CreateNode(nil)
+					newNode := createNode(nil)
 					pCore(newVal, newNode)
 					index := len(curr.down)
 					newNode.label = strconv.Itoa(index)
@@ -187,7 +187,7 @@ func (p *parse) Add(newVal []byte, path ...string) error {
 					return nil
 				}
 			}
-			newNode := CreateNode(nil)
+			newNode := createNode(nil)
 			index := len(curr.down)
 			newNode.label = strconv.Itoa(index)
 			newNode.value = newVal
@@ -229,7 +229,7 @@ func (p *parse) Insert(newIndex int, newVal []byte, path ...string) error {
 			if json[0] == 91 && json[len(json)-1] == 93 {
 				if lenv >= 2 {
 					if newVal[0] == 91 || newVal[0] == 123 {
-						newNode := CreateNode(nil)
+						newNode := createNode(nil)
 						pCore(newVal, newNode)
 						err = newNode.insert(curr, newIndex)
 						if err != nil {
@@ -242,7 +242,7 @@ func (p *parse) Insert(newIndex int, newVal []byte, path ...string) error {
 						return nil
 					}
 				}
-				newNode := CreateNode(nil)
+				newNode := createNode(nil)
 				err = newNode.insert(curr, newIndex)
 				if err != nil {
 					return err
@@ -265,7 +265,7 @@ func (p *parse) Insert(newIndex int, newVal []byte, path ...string) error {
 		if json[0] == 91 && json[len(json)-1] == 93 {
 			if lenv >= 2 {
 				if newVal[0] == 91 || newVal[0] == 123 {
-					newNode := CreateNode(nil)
+					newNode := createNode(nil)
 					pCore(newVal, newNode)
 					err = newNode.insert(curr, newIndex)
 					if err != nil {
@@ -288,7 +288,7 @@ func (p *parse) Insert(newIndex int, newVal []byte, path ...string) error {
 					return nil
 				}
 			}
-			newNode := CreateNode(nil)
+			newNode := createNode(nil)
 			err = newNode.insert(curr, newIndex)
 			if err != nil {
 				return err

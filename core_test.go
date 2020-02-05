@@ -73,8 +73,8 @@ func TestInterperterGet(t *testing.T) {
 			if json[start-1] != 34 {
 				value = Flatten(value)
 			}
-			if string(value) != StripQuotes(values[i]) {
-				t.Errorf("Fail (Test Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), StripQuotes(values[i]), i)
+			if string(value) != stripQuotes(values[i]) {
+				t.Errorf("Fail (Test Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), stripQuotes(values[i]), i)
 				return
 			}
 		}
@@ -98,7 +98,7 @@ func TestInterperterSet(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(value) != StripQuotes(values[i]) {
+			if string(value) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -142,7 +142,7 @@ func TestInterperterSetKey(t *testing.T) {
 				if newJson[start-1] != 34 {
 					value = Flatten(value)
 				}
-				if string(value) != StripQuotes(values[i]) {
+				if string(value) != stripQuotes(values[i]) {
 					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), values[i])
 					return
 				}
@@ -182,7 +182,7 @@ func TestInterperterAddKV(t *testing.T) {
 					val = Flatten(val)
 				}
 			}
-			if string(val) != StripQuotes(values[i]) {
+			if string(val) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(val), values[i])
 				return
 			}
@@ -207,7 +207,7 @@ func TestInterperterAdd(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(Flatten(value)), values[i])
 				return
 			}
@@ -238,7 +238,7 @@ func TestInterperterInsert(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -271,7 +271,7 @@ func TestInterperterDeleteKV(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -310,7 +310,7 @@ func TestInterperterDeleteV(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -397,8 +397,8 @@ func TestInterperterGetFlatten(t *testing.T) {
 			if json[start-1] != 34 {
 				value = Flatten(value)
 			}
-			if string(value) != StripQuotes(values[i]) {
-				t.Errorf("Fail (Test Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), StripQuotes(values[i]), i)
+			if string(value) != stripQuotes(values[i]) {
+				t.Errorf("Fail (Test Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), stripQuotes(values[i]), i)
 				return
 			}
 		}
@@ -422,7 +422,7 @@ func TestInterperterSetFlatten(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(value) != StripQuotes(values[i]) {
+			if string(value) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -466,7 +466,7 @@ func TestInterperterSetKeyFlatten(t *testing.T) {
 				if newJson[start-1] != 34 {
 					value = Flatten(value)
 				}
-				if string(value) != StripQuotes(values[i]) {
+				if string(value) != stripQuotes(values[i]) {
 					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), values[i])
 					return
 				}
@@ -492,7 +492,7 @@ func TestInterperterAddKVFlatten(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -517,7 +517,7 @@ func TestInterperterAddFlatten(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(Flatten(value)), values[i])
 				return
 			}
@@ -548,7 +548,7 @@ func TestInterperterInsertFlatten(t *testing.T) {
 				t.Errorf("Total Fail(Insert Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -581,7 +581,7 @@ func TestInterperterDeleteKVFlatten(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -620,7 +620,7 @@ func TestInterperterDeleteVFlatten(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -712,8 +712,8 @@ func TestParserGet(t *testing.T) {
 					value = Flatten(value)
 				}
 			}
-			if string(value) != StripQuotes(values[i]) {
-				t.Errorf("Fail (Test Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), StripQuotes(values[i]), i)
+			if string(value) != stripQuotes(values[i]) {
+				t.Errorf("Fail (Test Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), stripQuotes(values[i]), i)
 				return
 			}
 		}
@@ -747,8 +747,8 @@ func TestParserSet(t *testing.T) {
 					value = Flatten(value)
 				}
 			}
-			if string(value) != StripQuotes(values[i]) {
-				t.Errorf("Fail (Test Parse Set), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), StripQuotes(values[i]), i)
+			if string(value) != stripQuotes(values[i]) {
+				t.Errorf("Fail (Test Parse Set), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), stripQuotes(values[i]), i)
 				return
 			}
 		}
@@ -906,7 +906,7 @@ func TestParserInsert(t *testing.T) {
 				t.Errorf("Total Fail(Get Insert), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -944,7 +944,7 @@ func TestParserDeleteKV(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -988,7 +988,7 @@ func TestParserDeleteV(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -1018,8 +1018,8 @@ func TestParserGetFlatten(t *testing.T) {
 					value = Flatten(value)
 				}
 			}
-			if string(value) != StripQuotes(values[i]) {
-				t.Errorf("Fail (Test Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), StripQuotes(values[i]), i)
+			if string(value) != stripQuotes(values[i]) {
+				t.Errorf("Fail (Test Get), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), stripQuotes(values[i]), i)
 				return
 			}
 		}
@@ -1053,8 +1053,8 @@ func TestParserSetFlatten(t *testing.T) {
 					value = Flatten(value)
 				}
 			}
-			if string(value) != StripQuotes(values[i]) {
-				t.Errorf("Fail (Test Parse Set), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), StripQuotes(values[i]), i)
+			if string(value) != stripQuotes(values[i]) {
+				t.Errorf("Fail (Test Parse Set), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), stripQuotes(values[i]), i)
 				return
 			}
 		}
@@ -1212,7 +1212,7 @@ func TestParserInsertFlatten(t *testing.T) {
 				t.Errorf("Total Fail(Get Insert), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -1250,7 +1250,7 @@ func TestParserDeleteKVFlatten(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}
@@ -1294,7 +1294,7 @@ func TestParserDeleteVFlatten(t *testing.T) {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if string(Flatten(value)) != StripQuotes(values[i]) {
+			if string(Flatten(value)) != stripQuotes(values[i]) {
 				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
 				return
 			}

@@ -19,7 +19,7 @@ func (p *parse) Set(newVal []byte, path ...string) error {
 	}
 	if lenv >= 2 {
 		if newVal[0] == 91 || newVal[0] == 123 {
-			newCore := CreateNode(nil)
+			newCore := createNode(nil)
 			pCore(newVal, newCore)
 			newCore.label = curr.label
 			newCore.up = curr.up

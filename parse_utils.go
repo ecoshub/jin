@@ -17,7 +17,7 @@ type parse struct {
 	json []byte
 }
 
-func CreateNode(up *node) *node {
+func createNode(up *node) *node {
 	Node := node{up: up, down: []*node{}}
 	if up != nil {
 		up.down = append(up.down, &Node)
@@ -26,7 +26,7 @@ func CreateNode(up *node) *node {
 }
 
 func Parse(json []byte) (*parse, error) {
-	core := CreateNode(nil)
+	core := createNode(nil)
 	err := pCore(json, core)
 	if err != nil {
 		return nil, err
@@ -41,7 +41,7 @@ func Parse(json []byte) (*parse, error) {
 
 func (n *node) link(label string) *node {
 	if n.down == nil {
-		new := CreateNode(n)
+		new := createNode(n)
 		new.label = label
 		n.attach(new)
 		return new
@@ -51,7 +51,7 @@ func (n *node) link(label string) *node {
 			return d
 		}
 	}
-	new := CreateNode(n)
+	new := createNode(n)
 	new.label = label
 	n.attach(new)
 	return new

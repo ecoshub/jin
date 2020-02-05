@@ -7,8 +7,8 @@ func pCore(json []byte, core *node) error{
 		return nil
 	}
 	inQuote := false
-	braceList := MakeSeq(4)
-	indexList := MakeSeq(4)
+	braceList := makeSeq(4)
+	indexList := makeSeq(4)
 	indexList.Push(0)
 	var start int
 	var end int
@@ -66,11 +66,11 @@ func pCore(json []byte, core *node) error{
 			case 91, 123:
 				switch last {
 				case 58:
-					current := CreateNode(core)
+					current := createNode(core)
 					current.label = string(key)
 					core = current
 				default:
-					current := CreateNode(core)
+					current := createNode(core)
 					current.label = strconv.Itoa(indexList.Last())
 					core = current
 				}
@@ -82,13 +82,13 @@ func pCore(json []byte, core *node) error{
 			case 93, 125:
 				switch last {
 				case 58:
-					current := CreateNode(core)
+					current := createNode(core)
 					current.label = string(key)
 					current.value = json[valStart:i]
 					core = current
 					core = core.up
 				case 44:
-					current := CreateNode(core)
+					current := createNode(core)
 					current.label = strconv.Itoa(indexList.Last())
 					current.value = json[valStart:i]
 					core = current
@@ -108,13 +108,13 @@ func pCore(json []byte, core *node) error{
 			case 44:
 				switch last {
 				case 58:
-					current := CreateNode(core)
+					current := createNode(core)
 					current.label = string(key)
 					current.value = json[valStart:i]
 					core = current
 					core = core.up
 				case 44, 91:
-					current := CreateNode(core)
+					current := createNode(core)
 					current.label = strconv.Itoa(indexList.Last())
 					current.value = json[valStart:i]
 					core = current

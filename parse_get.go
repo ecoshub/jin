@@ -10,7 +10,7 @@ func (p *parse) Get(path ...string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	return StripQuotesByte(trim(curr.value)), nil
+	return stripQuotesByte(trim(curr.value)), nil
 }
 
 func (p *parse) GetString(path ...string) (string, error) {
