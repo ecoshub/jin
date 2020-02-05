@@ -33,9 +33,8 @@ func ExecuteNode(par string) (string, error) {
 	err := cmd.Run()
 	if err != nil {
 		return "", err
-	} else {
-		return out.String(), nil
 	}
+	return out.String(), nil
 }
 
 func Dir(dir string) []string {

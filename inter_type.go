@@ -48,18 +48,16 @@ func IsEmpty(json []byte, path ...string) (bool, error) {
 		for space(json[start]) {
 			if start > len(json)-1 {
 				return false, BAD_JSON_ERROR(start)
-			} else {
-				start++
-				continue
 			}
+			start++
+			continue
 		}
 		for space(json[end]) {
 			if end < 1 {
 				return false, BAD_JSON_ERROR(end)
-			} else {
-				end--
-				continue
 			}
+			end--
+			continue
 		}
 	} else {
 		_, start, end, err = core(json, false, path...)
@@ -92,10 +90,9 @@ func typeControlCore(json []byte, control []byte, equal bool, path ...string) (b
 		for space(json[start]) {
 			if start > len(json)-1 {
 				return false, -1, BAD_JSON_ERROR(start)
-			} else {
-				start++
-				continue
 			}
+			start++
+			continue
 		}
 	} else {
 		_, start, _, err = core(json, true, path...)
@@ -107,15 +104,12 @@ func typeControlCore(json []byte, control []byte, equal bool, path ...string) (b
 		if json[start] == v {
 			if equal {
 				return true, start, nil
-			} else {
-				return false, start, nil
 			}
+			return false, start, nil
 		}
 	}
 	if equal {
 		return false, start, nil
-	} else {
-		return true, start, nil
 	}
-	return false, -1, nil
+	return true, start, nil
 }

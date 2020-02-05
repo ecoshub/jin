@@ -44,34 +44,32 @@ func SetKey(json []byte, newKey string, path ...string) ([]byte, error) {
 	}
 	if len(path) == 0 {
 		return json, NULL_PATH_ERROR()
-	} else {
-		var err error
-		var keyStart int
-		var start int
-		newPath := make([]string, len(path))
-		copy(newPath, path[:len(path)-1])
-		newPath[len(newPath)-1] = newKey
-		_, _, _, err = core(json, false, newPath...)
-		if err != nil {
-			if err.Error() == KEY_NOT_FOUND_ERROR().Error() {
-				keyStart, start, _, err = core(json, false, path...)
-				if err != nil {
-					return json, err
-				}
-				for i := keyStart; i < start; i++ {
-					curr := json[i]
-					if curr == 92 {
-						i++
-					}
-					if curr == 34 {
-						return replace(json, []byte(newKey), keyStart, i), nil
-					}
-				}
-				return json, BAD_JSON_ERROR(keyStart)
-			}
-			return json, KEY_EXPECTED_ERROR()
-		}
-		return json, KEY_ALREADY_EXISTS_ERROR()
 	}
-	return json, BAD_JSON_ERROR(-1)
+	var err error
+	var keyStart int
+	var start int
+	newPath := make([]string, len(path))
+	copy(newPath, path[:len(path)-1])
+	newPath[len(newPath)-1] = newKey
+	_, _, _, err = core(json, false, newPath...)
+	if err != nil {
+		if err.Error() == KEY_NOT_FOUND_ERROR().Error() {
+			keyStart, start, _, err = core(json, false, path...)
+			if err != nil {
+				return json, err
+			}
+			for i := keyStart; i < start; i++ {
+				curr := json[i]
+				if curr == 92 {
+					i++
+				}
+				if curr == 34 {
+					return replace(json, []byte(newKey), keyStart, i), nil
+				}
+			}
+			return json, BAD_JSON_ERROR(keyStart)
+		}
+		return json, KEY_EXPECTED_ERROR()
+	}
+	return json, KEY_ALREADY_EXISTS_ERROR()
 }

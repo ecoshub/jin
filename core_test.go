@@ -229,9 +229,8 @@ func TestInterperterInsert(t *testing.T) {
 				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
 					t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
 					return
-				} else {
-					continue
 				}
+				continue
 			}
 			value, err = Get(json, paths[i]...)
 			if err != nil {
@@ -346,10 +345,9 @@ func TestInterperterArrayIter(t *testing.T) {
 				if string(value) != string(value2) {
 					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value2), string(value))
 					return false
-				} else {
-					count++
-					return true
 				}
+				count++
+				return true
 			}, path...)
 			if err != nil {
 				t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
@@ -377,9 +375,8 @@ func TestInterperterKeyValueIter(t *testing.T) {
 				if string(value) != string(value2) {
 					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), string(value2))
 					return false
-				} else {
-					return true
 				}
+				return true
 			}, path...)
 			if err != nil {
 				t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
@@ -548,9 +545,8 @@ func TestInterperterInsertFlatten(t *testing.T) {
 				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
 					t.Errorf("Total Fail(Insert), path:%v err:%v\n", paths[i], err)
 					return
-				} else {
-					continue
 				}
+				continue
 			}
 			value, err = Get(json, paths[i]...)
 			if err != nil {
@@ -656,10 +652,9 @@ func TestInterperterArrayIterFlatten(t *testing.T) {
 				if string(value) != string(value2) {
 					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value2), string(value))
 					return false
-				} else {
-					count++
-					return true
 				}
+				count++
+				return true
 			}, path...)
 			if err != nil {
 				t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
@@ -687,9 +682,8 @@ func TestInterperterKeyValueIterFlatten(t *testing.T) {
 				if string(value) != string(value2) {
 					t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", newPath, string(value), string(value2))
 					return false
-				} else {
-					return true
 				}
+				return true
 			}, path...)
 			if err != nil {
 				t.Errorf("Total Fail(ArrayIter), path:%v err:%v\n", path, err)
@@ -886,9 +880,8 @@ func TestParserInsert(t *testing.T) {
 				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
 					t.Errorf("Total Fail(Insert), path:%v err:%v\n", paths[i], err)
 					return
-				} else {
-					continue
 				}
+				continue
 			}
 			value, err = prs.Get(paths[i]...)
 			if err != nil {
@@ -1181,9 +1174,8 @@ func TestParserInsertFlatten(t *testing.T) {
 				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
 					t.Errorf("Total Fail(Insert), path:%v err:%v\n", paths[i], err)
 					return
-				} else {
-					continue
 				}
+				continue
 			}
 			value, err = prs.Get(paths[i]...)
 			if err != nil {

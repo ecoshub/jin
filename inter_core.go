@@ -35,10 +35,9 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 		// json length overflow control
 		if offset > len(json)-1 {
 			return -1, -1, -1, BAD_JSON_ERROR(offset)
-		} else {
-			offset++
-			continue
 		}
+		offset++
+		continue
 	}
 	// braceType determine whether or not search will be a key search or index search
 	braceType := json[offset]
@@ -174,10 +173,9 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 							// if level is less than 1 it mean index not in this array.
 							if level < 2 {
 								return -1, -1, -1, INDEX_OUT_OF_RANGE_ERROR()
-							} else {
-								level--
-								continue
 							}
+							level--
+							continue
 						}
 					}
 				}
@@ -400,10 +398,9 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 		// json length overflow control
 		if offset > len(json)-1 {
 			return -1, -1, -1, BAD_JSON_ERROR(offset)
-		} else {
-			offset++
-			continue
 		}
+		offset++
+		continue
 	}
 	if justStart {
 		return keyStart, offset, 0, nil
@@ -447,10 +444,9 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 				if curr == 93 || curr == 125 {
 					if level == 1 {
 						return keyStart, offset, i + 1, nil
-					} else {
-						level--
-						continue
 					}
+					level--
+					continue
 				}
 				continue
 			}
@@ -479,9 +475,8 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 				if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 					if offset == i {
 						return -1, -1, -1, EMPTY_ARRAY_ERROR()
-					} else {
-						return keyStart, offset, i, nil
 					}
+					return keyStart, offset, i, nil
 				}
 			}
 		}

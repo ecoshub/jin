@@ -74,9 +74,8 @@ func (p *parse) GetStringArray(path ...string) ([]string, error) {
 			return nil, PARSE_STRING_ARRAY_ERROR(val)
 		}
 		return arr, nil
-	} else {
-		return nil, PARSE_STRING_ARRAY_ERROR(val)
 	}
+	return nil, PARSE_STRING_ARRAY_ERROR(val)
 }
 
 func (p *parse) GetIntArray(path ...string) ([]int, error) {
@@ -139,9 +138,8 @@ func (p *parse) GetIntArray(path ...string) ([]int, error) {
 			}
 		}
 		return newArray, nil
-	} else {
-		return nil, PARSE_INT_ARRAY_ERROR(val)
 	}
+	return nil, PARSE_INT_ARRAY_ERROR(val)
 }
 
 func (p *parse) GetFloatArray(path ...string) ([]float64, error) {
@@ -204,9 +202,8 @@ func (p *parse) GetFloatArray(path ...string) ([]float64, error) {
 			}
 		}
 		return newArray, nil
-	} else {
-		return nil, PARSE_FLOAT_ARRAY_ERROR(val)
 	}
+	return nil, PARSE_FLOAT_ARRAY_ERROR(val)
 }
 
 func (p *parse) GetBoolArray(path ...string) ([]bool, error) {
@@ -279,7 +276,6 @@ func (p *parse) GetBoolArray(path ...string) ([]bool, error) {
 			}
 		}
 		return newArray, nil
-	} else {
-		return nil, PARSE_BOOL_ARRAY_ERROR(val)
 	}
+	return nil, PARSE_BOOL_ARRAY_ERROR(val)
 }

@@ -8,10 +8,9 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 		for space(json[start]) {
 			if start > len(json)-1 {
 				return BAD_JSON_ERROR(start)
-			} else {
-				start++
-				continue
 			}
+			start++
+			continue
 		}
 	} else {
 		_, start, _, err = core(json, true, path...)
@@ -38,10 +37,8 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 					if json[k] != 92 {
 						if (i-1-k)%2 == 0 {
 							inQuote = !inQuote
-							break
-						} else {
-							break
 						}
+						break
 					}
 					continue
 				}
@@ -75,10 +72,9 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 							if json[start] == 34 && json[end] == 34 {
 								callback(json[start+1 : end])
 								return nil
-							} else {
-								callback(json[start : end+1])
-								return nil
 							}
+							callback(json[start : end+1])
+							return nil
 						}
 					}
 					level--
@@ -115,10 +111,8 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 			}
 		}
 		return nil
-	} else {
-		return ARRAY_EXPECTED_ERROR()
 	}
-	return BAD_JSON_ERROR(-1)
+	return ARRAY_EXPECTED_ERROR()
 }
 
 func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...string) error {
@@ -129,10 +123,9 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...st
 		for space(json[start]) {
 			if start > len(json)-1 {
 				return BAD_JSON_ERROR(start)
-			} else {
-				start++
-				continue
 			}
+			start++
+			continue
 		}
 	} else {
 		_, start, _, err = core(json, true, path...)
@@ -205,10 +198,9 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...st
 							if json[start] == 34 && json[end] == 34 {
 								callback(key, json[start+1:end])
 								return nil
-							} else {
-								callback(key, json[start:end+1])
-								return nil
 							}
+							callback(key, json[start:end+1])
+							return nil
 						}
 					}
 					level--
@@ -249,8 +241,6 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...st
 			}
 		}
 		return nil
-	} else {
-		return OBJECT_EXPECTED_ERROR()
 	}
-	return BAD_JSON_ERROR(-1)
+	return OBJECT_EXPECTED_ERROR()
 }

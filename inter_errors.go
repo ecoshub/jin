@@ -31,7 +31,7 @@ func KEY_NOT_FOUND_ERROR() error {
 	return errors.New("ERROR_CODE:08 Error: Key not found.")
 }
 func BAD_JSON_ERROR(index int) error {
-	return errors.New(fmt.Sprintf("ERROR_CODE:09 Error: Bad JSON format. at:%v", index))
+	return fmt.Errorf("ERROR_CODE:09 Error: Bad JSON format. at:%v", index)
 }
 func BAD_KEY_ERROR() error {
 	return errors.New("ERROR_CODE:10 Error: Key value cannot contain quote symbol.")
@@ -40,25 +40,25 @@ func KEY_ALREADY_EXISTS_ERROR() error {
 	return errors.New("ERROR_CODE:11 Error: Key already exist.")
 }
 func PARSE_INT_ERROR(val string) error {
-	return errors.New(fmt.Sprintf("ERROR_CODE:12 Parse Error: '%v' Cannot be converted to int.", val))
+	return fmt.Errorf("ERROR_CODE:12 Parse Error: '%v' Cannot be converted to int.", val)
 }
 func PARSE_FLOAT_ERROR(val string) error {
-	return errors.New(fmt.Sprintf("ERROR_CODE:13 Parse Error: '%v' Cannot be converted to float.", val))
+	return fmt.Errorf("ERROR_CODE:13 Parse Error: '%v' Cannot be converted to float.", val)
 }
 func PARSE_BOOL_ERROR(val string) error {
-	return errors.New(fmt.Sprintf("ERROR_CODE:14 Parse Error: '%v' Cannot be converted to bool.", val))
+	return fmt.Errorf("ERROR_CODE:14 Parse Error: '%v' Cannot be converted to bool.", val)
 }
 func PARSE_STRING_ARRAY_ERROR(val string) error {
-	return errors.New(fmt.Sprintf("ERROR_CODE:15 Parse Error: '%v' Cannot be converted to []string.", val))
+	return fmt.Errorf("ERROR_CODE:15 Parse Error: '%v' Cannot be converted to []string.", val)
 }
 func PARSE_INT_ARRAY_ERROR(val string) error {
-	return errors.New(fmt.Sprintf("ERROR_CODE:16 Parse Error: '%v' Cannot be converted to []int.", val))
+	return fmt.Errorf("ERROR_CODE:16 Parse Error: '%v' Cannot be converted to []int.", val)
 }
 func PARSE_FLOAT_ARRAY_ERROR(val string) error {
-	return errors.New(fmt.Sprintf("ERROR_CODE:17 Parse Error: '%v' Cannot be converted to []float.", val))
+	return fmt.Errorf("ERROR_CODE:17 Parse Error: '%v' Cannot be converted to []float.", val)
 }
 func PARSE_BOOL_ARRAY_ERROR(val string) error {
-	return errors.New(fmt.Sprintf("ERROR_CODE:18 Parse Error: '%v' Cannot be converted to []bool.", val))
+	return fmt.Errorf("ERROR_CODE:18 Parse Error: '%v' Cannot be converted to []bool.", val)
 }
 func END_OF_ITERATION() error {
 	return errors.New("ERROR_CODE:19 Iteration Ended. If you want to restart the iteration use Reset() function.")

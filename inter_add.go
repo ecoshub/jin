@@ -50,23 +50,20 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 			val := []byte(`"` + key + `":` + string(value))
 			json = replace(json, val, end-1, end-1)
 			return json, nil
-		} else {
-			path = append(path, key)
-			_, _, _, err = core(json, false, path...)
-			if err != nil {
-				if err.Error() == KEY_NOT_FOUND_ERROR().Error() {
-					val := []byte(`,"` + key + `":` + string(value))
-					json = replace(json, val, end-1, end-1)
-					return json, nil
-				}
-				return json, err
-			}
-			return json, KEY_ALREADY_EXISTS_ERROR()
 		}
-	} else {
-		return json, OBJECT_EXPECTED_ERROR()
+		path = append(path, key)
+		_, _, _, err = core(json, false, path...)
+		if err != nil {
+			if err.Error() == KEY_NOT_FOUND_ERROR().Error() {
+				val := []byte(`,"` + key + `":` + string(value))
+				json = replace(json, val, end-1, end-1)
+				return json, nil
+			}
+			return json, err
+		}
+		return json, KEY_ALREADY_EXISTS_ERROR()
 	}
-	return json, BAD_JSON_ERROR(-1)
+	return json, OBJECT_EXPECTED_ERROR()
 }
 
 func Add(json []byte, value []byte, path ...string) ([]byte, error) {

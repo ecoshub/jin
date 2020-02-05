@@ -45,7 +45,6 @@ func (p *parse) Set(newVal []byte, path ...string) error {
 		if err != nil {
 			return err
 		}
-
 	}
 	return nil
 }
