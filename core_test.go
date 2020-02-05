@@ -701,7 +701,7 @@ func TestInterperterKeyValueIterFlatten(t *testing.T) {
 
 func TestParserGet(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "get", file)
@@ -717,7 +717,7 @@ func TestParserGet(t *testing.T) {
 				return
 			}
 			if len(value) > 1 {
-				if value[0] == 91 && value[len(value) - 1] == 93 || value[0] == 123 && value[len(value) - 1] == 125 {
+				if value[0] == 91 && value[len(value)-1] == 93 || value[0] == 123 && value[len(value)-1] == 125 {
 					value = Flatten(value)
 				}
 			}
@@ -731,7 +731,7 @@ func TestParserGet(t *testing.T) {
 
 func TestParserSet(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "set", file)
@@ -752,7 +752,7 @@ func TestParserSet(t *testing.T) {
 				return
 			}
 			if len(value) > 1 {
-				if value[0] == 91 && value[len(value) - 1] == 93 || value[0] == 123 && value[len(value) - 1] == 125 {
+				if value[0] == 91 && value[len(value)-1] == 93 || value[0] == 123 && value[len(value)-1] == 125 {
 					value = Flatten(value)
 				}
 			}
@@ -766,7 +766,7 @@ func TestParserSet(t *testing.T) {
 
 func TestParserSetKey(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "get", file)
@@ -776,19 +776,19 @@ func TestParserSetKey(t *testing.T) {
 				t.Errorf("Total Fail(Parse SetKey), err:%v\n", err)
 				return
 			}
-			value, err := prs.Get(paths[i][:len(paths[i]) - 1]...)
+			value, err := prs.Get(paths[i][:len(paths[i])-1]...)
 			if err != nil {
 				t.Errorf("Total Fail(Test Parse SetKey Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if len(value) > 1 && len(paths[i]) > 1{
-				if value[0] == 123 && value[len(value) - 1] == 125 {
+			if len(value) > 1 && len(paths[i]) > 1 {
+				if value[0] == 123 && value[len(value)-1] == 125 {
 					err := prs.SetKey("test-key", paths[i]...)
 					if err != nil {
 						t.Errorf("Total Fail(Test Parse SetKey), path:%v err:%v\n", paths[i], err)
 						return
 					}
-					value2, err := prs.Get(append(paths[i][:len(paths[i]) - 1], "test-key")...)
+					value2, err := prs.Get(append(paths[i][:len(paths[i])-1], "test-key")...)
 					if err != nil {
 						t.Errorf("Total Fail(Test Parse SetKey Get), path:%v err:%v\n", paths[i], err)
 						return
@@ -810,7 +810,7 @@ func TestParserSetKey(t *testing.T) {
 
 func TestParserAddKV(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "addkv", file)
@@ -831,7 +831,7 @@ func TestParserAddKV(t *testing.T) {
 
 func TestParserAdd(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "add", file)
@@ -861,7 +861,7 @@ func TestParserAdd(t *testing.T) {
 
 func TestParserInsert(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "insert", file)
@@ -896,7 +896,7 @@ func TestParserInsert(t *testing.T) {
 				return
 			}
 			if string(Flatten(value)) != stripQuotes(values[i]) {
-				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(value), values[i])
+				t.Errorf("Fail, not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<\n", paths[i], string(Flatten(value)), stripQuotes(values[i]))
 				return
 			}
 		}
@@ -905,7 +905,7 @@ func TestParserInsert(t *testing.T) {
 
 func TestParserDeleteKV(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "deleteKV", file)
@@ -943,7 +943,7 @@ func TestParserDeleteKV(t *testing.T) {
 
 func TestParserDeleteV(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "deleteV", file)
@@ -996,7 +996,7 @@ func TestParserDeleteV(t *testing.T) {
 
 func TestParserGetFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "get", file)
@@ -1012,7 +1012,7 @@ func TestParserGetFlatten(t *testing.T) {
 				return
 			}
 			if len(value) > 1 {
-				if value[0] == 91 && value[len(value) - 1] == 93 || value[0] == 123 && value[len(value) - 1] == 125 {
+				if value[0] == 91 && value[len(value)-1] == 93 || value[0] == 123 && value[len(value)-1] == 125 {
 					value = Flatten(value)
 				}
 			}
@@ -1026,7 +1026,7 @@ func TestParserGetFlatten(t *testing.T) {
 
 func TestParserSetFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "set", file)
@@ -1047,7 +1047,7 @@ func TestParserSetFlatten(t *testing.T) {
 				return
 			}
 			if len(value) > 1 {
-				if value[0] == 91 && value[len(value) - 1] == 93 || value[0] == 123 && value[len(value) - 1] == 125 {
+				if value[0] == 91 && value[len(value)-1] == 93 || value[0] == 123 && value[len(value)-1] == 125 {
 					value = Flatten(value)
 				}
 			}
@@ -1061,7 +1061,7 @@ func TestParserSetFlatten(t *testing.T) {
 
 func TestParserSetKeyFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "get", file)
@@ -1071,19 +1071,19 @@ func TestParserSetKeyFlatten(t *testing.T) {
 				t.Errorf("Total Fail(Parse SetKey), err:%v\n", err)
 				return
 			}
-			value, err := prs.Get(paths[i][:len(paths[i]) - 1]...)
+			value, err := prs.Get(paths[i][:len(paths[i])-1]...)
 			if err != nil {
 				t.Errorf("Total Fail(Test Parse SetKey Get), path:%v err:%v\n", paths[i], err)
 				return
 			}
-			if len(value) > 1 && len(paths[i]) > 1{
-				if value[0] == 123 && value[len(value) - 1] == 125 {
+			if len(value) > 1 && len(paths[i]) > 1 {
+				if value[0] == 123 && value[len(value)-1] == 125 {
 					err := prs.SetKey("test-key", paths[i]...)
 					if err != nil {
 						t.Errorf("Total Fail(Test Parse SetKey), path:%v err:%v\n", paths[i], err)
 						return
 					}
-					value2, err := prs.Get(append(paths[i][:len(paths[i]) - 1], "test-key")...)
+					value2, err := prs.Get(append(paths[i][:len(paths[i])-1], "test-key")...)
 					if err != nil {
 						t.Errorf("Total Fail(Test Parse SetKey Get), path:%v err:%v\n", paths[i], err)
 						return
@@ -1103,10 +1103,9 @@ func TestParserSetKeyFlatten(t *testing.T) {
 	}
 }
 
-
 func TestParserAddKVFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "addkv", file)
@@ -1125,10 +1124,9 @@ func TestParserAddKVFlatten(t *testing.T) {
 	}
 }
 
-
 func TestParserAddFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "add", file)
@@ -1158,7 +1156,7 @@ func TestParserAddFlatten(t *testing.T) {
 
 func TestParserInsertFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "insert", file)
@@ -1202,7 +1200,7 @@ func TestParserInsertFlatten(t *testing.T) {
 
 func TestParserDeleteKVFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "deleteKV", file)
@@ -1240,7 +1238,7 @@ func TestParserDeleteKVFlatten(t *testing.T) {
 
 func TestParserDeleteVFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "deleteV", file)

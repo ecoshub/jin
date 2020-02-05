@@ -184,13 +184,13 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 	}
 	var startEdge int
 	var endEdge int
-	for i := start-1 ; i > 0 ; i -- {
+	for i := start - 1; i > 0; i-- {
 		if !space(json[i]) {
 			startEdge = i
 			break
 		}
 	}
-	for i := end ; i < len(json) ; i ++ {
+	for i := end; i < len(json); i++ {
 		if !space(json[i]) {
 			endEdge = i
 			break
@@ -214,7 +214,7 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 		val := make([]byte, 0, len(value)+1)
 		val = append(val, 44)
 		val = append(val, value...)
-		json = replace(json, val,start-1, start-1)
+		json = replace(json, val, start-1, start-1)
 		return json, nil
 	}
 	return nil, BAD_JSON_ERROR(start)

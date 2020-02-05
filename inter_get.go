@@ -114,9 +114,9 @@ func GetIntArray(json []byte, path ...string) ([]int, error) {
 					if curr == 93 {
 						if level == 0 {
 							element := val[start:i]
-							num, err := strconv.Atoi(trimAndStripQuote(element))
+							num, err := strconv.Atoi(cleanValueString(element))
 							if err != nil {
-								return nil, PARSE_INT_ERROR(trimAndStripQuote(element))
+								return nil, PARSE_INT_ERROR(cleanValueString(element))
 							}
 							newArray = append(newArray, num)
 							start = i + 1
@@ -127,9 +127,9 @@ func GetIntArray(json []byte, path ...string) ([]int, error) {
 				if level == 1 {
 					if curr == 44 {
 						element := val[start:i]
-						num, err := strconv.Atoi(trimAndStripQuote(element))
+						num, err := strconv.Atoi(cleanValueString(element))
 						if err != nil {
-							return nil, PARSE_INT_ERROR(trimAndStripQuote(element))
+							return nil, PARSE_INT_ERROR(cleanValueString(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -179,9 +179,9 @@ func GetFloatArray(json []byte, path ...string) ([]float64, error) {
 					if curr == 93 {
 						if level == 0 {
 							element := val[start:i]
-							num, err := strconv.ParseFloat(trimAndStripQuote(element), 64)
+							num, err := strconv.ParseFloat(cleanValueString(element), 64)
 							if err != nil {
-								return nil, PARSE_FLOAT_ERROR(trimAndStripQuote(element))
+								return nil, PARSE_FLOAT_ERROR(cleanValueString(element))
 							}
 							newArray = append(newArray, num)
 							start = i + 1
@@ -192,9 +192,9 @@ func GetFloatArray(json []byte, path ...string) ([]float64, error) {
 				if level == 1 {
 					if curr == 44 {
 						element := val[start:i]
-						num, err := strconv.ParseFloat(trimAndStripQuote(element), 64)
+						num, err := strconv.ParseFloat(cleanValueString(element), 64)
 						if err != nil {
-							return nil, PARSE_FLOAT_ERROR(trimAndStripQuote(element))
+							return nil, PARSE_FLOAT_ERROR(cleanValueString(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -244,7 +244,7 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 					if curr == 93 {
 						if level == 0 {
 							element := val[start:i]
-							element = trimAndStripQuote(element)
+							element = cleanValueString(element)
 							if element == "true" || element == "false" {
 								if element == "true" {
 									newArray = append(newArray, true)
@@ -252,7 +252,7 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 									newArray = append(newArray, false)
 								}
 							} else {
-								return nil, PARSE_BOOL_ERROR(trimAndStripQuote(element))
+								return nil, PARSE_BOOL_ERROR(cleanValueString(element))
 							}
 							start = i + 1
 							break
@@ -262,7 +262,7 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 				if level == 1 {
 					if curr == 44 {
 						element := val[start:i]
-						element = trimAndStripQuote(element)
+						element = cleanValueString(element)
 						if element == "true" || element == "false" {
 							if element == "true" {
 								newArray = append(newArray, true)

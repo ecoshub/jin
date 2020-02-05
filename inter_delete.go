@@ -12,8 +12,8 @@ func Delete(json []byte, path ...string) ([]byte, error) {
 	start := 0
 	if ks == -1 {
 		start = s
-	}else{
-		start = ks -1
+	} else {
+		start = ks - 1
 	}
 	if json[start-1] == 34 {
 		start--
@@ -23,13 +23,13 @@ func Delete(json []byte, path ...string) ([]byte, error) {
 	}
 	var startEdge int
 	var endEdge int
-	for i := start-1 ; i > 0 ; i -- {
+	for i := start - 1; i > 0; i-- {
 		if !space(json[i]) {
 			startEdge = i
 			break
 		}
 	}
-	for i := e ; i < len(json) ; i ++ {
+	for i := e; i < len(json); i++ {
 		if !space(json[i]) {
 			endEdge = i
 			break
