@@ -226,7 +226,7 @@ func TestInterperterInsert(t *testing.T) {
 		for i := range paths {
 			json, err = Insert(json, 0, []byte(`"test-value"`), paths[i]...)
 			if err != nil {
-				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
+				if err.Error() != ERROR_EMPTY_ARRAY().Error() {
 					t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
 					return
 				}
@@ -542,7 +542,7 @@ func TestInterperterInsertFlatten(t *testing.T) {
 		for i := range paths {
 			json, err = Insert(json, 0, []byte(`"test-value"`), paths[i]...)
 			if err != nil {
-				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
+				if err.Error() != ERROR_EMPTY_ARRAY().Error() {
 					t.Errorf("Total Fail(Insert), path:%v err:%v\n", paths[i], err)
 					return
 				}
@@ -885,7 +885,7 @@ func TestParserInsert(t *testing.T) {
 			}
 			err = prs.Insert(0, []byte(`"test-value"`), paths[i]...)
 			if err != nil {
-				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
+				if err.Error() != ERROR_EMPTY_ARRAY().Error() {
 					t.Errorf("Total Fail(Insert), path:%v err:%v\n", paths[i], err)
 					return
 				}
@@ -1187,7 +1187,7 @@ func TestParserInsertFlatten(t *testing.T) {
 			}
 			err = prs.Insert(0, []byte(`"test-value"`), paths[i]...)
 			if err != nil {
-				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
+				if err.Error() != ERROR_EMPTY_ARRAY().Error() {
 					t.Errorf("Total Fail(Insert), path:%v err:%v\n", paths[i], err)
 					return
 				}

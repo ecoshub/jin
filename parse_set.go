@@ -8,10 +8,10 @@ func (p *parse) Set(newVal []byte, path ...string) error {
 	var curr *node
 	var err error
 	if lenp == 0 {
-		return NULL_PATH_ERROR()
+		return ERROR_NULL_PATH()
 	}
 	if lenv == 0 {
-		return NULL_NEW_VALUE_ERROR()
+		return ERROR_NULL_NEW_VALUE()
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
@@ -77,10 +77,10 @@ func (p *parse) SetKey(newKey string, path ...string) error {
 	var curr *node
 	var err error
 	if lenp == 0 {
-		return NULL_PATH_ERROR()
+		return ERROR_NULL_PATH()
 	}
 	if lenv == 0 {
-		return NULL_KEY_ERROR()
+		return ERROR_NULL_KEY()
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
@@ -88,7 +88,7 @@ func (p *parse) SetKey(newKey string, path ...string) error {
 	}
 	for _, d := range curr.up.down {
 		if d.label == newKey {
-			return KEY_ALREADY_EXISTS_ERROR()
+			return ERROR_KEY_ALREADY_EXISTS()
 		}
 	}
 	curr.label = newKey

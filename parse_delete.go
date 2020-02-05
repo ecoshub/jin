@@ -5,7 +5,7 @@ func (p *parse) Delete(path ...string) error {
 	var curr *node
 	lenp := len(path)
 	if lenp == 0 {
-		return NULL_PATH_ERROR()
+		return ERROR_NULL_PATH()
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {

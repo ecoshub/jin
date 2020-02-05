@@ -10,7 +10,7 @@ import "strconv"
 func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 	// null json control.
 	if len(json) < 2 {
-		return -1, -1, -1, BAD_JSON_ERROR(0)
+		return -1, -1, -1, ERROR_BAD_JSON(0)
 	}
 	// main offset track of this search.
 	offset := 0
@@ -34,7 +34,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 	for space(json[offset]) {
 		// json length overflow control
 		if offset > len(json)-1 {
-			return -1, -1, -1, BAD_JSON_ERROR(offset)
+			return -1, -1, -1, ERROR_BAD_JSON(offset)
 		}
 		offset++
 		continue
@@ -52,7 +52,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 			arrayIndex, err := strconv.Atoi(currentPath)
 			if err != nil {
 				// braceType and current path type is conflicts.
-				return -1, -1, -1, INDEX_EXPECTED_ERROR()
+				return -1, -1, -1, ERROR_INDEX_EXPECTED()
 			}
 			// zeroth index search.
 			if arrayIndex == 0 {
@@ -76,7 +76,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 							break
 						} else {
 							if k != len(path)-1 {
-								return -1, -1, -1, INDEX_OUT_OF_RANGE_ERROR()
+								return -1, -1, -1, ERROR_INDEX_OUT_OF_RANGE()
 							}
 							break
 						}
@@ -135,7 +135,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 											if !space(curr) {
 												if curr != 91 && curr != 123 {
 													if k != len(path)-1 {
-														return -1, -1, -1, INDEX_OUT_OF_RANGE_ERROR()
+														return -1, -1, -1, ERROR_INDEX_OUT_OF_RANGE()
 													}
 													break
 												}
@@ -172,7 +172,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 						if curr == 93 || curr == 125 {
 							// if level is less than 1 it mean index not in this array.
 							if level < 2 {
-								return -1, -1, -1, INDEX_OUT_OF_RANGE_ERROR()
+								return -1, -1, -1, ERROR_INDEX_OUT_OF_RANGE()
 							}
 							level--
 							continue
@@ -180,7 +180,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 					}
 				}
 				if !found {
-					return -1, -1, -1, INDEX_OUT_OF_RANGE_ERROR()
+					return -1, -1, -1, ERROR_INDEX_OUT_OF_RANGE()
 				}
 				// Check true for column char again for keep same with first declaration.
 				isJsonChar[58] = true
@@ -381,7 +381,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 			}
 			// key not found return error
 			if !found {
-				return -1, -1, -1, KEY_NOT_FOUND_ERROR()
+				return -1, -1, -1, ERROR_KEY_NOT_FOUND()
 			}
 			// Include comma character to json chars to restore original.
 			isJsonChar[44] = true
@@ -391,13 +391,13 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 	// this means not search operation has take place
 	// it must be some kinda error or bad format
 	if offset == 0 {
-		return -1, -1, -1, BAD_JSON_ERROR(0)
+		return -1, -1, -1, ERROR_BAD_JSON(0)
 	}
 	// skip spaces from top.
 	for space(json[offset]) {
 		// json length overflow control
 		if offset > len(json)-1 {
-			return -1, -1, -1, BAD_JSON_ERROR(offset)
+			return -1, -1, -1, ERROR_BAD_JSON(offset)
 		}
 		offset++
 		continue
@@ -474,7 +474,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 				// if current byte is space or one of these ',' ']' '}' this means end of the value is i
 				if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 					if offset == i {
-						return -1, -1, -1, EMPTY_ARRAY_ERROR()
+						return -1, -1, -1, ERROR_EMPTY_ARRAY()
 					}
 					return keyStart, offset, i, nil
 				}
@@ -484,5 +484,5 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 	// This means not search operation has take place
 	// not any formatting operation has take place
 	// it must be some kinda bad JSON format
-	return -1, -1, -1, BAD_JSON_ERROR(offset)
+	return -1, -1, -1, ERROR_BAD_JSON(offset)
 }

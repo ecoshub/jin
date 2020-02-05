@@ -4,7 +4,7 @@ import "strconv"
 
 func Set(json []byte, newValue []byte, path ...string) ([]byte, error) {
 	if len(path) == 0 {
-		return json, NULL_PATH_ERROR()
+		return json, ERROR_NULL_PATH()
 	}
 	_, start, end, err := core(json, false, path...)
 	if err != nil {
@@ -40,10 +40,10 @@ func SetBool(json []byte, newValue bool, path ...string) ([]byte, error) {
 
 func SetKey(json []byte, newKey string, path ...string) ([]byte, error) {
 	if len(newKey) == 0 {
-		return json, NULL_NEW_VALUE_ERROR()
+		return json, ERROR_NULL_NEW_VALUE()
 	}
 	if len(path) == 0 {
-		return json, NULL_PATH_ERROR()
+		return json, ERROR_NULL_PATH()
 	}
 	var err error
 	var keyStart int
@@ -53,7 +53,7 @@ func SetKey(json []byte, newKey string, path ...string) ([]byte, error) {
 	newPath[len(newPath)-1] = newKey
 	_, _, _, err = core(json, false, newPath...)
 	if err != nil {
-		if err.Error() == KEY_NOT_FOUND_ERROR().Error() {
+		if err.Error() == ERROR_KEY_NOT_FOUND().Error() {
 			keyStart, start, _, err = core(json, false, path...)
 			if err != nil {
 				return json, err
@@ -67,9 +67,9 @@ func SetKey(json []byte, newKey string, path ...string) ([]byte, error) {
 					return replace(json, []byte(newKey), keyStart, i), nil
 				}
 			}
-			return json, BAD_JSON_ERROR(keyStart)
+			return json, ERROR_BAD_JSON(keyStart)
 		}
-		return json, KEY_EXPECTED_ERROR()
+		return json, ERROR_KEY_EXPECTED()
 	}
-	return json, KEY_ALREADY_EXISTS_ERROR()
+	return json, ERROR_KEY_ALREADY_EXISTS()
 }

@@ -12,11 +12,11 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 				if json[i] == 123 {
 					start = i
 					if i == len(json)-1 {
-						return json, BAD_JSON_ERROR(i)
+						return json, ERROR_BAD_JSON(i)
 					}
 					break
 				} else {
-					return json, OBJECT_EXPECTED_ERROR()
+					return json, ERROR_OBJECT_EXPECTED()
 				}
 			}
 		}
@@ -25,11 +25,11 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 				if json[i] == 125 {
 					end = i + 1
 					if i == 0 {
-						return json, BAD_JSON_ERROR(i)
+						return json, ERROR_BAD_JSON(i)
 					}
 					break
 				} else {
-					return json, OBJECT_EXPECTED_ERROR()
+					return json, ERROR_OBJECT_EXPECTED()
 				}
 			}
 		}
@@ -54,16 +54,16 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 		path = append(path, key)
 		_, _, _, err = core(json, false, path...)
 		if err != nil {
-			if err.Error() == KEY_NOT_FOUND_ERROR().Error() {
+			if err.Error() == ERROR_KEY_NOT_FOUND().Error() {
 				val := []byte(`,"` + key + `":` + string(value))
 				json = replace(json, val, end-1, end-1)
 				return json, nil
 			}
 			return json, err
 		}
-		return json, KEY_ALREADY_EXISTS_ERROR()
+		return json, ERROR_KEY_ALREADY_EXISTS()
 	}
-	return json, OBJECT_EXPECTED_ERROR()
+	return json, ERROR_OBJECT_EXPECTED()
 }
 
 func Add(json []byte, value []byte, path ...string) ([]byte, error) {
@@ -71,7 +71,7 @@ func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 	var end int
 	var err error
 	if len(json) < 2 {
-		return json, BAD_JSON_ERROR(0)
+		return json, ERROR_BAD_JSON(0)
 	}
 	if len(path) == 0 {
 		for i := 0; i < len(json); i++ {
@@ -79,11 +79,11 @@ func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 				if json[i] == 91 {
 					start = i
 					if i == len(json)-1 {
-						return json, BAD_JSON_ERROR(i)
+						return json, ERROR_BAD_JSON(i)
 					}
 					break
 				} else {
-					return json, ARRAY_EXPECTED_ERROR()
+					return json, ERROR_ARRAY_EXPECTED()
 				}
 			}
 		}
@@ -92,11 +92,11 @@ func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 				if json[i] == 93 {
 					end = i + 1
 					if i == 0 {
-						return json, BAD_JSON_ERROR(i)
+						return json, ERROR_BAD_JSON(i)
 					}
 					break
 				} else {
-					return json, ARRAY_EXPECTED_ERROR()
+					return json, ERROR_ARRAY_EXPECTED()
 				}
 			}
 		}
@@ -124,9 +124,9 @@ func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 			return json, nil
 		}
 	} else {
-		return json, ARRAY_EXPECTED_ERROR()
+		return json, ERROR_ARRAY_EXPECTED()
 	}
-	return json, BAD_JSON_ERROR(-1)
+	return json, ERROR_BAD_JSON(-1)
 }
 
 func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error) {
@@ -139,11 +139,11 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 				if json[i] == 91 {
 					start = i
 					if i == len(json)-1 {
-						return json, BAD_JSON_ERROR(i)
+						return json, ERROR_BAD_JSON(i)
 					}
 					break
 				} else {
-					return json, ARRAY_EXPECTED_ERROR()
+					return json, ERROR_ARRAY_EXPECTED()
 				}
 			}
 		}
@@ -152,11 +152,11 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 				if json[i] == 93 {
 					end = i + 1
 					if i == 0 {
-						return json, BAD_JSON_ERROR(i)
+						return json, ERROR_BAD_JSON(i)
 					}
 					break
 				} else {
-					return json, ARRAY_EXPECTED_ERROR()
+					return json, ERROR_ARRAY_EXPECTED()
 				}
 			}
 		}
@@ -167,7 +167,7 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 		}
 	}
 	if json[start] != 91 || json[end-1] != 93 {
-		return json, ARRAY_EXPECTED_ERROR()
+		return json, ERROR_ARRAY_EXPECTED()
 	}
 	_, start, end, err = core(json, false, append(path, strconv.Itoa(index))...)
 	if err != nil {
@@ -214,7 +214,7 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 		json = replace(json, val, start-1, start-1)
 		return json, nil
 	}
-	return nil, BAD_JSON_ERROR(start)
+	return nil, ERROR_BAD_JSON(start)
 }
 
 func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, error) {
