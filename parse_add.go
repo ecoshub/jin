@@ -77,7 +77,7 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 					}
 					for i := 0; i < lenp; i++ {
 						newNode = newNode.up
-						newNode.value, err = Get(p.json, path[:lenp-i-1]...)
+						newNode.value, err = Get(p.json, path[:lenp-i]...)
 						if err != nil {
 							return err
 						}
@@ -96,7 +96,7 @@ func (p *parse) AddKeyValue(key string, newVal []byte, path ...string) error {
 			}
 			for i := 0; i < lenp; i++ {
 				newNode = newNode.up
-				newNode.value, err = Get(p.json, path[:lenp-i-1]...)
+				newNode.value, err = Get(p.json, path[:lenp-i]...)
 				if err != nil {
 					return err
 				}

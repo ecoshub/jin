@@ -354,18 +354,15 @@ func trim(str []byte) []byte {
 
 func trimAndStripQuote(str string) string {
 	start := 0
-	lens := len(str) - 1
-	for space(str[start]) {
-		if start > lens {
-			break
-		}
+	lens := len(str)
+	for space(str[start]) && start < lens - 1 {
 		start++
 	}
-	end := lens
-	for space(str[end]) {
-		if end < 1 {
-			break
-		}
+	if start == lens - 1 {
+		return ""
+	}
+	end := lens - 1
+	for space(str[end]) && end > 1 {
 		end--
 	}
 	if str[start] == 34 && str[end] == 34 {

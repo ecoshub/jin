@@ -1,5 +1,6 @@
 package jin
 
+
 func IsObject(json []byte, path ...string) (bool, error) {
 	state, _, err := typeControlCore(json, []byte{91, 123}, true, path...)
 	if err != nil {
@@ -61,14 +62,15 @@ func IsEmpty(json []byte, path ...string) (bool, error) {
 				continue
 			}
 		}
-	} else {
+	}else{
 		_, start, end, err = core(json, false, path...)
 		if err != nil {
 			return false, err
 		}
+		end--
 	}
 	braceStart := json[start]
-	braceEnd := json[end-1]
+	braceEnd := json[end]
 	if braceStart == 91 || braceStart == 123 {
 		if braceStart+2 != braceEnd {
 			return false, BAD_JSON_ERROR(end)
