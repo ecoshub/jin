@@ -7,7 +7,7 @@ func ExampleAdd() {
     // Output: hello
 }
 
-func ExampleAdd_M() {
+func ExampleParser_Add() {
     fmt.Println("hi")
     // Output: hi
 }
