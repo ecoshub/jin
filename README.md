@@ -1,4 +1,5 @@
-![License](https://img.shields.io/dub/l/vibe-d.svg)
+[![Go Report Card](https://goreportcard.com/badge/github.com/ecoshub/jin)](https://goreportcard.com/report/github.com/ecoshub/jin) ![License](https://img.shields.io/dub/l/vibe-d.svg)
+
 ## COMPREHENSIVE AND FAST WAY TO DEAL WITH JSON
 ## UNDER DEVELOPMENT
 + (+) Basic get & set fucntions
