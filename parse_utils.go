@@ -18,15 +18,12 @@ type parse struct {
 }
 
 func createNode(up *node) *node {
-	Node := node{up: up, down: []*node{}}
-	if up != nil {
-		up.down = append(up.down, &Node)
-	}
+	Node := node{up: up}
 	return &Node
 }
 
 func Parse(json []byte) (*parse, error) {
-	core := createNode(nil)
+	core := &node{up:nil}
 	err := pCore(json, core)
 	if err != nil {
 		return nil, err
@@ -37,29 +34,6 @@ func Parse(json []byte) (*parse, error) {
 	core = core.down[0]
 	pars := parse{core: core, json: json}
 	return &pars, nil
-}
-
-func (n *node) link(label string) *node {
-	if n.down == nil {
-		new := createNode(n)
-		new.label = label
-		n.attach(new)
-		return new
-	}
-	for _, d := range n.down {
-		if d.label == label {
-			return d
-		}
-	}
-	new := createNode(n)
-	new.label = label
-	n.attach(new)
-	return new
-}
-
-func (n *node) attach(other *node) {
-	other.up = n
-	n.down = append(n.down, other)
 }
 
 func (n *node) insert(up *node, index int) error {
@@ -89,24 +63,18 @@ func (n *node) deAttach() {
 }
 
 func (n *node) walk(path []string) (*node, error) {
-	lenp := len(path)
-	curr := n
-	if lenp == 0 {
-		return curr, nil
-	}
-	for i := 0; i < lenp; i++ {
-		exists := false
-		for _, down := range curr.down {
-			if down.label == path[i] {
-				curr = down
-				exists = true
+	for _, p := range path {
+		for _, d := range n.down {
+			if d.label == p {
+				n = d
+				goto cont
 			}
 		}
-		if !exists {
-			return nil, KEY_NOT_FOUND_ERROR()
-		}
+		return nil, KEY_NOT_FOUND_ERROR()
+	cont:
+		continue
 	}
-	return curr, nil
+	return n, nil
 }
 
 func (n *node) getIndex() int {
@@ -118,31 +86,33 @@ func (n *node) getIndex() int {
 	return -1
 }
 
-func (p *parse) Tree(withValues bool) {
-	p.core.recursivePrint(p.json, 0, withValues)
+func (p *parse) Tree(withValues bool) string {
+	str := ""
+	p.core.createTree(p.json, 0, withValues, &str)
+	return str
 }
 
-func (n *node) recursivePrint(json []byte, depth int, withValues bool) {
+func (n *node) createTree(json []byte, depth int, withValues bool, str *string) {
 	for _, d := range n.down {
-		str := ""
+		tab := ""
 		for i := 0; i < depth-1; i++ {
-			str += fmt.Sprintf("\t")
+			tab += fmt.Sprintf("\t")
 		}
 		if withValues {
 			if depth != 0 {
-				fmt.Printf("\t%v %-6v : %v\n", str+string(9492)+" ", d.label, string(d.value))
+				*str += fmt.Sprintf("\t%v %-6v : %v\n", tab+string(9492)+" ", d.label, string(d.value))
 			} else {
-				fmt.Printf("%v%v %-6v : %v\n", str, string(9472), d.label, string(d.value))
+				*str += fmt.Sprintf("%v%v %-6v : %v\n", tab, string(9472), d.label, string(d.value))
 			}
 		} else {
 			if depth != 0 {
-				fmt.Printf("\t%v %v\n", str+string(9492)+" ", d.label)
+				*str += fmt.Sprintf("\t%v %v\n", tab+string(9492)+" ", d.label)
 			} else {
-				fmt.Printf("%v%v %v\n", str, string(9472), d.label)
+				*str += fmt.Sprintf("%v%v %v\n", tab, string(9472), d.label)
 			}
 		}
 		if len(d.down) > 0 {
-			d.recursivePrint(json, depth+1, withValues)
+			d.createTree(json, depth+1, withValues, str)
 		}
 	}
 }

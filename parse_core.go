@@ -2,8 +2,9 @@ package jin
 
 import "strconv"
 
-func pCore(json []byte, core *node) error{
-	if len(json) < 2 {
+func pCore(json []byte, core *node) error {
+	lenj := len(json)
+	if lenj < 2 {
 		return nil
 	}
 	inQuote := false
@@ -14,7 +15,7 @@ func pCore(json []byte, core *node) error{
 	var end int
 	var key []byte
 	var valStart int
-	var last byte	
+	var last byte
 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
 	isJsonChar := make([]bool, 256)
 	for _, v := range chars {
@@ -23,12 +24,10 @@ func pCore(json []byte, core *node) error{
 	for space(json[start]) {
 		if start > len(json)-1 {
 			return nil
-		} else {
-			start++
-			continue
 		}
+		start++
 	}
-	for i := start ; i < len(json) ; i ++ {
+	for i := start; i < lenj; i++ {
 		curr := json[i]
 		if !isJsonChar[curr] {
 			continue
@@ -37,7 +36,7 @@ func pCore(json []byte, core *node) error{
 			if inQuote {
 				for n := i - 1; n > -1; n-- {
 					if json[n] != 92 {
-						if (i-n) & 1 != 0 {
+						if (i-n)&1 != 0 {
 							inQuote = !inQuote
 							break
 						} else {
@@ -46,7 +45,7 @@ func pCore(json []byte, core *node) error{
 					}
 					continue
 				}
-			}else{
+			} else {
 				inQuote = true
 				start = i + 1
 				continue
@@ -61,18 +60,18 @@ func pCore(json []byte, core *node) error{
 		}
 		if inQuote {
 			continue
-		}else{
+		} else {
 			switch curr {
 			case 91, 123:
 				switch last {
 				case 58:
-					current := createNode(core)
-					current.label = string(key)
-					core = current
+					newNode := &node{up: core, label: string(key)}
+					core.down = append(core.down, newNode)
+					core = newNode
 				default:
-					current := createNode(core)
-					current.label = strconv.Itoa(indexList.Last())
-					core = current
+					newNode := &node{up: core, label: strconv.Itoa(indexList.Last())}
+					core.down = append(core.down, newNode)
+					core = newNode
 				}
 				indexList.Push(0)
 				braceList.Push(i)
@@ -82,20 +81,14 @@ func pCore(json []byte, core *node) error{
 			case 93, 125:
 				switch last {
 				case 58:
-					current := createNode(core)
-					current.label = string(key)
-					current.value = json[valStart:i]
-					core = current
-					core = core.up
+					newNode := &node{up: core, label: string(key), value: json[valStart:i]}
+					core.down = append(core.down, newNode)
 				case 44:
-					current := createNode(core)
-					current.label = strconv.Itoa(indexList.Last())
-					current.value = json[valStart:i]
-					core = current
-					core = core.up
+					newNode := &node{up: core, label: strconv.Itoa(indexList.Last()), value: json[valStart:i]}
+					core.down = append(core.down, newNode)
 					valStart = i + 1
 				}
-				core.value = json[braceList.Pop():i+1]
+				core.value = json[braceList.Pop() : i+1]
 				indexList.Pop()
 				core = core.up
 				last = curr
@@ -103,26 +96,20 @@ func pCore(json []byte, core *node) error{
 			case 58:
 				key = json[start:end]
 				valStart = i + 1
-				last = curr
+				last = 58
 				continue
 			case 44:
 				switch last {
 				case 58:
-					current := createNode(core)
-					current.label = string(key)
-					current.value = json[valStart:i]
-					core = current
-					core = core.up
+					newNode := &node{up: core, label: string(key), value: json[valStart:i]}
+					core.down = append(core.down, newNode)
 				case 44, 91:
-					current := createNode(core)
-					current.label = strconv.Itoa(indexList.Last())
-					current.value = json[valStart:i]
-					core = current
-					core = core.up
+					newNode := &node{up: core, label: strconv.Itoa(indexList.Last()), value: json[valStart:i]}
+					core.down = append(core.down, newNode)
 				}
 				indexList.Inc()
 				valStart = i + 1
-				last = curr
+				last = 44
 				continue
 			}
 		}
