@@ -28,7 +28,7 @@ func GetInt(json []byte, path ...string) (int, error) {
 	}
 	intVal, err := strconv.Atoi(val)
 	if err != nil {
-		return -1, error_parse_int(val)
+		return -1, intParseError(val)
 	}
 	return intVal, nil
 }
@@ -40,7 +40,7 @@ func GetFloat(json []byte, path ...string) (float64, error) {
 	}
 	floatVal, err := strconv.ParseFloat(val, 64)
 	if err != nil {
-		return -1, error_parse_float(val)
+		return -1, floatParseError(val)
 	}
 	return floatVal, nil
 }
@@ -56,7 +56,7 @@ func GetBool(json []byte, path ...string) (bool, error) {
 	if val == "false" {
 		return false, nil
 	}
-	return false, error_parse_bool(val)
+	return false, boolParseError(val)
 }
 
 func GetStringArray(json []byte, path ...string) ([]string, error) {
@@ -66,16 +66,16 @@ func GetStringArray(json []byte, path ...string) ([]string, error) {
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, error_parse_string_array(val)
+		return nil, stringArrayParseError(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		arr := ParseArray(val)
 		if arr == nil {
-			return nil, error_parse_string_array(val)
+			return nil, stringArrayParseError(val)
 		}
 		return arr, nil
 	}
-	return nil, error_parse_string_array(val)
+	return nil, stringArrayParseError(val)
 }
 
 func GetIntArray(json []byte, path ...string) ([]int, error) {
@@ -85,7 +85,7 @@ func GetIntArray(json []byte, path ...string) ([]int, error) {
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, error_parse_int_array(val)
+		return nil, intArrayParseError(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]int, 0, 16)
@@ -115,7 +115,7 @@ func GetIntArray(json []byte, path ...string) ([]int, error) {
 							element := val[start:i]
 							num, err := strconv.Atoi(cleanValueString(element))
 							if err != nil {
-								return nil, error_parse_int(cleanValueString(element))
+								return nil, intParseError(cleanValueString(element))
 							}
 							newArray = append(newArray, num)
 							break
@@ -127,7 +127,7 @@ func GetIntArray(json []byte, path ...string) ([]int, error) {
 						element := val[start:i]
 						num, err := strconv.Atoi(cleanValueString(element))
 						if err != nil {
-							return nil, error_parse_int(cleanValueString(element))
+							return nil, intParseError(cleanValueString(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -138,7 +138,7 @@ func GetIntArray(json []byte, path ...string) ([]int, error) {
 		}
 		return newArray, nil
 	}
-	return nil, error_parse_int_array(val)
+	return nil, intArrayParseError(val)
 }
 
 func GetFloatArray(json []byte, path ...string) ([]float64, error) {
@@ -148,7 +148,7 @@ func GetFloatArray(json []byte, path ...string) ([]float64, error) {
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, error_parse_float_array(val)
+		return nil, floatArrayParseError(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]float64, 0, 16)
@@ -178,7 +178,7 @@ func GetFloatArray(json []byte, path ...string) ([]float64, error) {
 							element := val[start:i]
 							num, err := strconv.ParseFloat(cleanValueString(element), 64)
 							if err != nil {
-								return nil, error_parse_float(cleanValueString(element))
+								return nil, floatParseError(cleanValueString(element))
 							}
 							newArray = append(newArray, num)
 							break
@@ -190,7 +190,7 @@ func GetFloatArray(json []byte, path ...string) ([]float64, error) {
 						element := val[start:i]
 						num, err := strconv.ParseFloat(cleanValueString(element), 64)
 						if err != nil {
-							return nil, error_parse_float(cleanValueString(element))
+							return nil, floatParseError(cleanValueString(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -201,7 +201,7 @@ func GetFloatArray(json []byte, path ...string) ([]float64, error) {
 		}
 		return newArray, nil
 	}
-	return nil, error_parse_float_array(val)
+	return nil, floatArrayParseError(val)
 }
 
 func GetBoolArray(json []byte, path ...string) ([]bool, error) {
@@ -211,7 +211,7 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, error_parse_bool_array(val)
+		return nil, boolArrayParseError(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]bool, 0, 16)
@@ -247,7 +247,7 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 									newArray = append(newArray, false)
 								}
 							} else {
-								return nil, error_parse_bool(cleanValueString(element))
+								return nil, boolParseError(cleanValueString(element))
 							}
 							break
 						}
@@ -264,7 +264,7 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 								newArray = append(newArray, false)
 							}
 						} else {
-							return nil, error_parse_bool(element)
+							return nil, boolParseError(element)
 						}
 						start = i + 1
 						continue
@@ -274,5 +274,5 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 		}
 		return newArray, nil
 	}
-	return nil, error_parse_bool_array(val)
+	return nil, boolArrayParseError(val)
 }

@@ -8,7 +8,7 @@ func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 	var curr *node
 	var err error
 	if lenv == 0 {
-		return error_null_key()
+		return nullKeyError()
 	}
 	json, err := p.Get(path...)
 	if err != nil {
@@ -18,7 +18,7 @@ func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 	if lenp == 0 {
 		for _, d := range curr.down {
 			if d.label == key {
-				return error_key_already_exists()
+				return keyAlreadyExistsError()
 			}
 		}
 		if len(json) >= 2 {
@@ -48,9 +48,9 @@ func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 				newNode.up = curr
 				return nil
 			}
-			return error_object_expected()
+			return objectExpectedError()
 		}
-		return error_bad_json(0)
+		return badJSONError(0)
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
@@ -58,7 +58,7 @@ func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 	}
 	for _, d := range curr.up.down {
 		if d.label == key {
-			return error_key_already_exists()
+			return keyAlreadyExistsError()
 		}
 	}
 	if len(json) >= 2 {
@@ -103,9 +103,9 @@ func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 			}
 			return nil
 		}
-		return error_object_expected()
+		return objectExpectedError()
 	}
-	return error_bad_json(0)
+	return badJSONError(0)
 }
 
 func (p *Parser) Add(newVal []byte, path ...string) error {
@@ -114,7 +114,7 @@ func (p *Parser) Add(newVal []byte, path ...string) error {
 	var curr *node
 	var err error
 	if lenv == 0 {
-		return error_null_key()
+		return nullKeyError()
 	}
 	json, err := p.Get(path...)
 	if err != nil {
@@ -154,9 +154,9 @@ func (p *Parser) Add(newVal []byte, path ...string) error {
 				newNode.up = curr
 				return nil
 			}
-			return error_array_expected()
+			return arrayExpectedError()
 		}
-		return error_bad_json(0)
+		return badJSONError(0)
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
@@ -206,9 +206,9 @@ func (p *Parser) Add(newVal []byte, path ...string) error {
 			}
 			return nil
 		}
-		return error_array_expected()
+		return arrayExpectedError()
 	}
-	return error_bad_json(0)
+	return badJSONError(0)
 }
 
 func (p *Parser) Insert(newIndex int, newVal []byte, path ...string) error {
@@ -217,7 +217,7 @@ func (p *Parser) Insert(newIndex int, newVal []byte, path ...string) error {
 	var curr *node
 	var err error
 	if lenv == 0 {
-		return error_null_key()
+		return nullKeyError()
 	}
 	json, err := p.Get(path...)
 	if err != nil {
@@ -266,9 +266,9 @@ func (p *Parser) Insert(newIndex int, newVal []byte, path ...string) error {
 				newNode.up = curr
 				return nil
 			}
-			return error_array_expected()
+			return arrayExpectedError()
 		}
-		return error_bad_json(0)
+		return badJSONError(0)
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
@@ -322,9 +322,9 @@ func (p *Parser) Insert(newIndex int, newVal []byte, path ...string) error {
 			}
 			return nil
 		}
-		return error_array_expected()
+		return arrayExpectedError()
 	}
-	return error_bad_json(0)
+	return badJSONError(0)
 }
 
 func (p *Parser) AddKeyValueString(key, value string, path ...string) error {
