@@ -1,3 +1,4 @@
+![License](https://img.shields.io/dub/l/vibe-d.svg)
 ## COMPREHENSIVE AND FAST WAY TO DEAL WITH JSON
 ## UNDER DEVELOPMENT
 + (+) Basic get & set fucntions
