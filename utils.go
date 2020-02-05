@@ -128,7 +128,7 @@ func Flatten(json []byte) []byte {
 
 func createTabs(n int) []byte {
 	res := make([]byte, n)
-	for i, _ := range res {
+	for i := range res {
 		res[i] = 9
 	}
 	return res
