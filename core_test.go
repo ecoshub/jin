@@ -286,6 +286,15 @@ func TestInterperterDeleteV(t *testing.T) {
 		t.Logf("%v", file)
 		InitValues(t, false, "deleteV", file)
 		for i, _ := range paths {
+			empty, err := IsEmpty(json, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Empty), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if empty {
+				t.Logf("SKIP(EMPTY ARRAY)")
+				return
+			}
 			value, err := Get(json, paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
@@ -811,39 +820,10 @@ func TestParserAddKV(t *testing.T) {
 				t.Errorf("Total Fail(Parse AddKV), err:%v\n", err)
 				return
 			}
-			var value []byte
-			if len(paths[i]) == 0 {
-				value = json
-				t.Logf("here")
-			}else{
-				value, err = prs.Get(paths[i][:len(paths[i]) - 1]...)
-				if err != nil {
-					t.Errorf("Total Fail(Test Parse AddKV Get), path:%v err:%v\n", paths[i], err)
-					return
-				}
-			}
-			if len(value) > 1 && len(paths[i]) > 1{
-				if value[0] == 123 && value[len(value) - 1] == 125 {
-					err := prs.AddKeyValue("test-key", []byte(`"test-value"`), paths[i]...)
-					if err != nil {
-						t.Errorf("Total Fail(Test Parse AddKV), path:%v err:%v\n", paths[i], err)
-						return
-					}
-					value2, err := prs.Get(append(paths[i][:len(paths[i]) - 1], "test-key")...)
-					if err != nil {
-						t.Errorf("Total Fail(Test Parse AddKV Get), path:%v err:%v\n", paths[i], err)
-						return
-					}
-					value, err := prs.Get(paths[i]...)
-					if err != nil {
-						t.Errorf("Total Fail(Test Parse AddKV Get2), path:%v err:%v\n", paths[i], err)
-						return
-					}
-					if string(value) != string(value2) {
-						t.Errorf("Fail (Test Parse AddKV), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), string(value2), i)
-						return
-					}
-				}
+			err = prs.AddKeyValue("test-key", []byte(`"test-value"`), paths[i]...)
+			value, err := prs.Get(paths[i]...)
+			if string(Flatten(value)) != string(values[i]) {
+				t.Errorf("Fail (Test Parse AddKV), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(Flatten(value)), string(values[i]), i)
 			}
 		}
 	}
@@ -892,6 +872,15 @@ func TestParserInsert(t *testing.T) {
 			return
 		}
 		for i, _ := range paths {
+			empty, err := IsEmpty(json, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Empty), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if empty {
+				t.Logf("SKIP(EMPTY ARRAY)")
+				return
+			}
 			err = prs.Insert(0, []byte(`"test-value"`), paths[i]...)
 			if err != nil {
 				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
@@ -959,6 +948,15 @@ func TestParserDeleteV(t *testing.T) {
 		t.Logf("%v", file)
 		InitValues(t, false, "deleteV", file)
 		for i, _ := range paths {
+			empty, err := IsEmpty(json, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Empty), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if empty {
+				t.Logf("SKIP(EMPTY ARRAY)")
+				return
+			}
 			prs, err := Parse(json)
 			if err != nil {
 				t.Errorf("Total Fail(Parse Insert), err:%v\n", err)
@@ -1105,6 +1103,7 @@ func TestParserSetKeyFlatten(t *testing.T) {
 	}
 }
 
+
 func TestParserAddKVFlatten(t *testing.T) {
 	t.Logf("test files:")
 	for f := 0 ; f < len(tests) ; f ++ {
@@ -1117,43 +1116,15 @@ func TestParserAddKVFlatten(t *testing.T) {
 				t.Errorf("Total Fail(Parse AddKV), err:%v\n", err)
 				return
 			}
-			var value []byte
-			if len(paths[i]) == 0 {
-				value = json
-				t.Logf("here")
-			}else{
-				value, err = prs.Get(paths[i][:len(paths[i]) - 1]...)
-				if err != nil {
-					t.Errorf("Total Fail(Test Parse AddKV Get), path:%v err:%v\n", paths[i], err)
-					return
-				}
-			}
-			if len(value) > 1 && len(paths[i]) > 1{
-				if value[0] == 123 && value[len(value) - 1] == 125 {
-					err := prs.AddKeyValue("test-key", []byte(`"test-value"`), paths[i]...)
-					if err != nil {
-						t.Errorf("Total Fail(Test Parse AddKV), path:%v err:%v\n", paths[i], err)
-						return
-					}
-					value2, err := prs.Get(append(paths[i][:len(paths[i]) - 1], "test-key")...)
-					if err != nil {
-						t.Errorf("Total Fail(Test Parse AddKV Get), path:%v err:%v\n", paths[i], err)
-						return
-					}
-					value, err := prs.Get(paths[i]...)
-					if err != nil {
-						t.Errorf("Total Fail(Test Parse AddKV Get2), path:%v err:%v\n", paths[i], err)
-						return
-					}
-					if string(value) != string(value2) {
-						t.Errorf("Fail (Test Parse AddKV), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(value), string(value2), i)
-						return
-					}
-				}
+			err = prs.AddKeyValue("test-key", []byte(`"test-value"`), paths[i]...)
+			value, err := prs.Get(paths[i]...)
+			if string(Flatten(value)) != string(values[i]) {
+				t.Errorf("Fail (Test Parse AddKV), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(Flatten(value)), string(values[i]), i)
 			}
 		}
 	}
 }
+
 
 func TestParserAddFlatten(t *testing.T) {
 	t.Logf("test files:")
@@ -1198,6 +1169,15 @@ func TestParserInsertFlatten(t *testing.T) {
 			return
 		}
 		for i, _ := range paths {
+			empty, err := IsEmpty(json, paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Empty), path:%v err:%v\n", paths[i], err)
+				return
+			}
+			if empty {
+				t.Logf("SKIP(EMPTY ARRAY)")
+				return
+			}
 			err = prs.Insert(0, []byte(`"test-value"`), paths[i]...)
 			if err != nil {
 				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
