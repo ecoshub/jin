@@ -251,7 +251,6 @@ func ParseArray(arr string) []string {
 							val := arr[start:i]
 							val = cleanValueString(val)
 							newArray = append(newArray, val)
-							start = i + 1
 							break
 						}
 					}

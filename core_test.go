@@ -815,7 +815,15 @@ func TestParserAddKV(t *testing.T) {
 				return
 			}
 			err = prs.AddKeyValue("test-key", []byte(`"test-value"`), paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(AddKeyValue AddKV), err:%v\n", err)
+				return
+			}
 			value, err := prs.Get(paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get AddKV), err:%v\n", err)
+				return
+			}
 			if string(Flatten(value)) != string(values[i]) {
 				t.Errorf("Fail (Test Parse AddKV), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(Flatten(value)), string(values[i]), i)
 			}
@@ -1109,7 +1117,15 @@ func TestParserAddKVFlatten(t *testing.T) {
 				return
 			}
 			err = prs.AddKeyValue("test-key", []byte(`"test-value"`), paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(AddKeyValue AddKV), err:%v\n", err)
+				return
+			}
 			value, err := prs.Get(paths[i]...)
+			if err != nil {
+				t.Errorf("Total Fail(Get AddKV), err:%v\n", err)
+				return
+			}
 			if string(Flatten(value)) != string(values[i]) {
 				t.Errorf("Fail (Test Parse AddKV), not same answer path:%v\n, got:\t\t>%v<\n, expected:\t>%v<  i:%v\n", paths[i], string(Flatten(value)), string(values[i]), i)
 			}

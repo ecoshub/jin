@@ -118,7 +118,6 @@ func (p *parse) GetIntArray(path ...string) ([]int, error) {
 								return nil, PARSE_INT_ERROR(cleanValueString(element))
 							}
 							newArray = append(newArray, num)
-							start = i + 1
 							break
 						}
 					}
@@ -182,7 +181,6 @@ func (p *parse) GetFloatArray(path ...string) ([]float64, error) {
 								return nil, PARSE_FLOAT_ERROR(cleanValueString(element))
 							}
 							newArray = append(newArray, num)
-							start = i + 1
 							break
 						}
 					}
@@ -251,7 +249,6 @@ func (p *parse) GetBoolArray(path ...string) ([]bool, error) {
 							} else {
 								return nil, PARSE_BOOL_ERROR(cleanValueString(element))
 							}
-							start = i + 1
 							break
 						}
 					}
