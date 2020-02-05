@@ -133,40 +133,91 @@ func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 }
 
 func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error) {
-	// lenpath == 0 and empty array control needed
 	var start int
+	var end int
 	var err error
 	if len(path) == 0 {
 		for i := 0; i < len(json); i++ {
 			if !space(json[i]) {
-				start = i
-				break
+				if json[i] == 91 {
+					start = i
+					if i == len(json)-1 {
+						return json, BAD_JSON_ERROR(i)
+					}
+					break
+				} else {
+					return json, ARRAY_EXPECTED_ERROR()
+				}
+			}
+		}
+		for i := len(json) - 1; i > -1; i-- {
+			if !space(json[i]) {
+				if json[i] == 93 {
+					end = i + 1
+					if i == 0 {
+						return json, BAD_JSON_ERROR(i)
+					}
+					break
+				} else {
+					return json, ARRAY_EXPECTED_ERROR()
+				}
 			}
 		}
 	} else {
-		_, start, _, err = core(json, true, path...)
+		_, start, end, err = core(json, false, path...)
 		if err != nil {
 			return json, err
 		}
 	}
-	if json[start] != 91 {
+	if json[start] != 91 || json[end-1] != 93 {
 		return json, ARRAY_EXPECTED_ERROR()
 	}
-	indexStr := strconv.Itoa(index)
-	path = append(path, indexStr)
-	_, start, _, err = core(json, true, path...)
+	_, start, end, err = core(json, false, append(path, strconv.Itoa(index))...)
 	if err != nil {
 		return json, err
 	}
-	val := make([]byte, len(value)+1)
-	copy(val, value)
-	val[len(val)-1] = 44
 	if json[start-1] == 34 {
-		json = replace(json, val, start-1, start-1)
+		start--
+	}
+	if json[end] == 34 {
+		end++
+	}
+	var startEdge int
+	var endEdge int
+	for i := start-1 ; i > 0 ; i -- {
+		if !space(json[i]) {
+			startEdge = i
+			break
+		}
+	}
+	for i := end ; i < len(json) ; i ++ {
+		if !space(json[i]) {
+			endEdge = i
+			break
+		}
+	}
+	if (json[startEdge] == 91 || json[startEdge] == 123) && json[startEdge]+2 == json[endEdge] {
+		val := make([]byte, 0, len(value)+1)
+		val = append(val, value...)
+		val = append(val, 44)
+		json = replace(json, val, start, start)
 		return json, nil
 	}
-	json = replace(json, val, start, start)
-	return json, nil
+	if json[endEdge] == 44 {
+		val := make([]byte, 0, len(value)+1)
+		val = append(val, value...)
+		val = append(val, 44)
+		json = replace(json, val, start, start)
+		return json, nil
+	}
+	if json[startEdge] == 44 {
+		val := make([]byte, 0, len(value)+1)
+		val = append(val, 44)
+		val = append(val, value...)
+		json = replace(json, val,start-1, start-1)
+		return json, nil
+	}
+	return nil, BAD_JSON_ERROR(start)
 }
 
 func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, error) {
