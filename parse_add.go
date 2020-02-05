@@ -236,6 +236,9 @@ func (p *parse) Insert(newIndex int, newVal []byte, path ...string) error {
 							return err
 						}
 						p.json, err = Insert(p.json, newIndex, newVal, path...)
+						if err != nil {
+							return err
+						}
 						err = newNode.insert(curr, newIndex)
 						if err != nil {
 							return err
@@ -253,6 +256,9 @@ func (p *parse) Insert(newIndex int, newVal []byte, path ...string) error {
 				newNode.value = newVal
 				curr.down = append(curr.down, newNode)
 				p.json, err = Insert(p.json, newIndex, newVal, path...)
+				if err != nil {
+					return err
+				}
 				err = newNode.insert(curr, newIndex)
 				if err != nil {
 					return err
