@@ -3,19 +3,19 @@ package jin
 import "strconv"
 
 type sequance struct {
-	list []int
-	index int
+	list   []int
+	index  int
 	length int
 }
 
-func makeSeq(length int) *sequance{
-	s := sequance{list:make([]int, length), index:0, length:length}
+func makeSeq(length int) *sequance {
+	s := sequance{list: make([]int, length), index: 0, length: length}
 	return &s
 }
 
 func (s *sequance) Push(element int) {
-	if s.index > s.length - 1 {
-		newList := make([]int, s.length + 4)
+	if s.index > s.length-1 {
+		newList := make([]int, s.length+4)
 		copy(newList, s.list)
 		s.list = newList
 		s.length = s.length + 4
@@ -24,7 +24,7 @@ func (s *sequance) Push(element int) {
 	s.index++
 }
 
-func (s *sequance) Pop() int{
+func (s *sequance) Pop() int {
 	if s.index > -1 {
 		s.index--
 		return s.list[s.index]
@@ -32,7 +32,7 @@ func (s *sequance) Pop() int{
 	return 0
 }
 
-func (s *sequance) Last() int{
+func (s *sequance) Last() int {
 	return s.list[s.index-1]
 }
 
@@ -249,7 +249,7 @@ func ParseArray(arr string) []string {
 					if curr == 93 {
 						if level == 0 {
 							val := arr[start:i]
-							val = trimAndStripQuote(val)
+							val = cleanValueString(val)
 							newArray = append(newArray, val)
 							start = i + 1
 							break
@@ -259,7 +259,7 @@ func ParseArray(arr string) []string {
 				if level == 1 {
 					if curr == 44 {
 						val := arr[start:i]
-						val = trimAndStripQuote(val)
+						val = cleanValueString(val)
 						newArray = append(newArray, val)
 						start = i + 1
 						continue
@@ -352,14 +352,28 @@ func trim(str []byte) []byte {
 	return str[start : end+1]
 }
 
-func trimAndStripQuote(str string) string {
+func cleanValueString(str string) string {
 	start := 0
 	lens := len(str)
-	for space(str[start]) && start < lens - 1 {
+	for space(str[start]) && start < lens-1 {
 		start++
 	}
-	if start == lens - 1 {
-		return ""
+	end := lens - 1
+	for space(str[end]) && end > 1 {
+		end--
+	}
+	if str[start] == 34 && str[end] == 34 {
+		start++
+		end--
+	}
+	return str[start : end+1]
+}
+
+func cleanValue(str []byte) []byte {
+	start := 0
+	lens := len(str)
+	for space(str[start]) && start < lens-1 {
+		start++
 	}
 	end := lens - 1
 	for space(str[end]) && end > 1 {
