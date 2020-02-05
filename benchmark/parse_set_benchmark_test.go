@@ -14,7 +14,7 @@ func BenchmarkFastjsonSetSmall(b *testing.B) {
 		prs.Set("uuid", fastjson.MustParse(`"test-value"`))
 		prs.Set("tz", fastjson.MustParse(`"test-value"`))
 		prs.Set("ua", fastjson.MustParse(`"test-value"`))
-		prs.Set("st",fastjson.MustParse(`"test-value"`))
+		prs.Set("st", fastjson.MustParse(`"test-value"`))
 	}
 }
 

@@ -1,9 +1,9 @@
 package jin
 
-import(
+import (
 	"github.com/buger/jsonparser"
-	"testing"
 	"jin"
+	"testing"
 )
 
 func nop(_ ...interface{}) {}

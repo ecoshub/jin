@@ -23,7 +23,7 @@ func createNode(up *node) *node {
 }
 
 func Parse(json []byte) (*parse, error) {
-	core := &node{up:nil}
+	core := &node{up: nil}
 	err := pCore(json, core)
 	if err != nil {
 		return nil, err

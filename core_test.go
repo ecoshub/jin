@@ -59,11 +59,11 @@ func InitValues(t *testing.T, flat bool, scenario string, fileName string) {
 
 func TestInterperterGet(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "get", file)
-		for i, _ := range paths {
+		for i := range paths {
 			_, start, end, err := core(json, false, paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Test Get), path:%v err:%v\n", paths[i], err)
@@ -83,11 +83,11 @@ func TestInterperterGet(t *testing.T) {
 
 func TestInterperterSet(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "set", file)
-		for i, _ := range paths {
+		for i := range paths {
 			value, err := Set(json, []byte(`"test-string"`), paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
@@ -108,11 +108,11 @@ func TestInterperterSet(t *testing.T) {
 
 func TestInterperterSetKey(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "get", file)
-		for i, _ := range paths {
+		for i := range paths {
 			keyStart, _, _, err1 := core(json, true, paths[i]...)
 			if err1 != nil {
 				t.Errorf("Total Fail(Core), path:%v\n", paths[i])
@@ -153,11 +153,11 @@ func TestInterperterSetKey(t *testing.T) {
 
 func TestInterperterAddKV(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "addkv", file)
-		for i, _ := range paths {
+		for i := range paths {
 			value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
@@ -171,7 +171,7 @@ func TestInterperterAddKV(t *testing.T) {
 				end = len(value)
 				val = value
 				val = Flatten(val)
-			}else{
+			} else {
 				_, start, end, err = core(value, false, paths[i]...)
 				if err != nil {
 					t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
@@ -192,11 +192,11 @@ func TestInterperterAddKV(t *testing.T) {
 
 func TestInterperterAdd(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "add", file)
-		for i, _ := range paths {
+		for i := range paths {
 			value, err := Add(json, []byte(`"test-value"`), paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
@@ -217,13 +217,13 @@ func TestInterperterAdd(t *testing.T) {
 
 func TestInterperterInsert(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "insert", file)
 		var err error
 		var value []byte
-		for i, _ := range paths {
+		for i := range paths {
 			json, err = Insert(json, 0, []byte(`"test-value"`), paths[i]...)
 			if err != nil {
 				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
@@ -248,11 +248,11 @@ func TestInterperterInsert(t *testing.T) {
 
 func TestInterperterDeleteKV(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "deleteKV", file)
-		for i, _ := range paths {
+		for i := range paths {
 			value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
@@ -281,11 +281,11 @@ func TestInterperterDeleteKV(t *testing.T) {
 
 func TestInterperterDeleteV(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "deleteV", file)
-		for i, _ := range paths {
+		for i := range paths {
 			empty, err := IsEmpty(json, paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Empty), path:%v err:%v\n", paths[i], err)
@@ -329,7 +329,7 @@ func TestInterperterDeleteV(t *testing.T) {
 
 func TestInterperterArrayIter(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "arrayiter", file)
@@ -361,7 +361,7 @@ func TestInterperterArrayIter(t *testing.T) {
 
 func TestInterperterKeyValueIter(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "objectiter", file)
@@ -391,11 +391,11 @@ func TestInterperterKeyValueIter(t *testing.T) {
 
 func TestInterperterGetFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "get", file)
-		for i, _ := range paths {
+		for i := range paths {
 			_, start, end, err := core(json, false, paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Test Get), path:%v err:%v\n", paths[i], err)
@@ -416,11 +416,11 @@ func TestInterperterGetFlatten(t *testing.T) {
 
 func TestInterperterSetFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "set", file)
-		for i, _ := range paths {
+		for i := range paths {
 			value, err := Set(json, []byte(`"test-string"`), paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
@@ -441,11 +441,11 @@ func TestInterperterSetFlatten(t *testing.T) {
 
 func TestInterperterSetKeyFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "get", file)
-		for i, _ := range paths {
+		for i := range paths {
 			keyStart, _, _, err1 := core(json, true, paths[i]...)
 			if err1 != nil {
 				t.Errorf("Total Fail(Core), path:%v\n", paths[i])
@@ -486,11 +486,11 @@ func TestInterperterSetKeyFlatten(t *testing.T) {
 
 func TestInterperterAddKVFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "addkv", file)
-		for i, _ := range paths {
+		for i := range paths {
 			value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
@@ -511,11 +511,11 @@ func TestInterperterAddKVFlatten(t *testing.T) {
 
 func TestInterperterAddFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "add", file)
-		for i, _ := range paths {
+		for i := range paths {
 			value, err := Add(json, []byte(`"test-value"`), paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
@@ -536,13 +536,13 @@ func TestInterperterAddFlatten(t *testing.T) {
 
 func TestInterperterInsertFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "insert", file)
 		var err error
 		var value []byte
-		for i, _ := range paths {
+		for i := range paths {
 			json, err = Insert(json, 0, []byte(`"test-value"`), paths[i]...)
 			if err != nil {
 				if err.Error() != EMPTY_ARRAY_ERROR().Error() {
@@ -567,11 +567,11 @@ func TestInterperterInsertFlatten(t *testing.T) {
 
 func TestInterperterDeleteKVFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "deleteKV", file)
-		for i, _ := range paths {
+		for i := range paths {
 			value, err := AddKeyValue(json, "test-key", []byte(`"test-value"`), paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Set), path:%v err:%v\n", paths[i], err)
@@ -600,11 +600,11 @@ func TestInterperterDeleteKVFlatten(t *testing.T) {
 
 func TestInterperterDeleteVFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "deleteV", file)
-		for i, _ := range paths {
+		for i := range paths {
 			value, err := Get(json, paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Get), path:%v err:%v\n", paths[i], err)
@@ -639,7 +639,7 @@ func TestInterperterDeleteVFlatten(t *testing.T) {
 
 func TestInterperterArrayIterFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "arrayiter", file)
@@ -671,7 +671,7 @@ func TestInterperterArrayIterFlatten(t *testing.T) {
 
 func TestInterperterKeyValueIterFlatten(t *testing.T) {
 	t.Logf("test files:")
-	for f := 0 ; f < len(tests) ; f ++ {
+	for f := 0; f < len(tests); f++ {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "objectiter", file)
@@ -710,7 +710,7 @@ func TestParserGet(t *testing.T) {
 			t.Errorf("Total Fail(Parse Get), err:%v\n", err)
 			return
 		}
-		for i, _ := range paths {
+		for i := range paths {
 			value, err := prs.Get(paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Test Parse Get), path:%v err:%v\n", paths[i], err)
@@ -740,7 +740,7 @@ func TestParserSet(t *testing.T) {
 			t.Errorf("Total Fail(Parse Set), err:%v\n", err)
 			return
 		}
-		for i, _ := range paths {
+		for i := range paths {
 			err := prs.Set([]byte(`"test-string"`), paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Test Parse Set), path:%v err:%v\n", paths[i], err)
@@ -770,7 +770,7 @@ func TestParserSetKey(t *testing.T) {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "get", file)
-		for i, _ := range paths {
+		for i := range paths {
 			prs, err := Parse(json)
 			if err != nil {
 				t.Errorf("Total Fail(Parse SetKey), err:%v\n", err)
@@ -814,7 +814,7 @@ func TestParserAddKV(t *testing.T) {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "addkv", file)
-		for i, _ := range paths {
+		for i := range paths {
 			prs, err := Parse(json)
 			if err != nil {
 				t.Errorf("Total Fail(Parse AddKV), err:%v\n", err)
@@ -835,7 +835,7 @@ func TestParserAdd(t *testing.T) {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "add", file)
-		for i, _ := range paths {
+		for i := range paths {
 			prs, err := Parse(json)
 			if err != nil {
 				t.Errorf("Total Fail(Parse Add), err:%v\n", err)
@@ -871,7 +871,7 @@ func TestParserInsert(t *testing.T) {
 			t.Errorf("Total Fail(Parse Insert), err:%v\n", err)
 			return
 		}
-		for i, _ := range paths {
+		for i := range paths {
 			empty, err := IsEmpty(json, paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Empty), path:%v err:%v\n", paths[i], err)
@@ -909,7 +909,7 @@ func TestParserDeleteKV(t *testing.T) {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "deleteKV", file)
-		for i, _ := range paths {
+		for i := range paths {
 			prs, err := Parse(json)
 			if err != nil {
 				t.Errorf("Total Fail(Parse Insert), err:%v\n", err)
@@ -947,7 +947,7 @@ func TestParserDeleteV(t *testing.T) {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, false, "deleteV", file)
-		for i, _ := range paths {
+		for i := range paths {
 			empty, err := IsEmpty(json, paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Empty), path:%v err:%v\n", paths[i], err)
@@ -1005,7 +1005,7 @@ func TestParserGetFlatten(t *testing.T) {
 			t.Errorf("Total Fail(Parse Get), err:%v\n", err)
 			return
 		}
-		for i, _ := range paths {
+		for i := range paths {
 			value, err := prs.Get(paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Test Parse Get), path:%v err:%v\n", paths[i], err)
@@ -1035,7 +1035,7 @@ func TestParserSetFlatten(t *testing.T) {
 			t.Errorf("Total Fail(Parse Set), err:%v\n", err)
 			return
 		}
-		for i, _ := range paths {
+		for i := range paths {
 			err := prs.Set([]byte(`"test-string"`), paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Test Parse Set), path:%v err:%v\n", paths[i], err)
@@ -1065,7 +1065,7 @@ func TestParserSetKeyFlatten(t *testing.T) {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "get", file)
-		for i, _ := range paths {
+		for i := range paths {
 			prs, err := Parse(json)
 			if err != nil {
 				t.Errorf("Total Fail(Parse SetKey), err:%v\n", err)
@@ -1109,7 +1109,7 @@ func TestParserAddKVFlatten(t *testing.T) {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "addkv", file)
-		for i, _ := range paths {
+		for i := range paths {
 			prs, err := Parse(json)
 			if err != nil {
 				t.Errorf("Total Fail(Parse AddKV), err:%v\n", err)
@@ -1130,7 +1130,7 @@ func TestParserAddFlatten(t *testing.T) {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "add", file)
-		for i, _ := range paths {
+		for i := range paths {
 			prs, err := Parse(json)
 			if err != nil {
 				t.Errorf("Total Fail(Parse Add), err:%v\n", err)
@@ -1166,7 +1166,7 @@ func TestParserInsertFlatten(t *testing.T) {
 			t.Errorf("Total Fail(Parse Insert), err:%v\n", err)
 			return
 		}
-		for i, _ := range paths {
+		for i := range paths {
 			empty, err := IsEmpty(json, paths[i]...)
 			if err != nil {
 				t.Errorf("Total Fail(Empty), path:%v err:%v\n", paths[i], err)
@@ -1204,7 +1204,7 @@ func TestParserDeleteKVFlatten(t *testing.T) {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "deleteKV", file)
-		for i, _ := range paths {
+		for i := range paths {
 			prs, err := Parse(json)
 			if err != nil {
 				t.Errorf("Total Fail(Parse Insert), err:%v\n", err)
@@ -1242,7 +1242,7 @@ func TestParserDeleteVFlatten(t *testing.T) {
 		file := "tests" + tests[f]
 		t.Logf("%v", file)
 		InitValues(t, true, "deleteV", file)
-		for i, _ := range paths {
+		for i := range paths {
 			prs, err := Parse(json)
 			if err != nil {
 				t.Errorf("Total Fail(Parse Insert), err:%v\n", err)
