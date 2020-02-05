@@ -48,7 +48,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 	for k := 0; k < len(path); k++ {
 		// 91 = [, beginning of an array search
 		if braceType == 91 {
-			// ARRAY SEACH SCOPE
+			// ARRAY SEARCH SCOPE
 			// path value cast to integer for determine index.
 			arrayIndex, err := strconv.Atoi(currentPath)
 			if err != nil {
@@ -188,7 +188,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 				isJsonChar[58] = true
 			}
 		} else {
-			// KEY SEACH SCOPE
+			// KEY SEARCH SCOPE
 			// main in quote flag for determine what is in quote and what is not.
 			inQuote := false
 			// Key found flag.
@@ -475,7 +475,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 		} else {
 			for i := offset; i < len(json); i++ {
 				curr := json[i]
-				// if curreny byte is space or one of these ',' ']' '}' this means end of the value is i
+				// if current byte is space or one of these ',' ']' '}' this means end of the value is i
 				if space(curr) || curr == 44 || curr == 93 || curr == 125 {
 					if offset == i {
 						return -1, -1, -1, EMPTY_ARRAY_ERROR()
