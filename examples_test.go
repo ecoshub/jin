@@ -194,28 +194,27 @@ func ExampleIndent() {
 func ExampleScheme_MakeJson() {
 	// without Scheme
 	json := MakeEmptyJson()
-	json, _ = AddKeyValueString(json, "name","eco")
-	json, _ = AddKeyValueString(json, "lastname","hub")
-	json, _ = AddKeyValue(json, "age",[]byte(`28`))
+	json, _ = AddKeyValueString(json, "name", "eco")
+	json, _ = AddKeyValueString(json, "lastname", "hub")
+	json, _ = AddKeyValue(json, "age", []byte(`28`))
 	// json = {"name":"eco","lastname":"hub","age":28}
 
-
 	// with Scheme
-	person := MakeScheme("name","lastname","age")
-	eco := person.MakeJson("eco","hub","28")
+	person := MakeScheme("name", "lastname", "age")
+	eco := person.MakeJson("eco", "hub", "28")
 	fmt.Println(string(eco))
 	// {"name":eco,"lastname":hub,"age":28}
 
 	// And it provides a limitless instantiation
-	sheldon := person.MakeJson("Sheldon","Bloom","42")
-	john := person.MakeJson("John","Wiki","28")
+	sheldon := person.MakeJson("Sheldon", "Bloom", "42")
+	john := person.MakeJson("John", "Wiki", "28")
 	fmt.Println(string(sheldon))
 	fmt.Println(string(john))
 	// {"name":"Sheldon","lastname":"Bloom","age":42}
 	// {"name":"John","lastname":"Wiki","age":28}
 	// Output: {"name":eco,"lastname":hub,"age":28}
-//{"name":"Sheldon","lastname":"Bloom","age":42}
-//{"name":"John","lastname":"Wiki","age":28}
+	//{"name":"Sheldon","lastname":"Bloom","age":42}
+	//{"name":"John","lastname":"Wiki","age":28}
 }
 
 func ExampleScheme() {
@@ -223,14 +222,14 @@ func ExampleScheme() {
 	// Add(), Remove(), Save(), Restore(),
 	// GetOriginalKeys(), GetCurrentKeys() functions.
 
-	person := jin.MakeScheme("name","lastname","age")
-	eco := person.MakeJson("eco","hub","28")
+	person := jin.MakeScheme("name", "lastname", "age")
+	eco := person.MakeJson("eco", "hub", "28")
 	fmt.Println(string(eco))
 	// {"name":"eco","lastname":"hub","age":28}
 
 	person.Add("ip")
 	person.Add("location")
-	sheldon := person.MakeJson("Sheldon","Bloom","42","192.168.1.105", "USA")
+	sheldon := person.MakeJson("Sheldon", "Bloom", "42", "192.168.1.105", "USA")
 	fmt.Println(string(sheldon))
 	// {"name":"Sheldon","lastname":"Bloom","age":42,"ip":"192.168.1.105","location":"USA"}
 
@@ -240,13 +239,13 @@ func ExampleScheme() {
 	// [name lastname age]
 
 	person.Remove("location")
-	john := person.MakeJson("John","Wiki","28","192.168.1.102")
+	john := person.MakeJson("John", "Wiki", "28", "192.168.1.102")
 	fmt.Println(string(john))
 	// {"name":"John","lastname":"Wiki","age":28,"ip":"192.168.1.102"}
 
 	// restores original form of scheme
 	person.Restore()
-	ted := person.MakeJson("ted","stinson","38")
+	ted := person.MakeJson("ted", "stinson", "38")
 	fmt.Println(string(ted))
 
 	person.Save()
@@ -256,11 +255,11 @@ func ExampleScheme() {
 	// [name lastname age]
 
 	//Output: {"name":"eco","lastname":"hub","age":28}
-//{"name":"Sheldon","lastname":"Bloom","age":42,"ip":"192.168.1.105","location":"USA"}
-//[name lastname age ip location]
-//[name lastname age]
-//{"name":"John","lastname":"Wiki","age":28,"ip":"192.168.1.102"}
-//{"name":"ted","lastname":"stinson","age":38}
-//[name lastname age]
-//[name lastname age]
+	//{"name":"Sheldon","lastname":"Bloom","age":42,"ip":"192.168.1.105","location":"USA"}
+	//[name lastname age ip location]
+	//[name lastname age]
+	//{"name":"John","lastname":"Wiki","age":28,"ip":"192.168.1.102"}
+	//{"name":"ted","lastname":"stinson","age":38}
+	//[name lastname age]
+	//[name lastname age]
 }
