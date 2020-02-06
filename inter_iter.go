@@ -1,6 +1,6 @@
 package jin
 
-// IterateArray() is a callback function that can iterate any array and return value as byte slice.
+// IterateArray is a callback function that can iterate any array and return value as byte slice.
 // It stripes quotation marks from string values befour return.
 // Path value can be left blank for access main JSON.
 func IterateArray(json []byte, callback func([]byte) bool, path ...string) error {
@@ -22,9 +22,9 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 		}
 	}
 	chars := []byte{34, 44, 91, 93, 123, 125}
-	isJsonChar := make([]bool, 256)
+	isJSONChar := make([]bool, 256)
 	for _, v := range chars {
-		isJsonChar[v] = true
+		isJSONChar[v] = true
 	}
 	if json[start] == 91 {
 		start++
@@ -32,7 +32,7 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 		level := 0
 		for i := start; i < len(json); i++ {
 			curr := json[i]
-			if !isJsonChar[curr] {
+			if !isJSONChar[curr] {
 				continue
 			}
 			if curr == 34 {
@@ -118,7 +118,7 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 	return arrayExpectedError()
 }
 
-// IterateKeyValue() is a callback function that can iterate any object and return key-value pair as byte slices.
+// IterateKeyValue is a callback function that can iterate any object and return key-value pair as byte slices.
 // It stripes quotation marks from string values befour return.
 // Path value can be left blank for access main JSON.
 func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...string) error {
@@ -140,9 +140,9 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...st
 		}
 	}
 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
-	isJsonChar := make([]bool, 256)
+	isJSONChar := make([]bool, 256)
 	for _, v := range chars {
-		isJsonChar[v] = true
+		isJSONChar[v] = true
 	}
 	if json[start] == 123 {
 		keyStart := 0
@@ -152,7 +152,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...st
 		var key []byte
 		for i := start; i < len(json); i++ {
 			curr := json[i]
-			if !isJsonChar[curr] {
+			if !isJSONChar[curr] {
 				continue
 			}
 			if curr == 34 {
