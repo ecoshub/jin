@@ -3,19 +3,28 @@ package jin
 import "strconv"
 import "fmt"
 
+// Scheme is a tool for creating non-nested JSON.
+// It provides a struct for saveing a JSON scheme for later usage.
+// Do not access or manipulate this struct. Please use methods. 
 type Scheme struct {
 	originalKeys []string
 	keys         []string
 }
 
+// MakeScheme is constructor method for creating Scheme's.
+// It only need keys for making json.
+// Then trigger Schemes with 'MakeJson' method to create JSON.
 func MakeScheme(keys ...string) *Scheme {
 	return &Scheme{keys: keys, originalKeys: keys}
 }
 
+// Scheme.MakeJson is main creation method for creating JSON's from Schemes.
 func (s *Scheme) MakeJson(values ...interface{}) []byte {
 	return MakeJson(s.keys, values)
 }
 
+// Add adds a new key value to the current scheme.
+// Example is in MakeScheme mathod.
 func (s *Scheme) Add(key string) bool {
 	for _, k := range s.keys {
 		if k == key {
@@ -26,6 +35,8 @@ func (s *Scheme) Add(key string) bool {
 	return true
 }
 
+// Remove removes the key value to the current scheme.
+// Example is in MakeScheme mathod.
 func (s *Scheme) Remove(key string) bool {
 	newKeys := make([]string, 0, len(s.keys))
 	result := false
@@ -40,25 +51,31 @@ func (s *Scheme) Remove(key string) bool {
 	return result
 }
 
+// Save saves current keys for protect them temporary changes.
+// Example is in MakeScheme mathod.
 func (s *Scheme) Save() {
 	s.originalKeys = s.keys
 }
 
+// Restore Schemes original form.
+// Example is in MakeScheme mathod.
 func (s *Scheme) Restore() {
 	s.keys = s.originalKeys
 }
 
+// Print ssimple print function for take a peak to Schemes original and current keys.
+// Example is in MakeScheme mathod.
 func (s *Scheme) Print() {
 	fmt.Println("Current  Keys : ", s.keys)
 	fmt.Println("Original Keys : ", s.originalKeys)
 }
 
-// MakeEmptyArray() simply creates "[]" this as byte slice.
+// MakeEmptyArray simply creates "[]" this as byte slice.
 func MakeEmptyArray() []byte {
 	return []byte{91, 93}
 }
 
-// MakeArray() creates an array formation from given values and returns them as byte slice.
+// MakeArray creates an array formation from given values and returns them as byte slice.
 // Do not use any slice/array for paramter.
 // It will accept this kind types but won't be able to make valid representation for use!
 func MakeArray(elements ...interface{}) []byte {
@@ -76,7 +93,7 @@ func MakeArray(elements ...interface{}) []byte {
 	return js
 }
 
-// MakeArrayString() is a variation of MakeArray() func.
+// MakeArrayString is a variation of MakeArray() func.
 // Parameter type must be slice of string.
 // For more information look MakeArray() function.
 func MakeArrayString(values []string) []byte {
@@ -94,7 +111,7 @@ func MakeArrayString(values []string) []byte {
 	return js
 }
 
-// MakeArrayInt() is a variation of MakeArray() func.
+// MakeArrayInt is a variation of MakeArray() func.
 // Parameter type must be slice of integer.
 // For more information look MakeArray() function.
 func MakeArrayInt(values []int) []byte {
@@ -112,7 +129,7 @@ func MakeArrayInt(values []int) []byte {
 	return js
 }
 
-// MakeArrayBool() is a variation of MakeArray() func.
+// MakeArrayBool is a variation of MakeArray() func.
 // Parameter type must be slice of boolean.
 // For more information look MakeArray() function.
 func MakeArrayBool(values []bool) []byte {
@@ -134,7 +151,7 @@ func MakeArrayBool(values []bool) []byte {
 	return js
 }
 
-// MakeArrayFloat() is a variation of MakeArray() func.
+// MakeArrayFloat is a variation of MakeArray() func.
 // Parameter type must be slice of float64.
 // For more information look MakeArray() function.
 func MakeArrayFloat(values []float64) []byte {
@@ -164,6 +181,9 @@ func MakeArrayFloat(values []float64) []byte {
 	return js
 }
 
+// MakeArrayBytes is a variation of MakeArray() func.
+// Parameter type must be slice of byte.
+// For more information look MakeArray() function.
 func MakeArrayBytes(values ...[]byte) []byte {
 	if values == nil {
 		return []byte{91, 93}
@@ -179,12 +199,12 @@ func MakeArrayBytes(values ...[]byte) []byte {
 	return js
 }
 
-// MakeEmptyJson() simply creates "{}" this as byte slice.
+// MakeEmptyJson simply creates "{}" this as byte slice.
 func MakeEmptyJson() []byte {
 	return []byte{123, 125}
 }
 
-// MakeJson() creates an JSON formation from given key and value slices, and returns them as byte slice.
+// MakeJson creates an JSON formation from given key and value slices, and returns them as byte slice.
 // Do not use any slice/array for 'values' variable paramter.
 // It will accept this kind types but won't be able to make valid representation for use!
 func MakeJson(keys []string, values []interface{}) []byte {
@@ -209,7 +229,7 @@ func MakeJson(keys []string, values []interface{}) []byte {
 	return js
 }
 
-// MakeJsonString() creates an JSON formation from given key and value string slices, and returns them as byte slice.
+// MakeJsonString creates an JSON formation from given key and value string slices, and returns them as byte slice.
 func MakeJsonString(keys, values []string) []byte {
 	if len(keys) != len(values) {
 		return nil
@@ -232,7 +252,7 @@ func MakeJsonString(keys, values []string) []byte {
 	return js
 }
 
-// MakeJsonWithMap() creates an JSON formation from given string-string-map, and returns them as byte slice.
+// MakeJsonWithMap creates an JSON formation from given string-string-map, and returns them as byte slice.
 func MakeJsonWithMap(json map[string]string) []byte {
 	if json == nil {
 		return []byte{123, 125}

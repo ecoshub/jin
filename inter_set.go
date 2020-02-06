@@ -2,6 +2,10 @@ package jin
 
 import "strconv"
 
+// Set sets the value that path has pointed.
+// Path can point anything, a key-value pair, a value, an array, an object.
+// Path variable can not be null,
+// otherwise it will provide an error message.
 func Set(json []byte, newValue []byte, path ...string) ([]byte, error) {
 	if len(path) == 0 {
 		return json, nullPathError()
@@ -16,6 +20,8 @@ func Set(json []byte, newValue []byte, path ...string) ([]byte, error) {
 	return replace(json, newValue, start, end), nil
 }
 
+// SetString is a variation of Set() func.
+// SetString takes the set value as string.
 func SetString(json []byte, newValue string, path ...string) ([]byte, error) {
 	if newValue[0] != 34 && newValue[len(newValue)-1] != 34 {
 		return Set(json, []byte(`"`+newValue+`"`), path...)
@@ -23,21 +29,30 @@ func SetString(json []byte, newValue string, path ...string) ([]byte, error) {
 	return Set(json, []byte(newValue), path...)
 }
 
+// SetInt is a variation of Set() func.
+// SetInt takes the set value as integer.
 func SetInt(json []byte, newValue int, path ...string) ([]byte, error) {
 	return Set(json, []byte(strconv.Itoa(newValue)), path...)
 }
 
+// SetFloat is a variation of Set() func.
+// SetFloat takes the set value as float64.
 func SetFloat(json []byte, newValue float64, path ...string) ([]byte, error) {
 	return Set(json, []byte(strconv.FormatFloat(newValue, 'e', -1, 64)), path...)
 }
 
+// SetBool is a variation of Set() func.
+// SetBool takes the set value as boolean.
 func SetBool(json []byte, newValue bool, path ...string) ([]byte, error) {
 	if newValue {
 		return Set(json, []byte("true"), path...)
 	}
 	return Set(json, []byte("false"), path...)
 }
-
+// SetKey sets the key value of key-value pair that path has pointed.
+// Path must point to an object.
+// otherwise it will provide an error message.
+// Path variable can not be null,
 func SetKey(json []byte, newKey string, path ...string) ([]byte, error) {
 	if len(newKey) == 0 {
 		return json, nullNewValueError()

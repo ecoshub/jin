@@ -1,6 +1,6 @@
 package jin
 
-// IsObject() is a type control function.
+// IsObject is a type control function.
 // If path points to an object it will return true, otherwise it will return false.
 // In this instance 'object' means everything that has starts and ends with curly brace.
 func IsObject(json []byte, path ...string) (bool, error) {
@@ -11,7 +11,7 @@ func IsObject(json []byte, path ...string) (bool, error) {
 	return state, nil
 }
 
-// IsArray() is a type control function.
+// IsArray is a type control function.
 // If path points to an array it will return true, otherwise it will return false.
 // In this instance 'array' means everything that has starts and ends with square brace.
 func IsArray(json []byte, path ...string) (bool, error) {
@@ -22,7 +22,7 @@ func IsArray(json []byte, path ...string) (bool, error) {
 	return state, nil
 }
 
-// IsValue() is a type control function.
+// IsValue is a type control function.
 // If path points to an value it will return true, otherwise it will return false.
 // In this instance 'value' means everything that has not starts and ends with any brace.
 func IsValue(json []byte, path ...string) (bool, error) {
@@ -33,7 +33,7 @@ func IsValue(json []byte, path ...string) (bool, error) {
 	return state, nil
 }
 
-// IsValue() is a type return function.
+// GetType is a type return function.
 // If path points to an value it will return 'value' string.
 // If path points to an array it will return 'array' string.
 // If path points to an object it will return 'object' string.
@@ -54,7 +54,7 @@ func GetType(json []byte, path ...string) (string, error) {
 	return "ERROR", nil
 }
 
-// IsEmpty() is a control function.
+// IsEmpty is a control function.
 // If path points to an value it will return 'value' string
 // If path points to an array that has zero element in it,
 // then it will return true, otherwise it will return false.
