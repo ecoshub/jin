@@ -1,6 +1,7 @@
 package jin
 
 import "strconv"
+
 /*
 Get returns the value that path has pointed.
 It stripes quotation marks from string values.

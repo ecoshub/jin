@@ -3,7 +3,6 @@ package jin
 import "strconv"
 import "fmt"
 
-
 // Scheme is a tool for creating non-nested JSONs.
 // It provides a struct for saving a JSON scheme for later usage.
 // Do not access or manipulate this struct.
