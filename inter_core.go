@@ -25,10 +25,10 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 	// 125 = }
 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
 	// creating a bool array fill with false
-	isJsonChar := make([]bool, 256)
+	isJSONChar := make([]bool, 256)
 	// only interested chars is true
 	for _, v := range chars {
-		isJsonChar[v] = true
+		isJSONChar[v] = true
 	}
 	// trim spaces of start
 	for space(json[offset]) {
@@ -94,12 +94,12 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 				// Index count of current element.
 				indexCount := 0
 				// Not interested with column char in this search
-				isJsonChar[58] = false
+				isJSONChar[58] = false
 				for i := offset; i < len(json); i++ {
 					// curr is current byte of reading.
 					curr := json[i]
 					// Just interested with json chars. Other wise continue.
-					if !isJsonChar[curr] {
+					if !isJSONChar[curr] {
 						continue
 					}
 					// If current byte is quote
@@ -183,7 +183,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 					return -1, -1, -1, indexOutOfRangeError()
 				}
 				// Check true for column char again for keep same with first declaration.
-				isJsonChar[58] = true
+				isJSONChar[58] = true
 			}
 		} else {
 			// KEY SEARCH SCOPE
@@ -198,12 +198,12 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 			// Current level.
 			level := k
 			// Not interested with comma in this search
-			isJsonChar[44] = false
+			isJSONChar[44] = false
 			for i := offset; i < len(json); i++ {
 				// curr is current byte of reading.
 				curr := json[i]
 				// Just interested with json chars. Other wise continue.
-				if !isJsonChar[curr] {
+				if !isJSONChar[curr] {
 					continue
 				}
 				// If current byte is quote
@@ -272,9 +272,9 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 								}
 							}
 							// Include comma character to json chars for jump function
-							isJsonChar[44] = true
+							isJSONChar[44] = true
 							// exclude column character to json chars for jump function
-							isJsonChar[58] = false
+							isJSONChar[58] = false
 							// exclude space character to json chars for jump function
 							// jump function start :{} -> ,
 							// it is fast travel from column to comma
@@ -285,7 +285,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 								// curr is current byte of reading.
 								curr := json[j]
 								// Just interested with json chars. Other wise continue.
-								if !isJsonChar[curr] {
+								if !isJSONChar[curr] {
 									continue
 								}
 								// Quote
@@ -334,9 +334,9 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 
 							}
 							// exclude comma character to json chars, jump func is ending.
-							isJsonChar[44] = false
+							isJSONChar[44] = false
 							// Include column character to json chars, jump func is ending.
-							isJsonChar[58] = true
+							isJSONChar[58] = true
 							// Include space character to json chars, jump func is ending.
 							continue
 						}
@@ -384,7 +384,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 				return -1, -1, -1, keyNotFoundError()
 			}
 			// Include comma character to json chars to restore original.
-			isJsonChar[44] = true
+			isJSONChar[44] = true
 			// Include space character to json chars to restore original.
 		}
 	}
@@ -415,7 +415,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 			// curr is current byte of reading.
 			curr := json[i]
 			// Just interested with json chars. Other wise continue.
-			if !isJsonChar[curr] {
+			if !isJSONChar[curr] {
 				continue
 			}
 			if curr == 34 {
