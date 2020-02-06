@@ -2,11 +2,9 @@ package jin
 
 import "strconv"
 
-/*
-AddKeyValue adds a key-value pair to an object.
-Path variable must point to an object,
-otherwise it will provide an error message.
-*/
+// AddKeyValue adds a key-value pair to an object.
+// Path variable must point to an object,
+// otherwise it will provide an error message.
 func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte, error) {
 	var start int
 	var end int
@@ -71,11 +69,9 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 	return json, objectExpectedError()
 }
 
-/*
-Add() adds a value to an array.
-Path variable must point to an array,
-otherwise it will provide an error message.
-*/
+// Add adds a value to an array.
+// Path variable must point to an array,
+// otherwise it will provide an error message.
 func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 	var start int
 	var end int
@@ -126,23 +122,19 @@ func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 		if empty {
 			json = replace(json, value, end-1, end-1)
 			return json, nil
-		} else {
-			val := make([]byte, len(value)+1)
-			val[0] = 44
-			copy(val[1:], value)
-			json = replace(json, val, end-1, end-1)
-			return json, nil
 		}
-	} else {
-		return json, arrayExpectedError()
+		val := make([]byte, len(value)+1)
+		val[0] = 44
+		copy(val[1:], value)
+		json = replace(json, val, end-1, end-1)
+		return json, nil
 	}
-	return json, badJSONError(-1)
+	return json, arrayExpectedError()
 }
-/*
-Insert() inserts a value to an array.
-Path variable must point to an array,
-otherwise it will provide an error message.
-*/
+
+// Insert inserts a value to an array.
+// Path variable must point to an array,
+// otherwise it will provide an error message.
 func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error) {
 	var start int
 	var end int
@@ -231,34 +223,26 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 	return nil, badJSONError(start)
 }
 
-/*
-AddKeyValueString() is a variation of AddKeyValue() func.
-Type of new value must be a string.
-*/
+// AddKeyValueString is a variation of AddKeyValue() func.
+// Type of new value must be a string.
 func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, error) {
 	return AddKeyValue(json, key, []byte(value), path...)
 }
 
-/*
-AddKeyValueInt() is a variation of AddKeyValue() func.
-Type of new value must be an integer.
-*/
+// AddKeyValueInt is a variation of AddKeyValue() func.
+// Type of new value must be an integer.
 func AddKeyValueInt(json []byte, key string, value int, path ...string) ([]byte, error) {
 	return AddKeyValue(json, key, []byte(strconv.Itoa(value)), path...)
 }
 
-/*
-AddKeyValueFloat() is a variation of AddKeyValue() func.
-Type of new value must be a float64.
-*/
+// AddKeyValueFloat is a variation of AddKeyValue() func.
+// Type of new value must be a float64.
 func AddKeyValueFloat(json []byte, key string, value float64, path ...string) ([]byte, error) {
 	return AddKeyValue(json, key, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
-/*
-AddKeyValueBool() is a variation of AddKeyValue() func.
-Type of new value must be a boolean.
-*/
+// AddKeyValueBool is a variation of AddKeyValue() func.
+// Type of new value must be a boolean.
 func AddKeyValueBool(json []byte, key string, value bool, path ...string) ([]byte, error) {
 	if value {
 		return AddKeyValue(json, key, []byte("true"), path...)
@@ -266,10 +250,8 @@ func AddKeyValueBool(json []byte, key string, value bool, path ...string) ([]byt
 	return AddKeyValue(json, key, []byte("false"), path...)
 }
 
-/*
-AddString() is a variation of Add() func.
-Type of new value must be an string.
-*/
+// AddString is a variation of Add() func.
+// Type of new value must be an string.
 func AddString(json []byte, value string, path ...string) ([]byte, error) {
 	if value[0] != 34 && value[len(value)-1] != 34 {
 		return Add(json, []byte(`"`+value+`"`), path...)
@@ -277,26 +259,20 @@ func AddString(json []byte, value string, path ...string) ([]byte, error) {
 	return Add(json, []byte(value), path...)
 }
 
-/*
-AddInt() is a variation of Add() func.
-Type of new value must be an integer.
-*/
+// AddInt is a variation of Add() func.
+// Type of new value must be an integer.
 func AddInt(json []byte, value int, path ...string) ([]byte, error) {
 	return Add(json, []byte(strconv.Itoa(value)), path...)
 }
 
-/*
-AddFloat() is a variation of Add() func.
-Type of new value must be an float64.
-*/
+// AddFloat is a variation of Add() func.
+// Type of new value must be an float64.
 func AddFloat(json []byte, value float64, path ...string) ([]byte, error) {
 	return Add(json, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
-/*
-AddBool() is a variation of Add() func.
-Type of new value must be an boolean.
-*/
+// AddBool is a variation of Add() func.
+// Type of new value must be an boolean.
 func AddBool(json []byte, value bool, path ...string) ([]byte, error) {
 	if value {
 		return Add(json, []byte("true"), path...)
@@ -304,10 +280,8 @@ func AddBool(json []byte, value bool, path ...string) ([]byte, error) {
 	return Add(json, []byte("false"), path...)
 }
 
-/*
-InsertString() is a variation of Insert() func.
-Type of new value must be an string.
-*/
+// InsertString is a variation of Insert() func.
+// Type of new value must be an string.
 func InsertString(json []byte, index int, value string, path ...string) ([]byte, error) {
 	if value[0] != 34 && value[len(value)-1] != 34 {
 		return Insert(json, index, []byte(`"`+value+`"`), path...)
@@ -315,26 +289,20 @@ func InsertString(json []byte, index int, value string, path ...string) ([]byte,
 	return Insert(json, index, []byte(value), path...)
 }
 
-/*
-InsertString() is a variation of Insert() func.
-Type of new value must be an integer.
-*/
+// InsertInt is a variation of Insert() func.
+// Type of new value must be an integer.
 func InsertInt(json []byte, index, value int, path ...string) ([]byte, error) {
 	return Insert(json, index, []byte(strconv.Itoa(value)), path...)
 }
 
-/*
-InsertString() is a variation of Insert() func.
-Type of new value must be an float64.
-*/
+// InsertFloat is a variation of Insert() func.
+// Type of new value must be an float64.
 func InsertFloat(json []byte, index int, value float64, path ...string) ([]byte, error) {
 	return Insert(json, index, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
-/*
-InsertString() is a variation of Insert() func.
-Type of new value must be an boolean.
-*/
+// InsertBool is a variation of Insert() func.
+// Type of new value must be an boolean.
 func InsertBool(json []byte, index int, value bool, path ...string) ([]byte, error) {
 	if value {
 		return Insert(json, index, []byte("true"), path...)

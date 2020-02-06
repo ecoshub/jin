@@ -181,17 +181,17 @@ func ExampleIndent() {
 	json = Indent(json)
 	fmt.Println(string(json))
 	// Output: {
-//	"user": "eco",
-//	"languages": [
-//		"go",
-//		"java",
-//		"python",
-//		"C",
-//		"Cpp"
-//	],
-//	"following": {
-//		"social": "dev.to",
-//		"code": "github"
-//	}
-//}
+	//	"user": "eco",
+	//	"languages": [
+	//		"go",
+	//		"java",
+	//		"python",
+	//		"C",
+	//		"Cpp"
+	//	],
+	//	"following": {
+	//		"social": "dev.to",
+	//		"code": "github"
+	//	}
+	//}
 }
