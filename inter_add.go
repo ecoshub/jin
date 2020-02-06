@@ -226,24 +226,39 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 // AddKeyValueString is a variation of AddKeyValue() func.
 // Type of new value must be a string.
 func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, error) {
-	return AddKeyValue(json, key, []byte(value), path...)
+	if len(value) == 0 {
+		return nil, nullKeyError()
+	}
+	if len(key) == 0 {
+		return nil, nullNewValueError()
+	}
+	return AddKeyValue(json, key, []byte(formatType(value)), path...)
 }
 
 // AddKeyValueInt is a variation of AddKeyValue() func.
 // Type of new value must be an integer.
 func AddKeyValueInt(json []byte, key string, value int, path ...string) ([]byte, error) {
+	if len(key) == 0 {
+		return nil, nullNewValueError()
+	}
 	return AddKeyValue(json, key, []byte(strconv.Itoa(value)), path...)
 }
 
 // AddKeyValueFloat is a variation of AddKeyValue() func.
 // Type of new value must be a float64.
 func AddKeyValueFloat(json []byte, key string, value float64, path ...string) ([]byte, error) {
+	if len(key) == 0 {
+		return nil, nullNewValueError()
+	}
 	return AddKeyValue(json, key, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
 // AddKeyValueBool is a variation of AddKeyValue() func.
 // Type of new value must be a boolean.
 func AddKeyValueBool(json []byte, key string, value bool, path ...string) ([]byte, error) {
+	if len(key) == 0 {
+		return nil, nullNewValueError()
+	}
 	if value {
 		return AddKeyValue(json, key, []byte("true"), path...)
 	}
@@ -253,10 +268,10 @@ func AddKeyValueBool(json []byte, key string, value bool, path ...string) ([]byt
 // AddString is a variation of Add() func.
 // Type of new value must be an string.
 func AddString(json []byte, value string, path ...string) ([]byte, error) {
-	if value[0] != 34 && value[len(value)-1] != 34 {
-		return Add(json, []byte(`"`+value+`"`), path...)
+	if len(value) == 0 {
+		return nil, nullNewValueError()
 	}
-	return Add(json, []byte(value), path...)
+	return Add(json, []byte(formatType(value)), path...)
 }
 
 // AddInt is a variation of Add() func.
@@ -283,27 +298,39 @@ func AddBool(json []byte, value bool, path ...string) ([]byte, error) {
 // InsertString is a variation of Insert() func.
 // Type of new value must be an string.
 func InsertString(json []byte, index int, value string, path ...string) ([]byte, error) {
-	if value[0] != 34 && value[len(value)-1] != 34 {
-		return Insert(json, index, []byte(`"`+value+`"`), path...)
+	if len(value) == 0 {
+		return nil, nullKeyError()
 	}
-	return Insert(json, index, []byte(value), path...)
+	if index < 0 {
+		return nil, indexOutOfRangeError()
+	}
+	return Insert(json, index, []byte(formatType(value)), path...)
 }
 
 // InsertInt is a variation of Insert() func.
 // Type of new value must be an integer.
 func InsertInt(json []byte, index, value int, path ...string) ([]byte, error) {
+	if index < 0 {
+		return nil, indexOutOfRangeError()
+	}
 	return Insert(json, index, []byte(strconv.Itoa(value)), path...)
 }
 
 // InsertFloat is a variation of Insert() func.
 // Type of new value must be an float64.
 func InsertFloat(json []byte, index int, value float64, path ...string) ([]byte, error) {
+	if index < 0 {
+		return nil, indexOutOfRangeError()
+	}
 	return Insert(json, index, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
 // InsertBool is a variation of Insert() func.
 // Type of new value must be an boolean.
 func InsertBool(json []byte, index int, value bool, path ...string) ([]byte, error) {
+	if index < 0 {
+		return nil, indexOutOfRangeError()
+	}
 	if value {
 		return Insert(json, index, []byte("true"), path...)
 	}
