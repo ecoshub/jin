@@ -49,6 +49,7 @@ func SetBool(json []byte, newValue bool, path ...string) ([]byte, error) {
 	}
 	return Set(json, []byte("false"), path...)
 }
+
 // SetKey sets the key value of key-value pair that path has pointed.
 // Path must point to an object.
 // otherwise it will provide an error message.
