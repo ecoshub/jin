@@ -2,6 +2,9 @@ package jin
 
 import "strconv"
 
+// AddKeyValue() adds a key-value pair to an object.
+// Path variable must point to an object,
+// otherwise it will provide an error message.
 func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte, error) {
 	var start int
 	var end int
@@ -67,11 +70,8 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 }
 
 // Add() adds a value to an array.
-// It must point to an array,
+// Path variable must point to an array,
 // otherwise it will provide an error message.
-/*
-	json, err := Add(json, newValue, "some-key", "some-other-key")
-*/
 func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 	var start int
 	var end int
@@ -223,18 +223,26 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 	return nil, badJSONError(start)
 }
 
+// AddKeyValueString() is a variation of AddKeyValue() func.
+// New value can be a string type.
 func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, error) {
 	return AddKeyValue(json, key, []byte(value), path...)
 }
 
+// AddKeyValueInt() is a variation of AddKeyValue() func.
+// New value can be a int type.
 func AddKeyValueInt(json []byte, key string, value int, path ...string) ([]byte, error) {
 	return AddKeyValue(json, key, []byte(strconv.Itoa(value)), path...)
 }
 
+// AddKeyValueFloat() is a variation of AddKeyValue() func.
+// New value can be a float type.
 func AddKeyValueFloat(json []byte, key string, value float64, path ...string) ([]byte, error) {
 	return AddKeyValue(json, key, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
+// AddKeyValueBool() is a variation of AddKeyValue() func.
+// New value can be a bool type.
 func AddKeyValueBool(json []byte, key string, value bool, path ...string) ([]byte, error) {
 	if value {
 		return AddKeyValue(json, key, []byte("true"), path...)

@@ -1,5 +1,8 @@
 package jin
 
+// Delete() can delete any key-value pair, array value, array, object.
+// Path value must be provided,
+// otherwise it will provide an error message.
 func Delete(json []byte, path ...string) ([]byte, error) {
 	lenp := len(path)
 	if lenp == 0 {
