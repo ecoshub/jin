@@ -42,7 +42,7 @@ func ExampleSetKey() {
 	newKey := "sites"
 	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
 
-	json, err := jin.SetKey(json, newKey, path...)
+	json, err := SetKey(json, newKey, path...)
 	// or without path variable
 	// json, err := Set(json, newKey, "following")
 	if err != nil {
@@ -264,7 +264,7 @@ func ExampleParser_TreeFull() {
 	//	└  code   : "github"
 }
 
-func ExampleScheme_MakeJson() {
+func ExampleScheme_MakeScheme() {
 	// without Scheme
 	json := MakeEmptyJson()
 	json, _ = AddKeyValueString(json, "name", "eco")
@@ -291,7 +291,7 @@ func ExampleScheme_MakeJson() {
 }
 
 func ExampleScheme() {
-	// This Sections provides examples for;
+	// This Section provides examples for;
 	// Add(), Remove(), Save(), Restore(),
 	// GetOriginalKeys(), GetCurrentKeys() functions.
 
