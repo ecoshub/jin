@@ -1,6 +1,6 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/ecoshub/jin)](https://goreportcard.com/report/github.com/ecoshub/jin) ![License](https://img.shields.io/dub/l/vibe-d.svg) [![GoDoc](https://godoc.org/github.com/ecoshub/jin?status.svg)](https://godoc.org/github.com/ecoshub/jin)
 
-## `Fast and Easy Way to Deal With JSON`
+## Fast and Easy Way to Deal With JSON
 
 __Jin__ is a comprehensive JSON manipulation tool bundle.
 All functions tested with random data against __Node.js__.
@@ -22,7 +22,7 @@ In conclusion the results of the benchmark __'Jin'__ was the fastest and lightwe
 For more information take a look at __BENCHMARK__ section.
 
 ---
-#### Parser vs Interpreter
+### Parser vs Interpreter
 
 Major difference between parsing and interpreting is,
 parser has to read all data before answer your needs.
@@ -35,9 +35,9 @@ If you need to access all keys of a JSON then we are simply recommend you to use
 But if you need to access some keys of a JSON I strongly recommend you to use Interperter, it will be much faster than parser. 
 
 ---
-### __QUICK START__
+### QUICK START
 
-#### `Interpreter`
+#### Interpreter
 
 Interpreter is core element of this package, no need for instantiate, just call which function you want!
 
@@ -82,7 +82,7 @@ then you can use `GetString()` like this.
 	//Output: ecoshub/jin
 ```
 ---
-### Parser
+#### Parser
 
 Parser is another alternative for manipulation JSON.
 
@@ -132,7 +132,7 @@ Other important functions of interpreter/parser.
 
 ---
 
-### `Documentation`
+### Documentation
 
 There is a detailed doctumentation with lots of examples in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
 
@@ -163,9 +163,9 @@ For example let's look at `IterateKey()` function.
 
 ---
 
-#### Other Tools
+### Other Tools
 
-##### Formatting
+#### Formatting
 
 There are two formatting functions. Flatten() and Indent()
 
@@ -192,8 +192,6 @@ Or get value type of the path
 	fmt.Println(jin.GetType(json, "repo"))
 	// Output: array
 ```
----
-
 #### JSON Build Tools
 
 There are lots of JSON build functions in this package and all of them has its own examples.
@@ -208,7 +206,7 @@ Go end take a look at them from __[GoDoc](https://godoc.org/github.com/ecoshub/j
 
 ---
 
-#### Testing
+### Testing
 
 Almost all functions/methods tested with complicated randomly creted JSONs.
 
@@ -247,7 +245,8 @@ If you want to test another JSON file that is not in the tests folder just drag 
 
 Benchmark results.
 
-*Benchmark prefix removed to make more room for results.*
+- *Benchmark prefix removed to make more room for results.*
+- *Benchmark between 'buger/jsonparser' and 'ecoshub/jin' use the same payload (JSON test cases) that 'buger/jsonparser' package use for benchmark it self.*
 ```go
 	goos: linux
 	goarch: amd64
@@ -305,7 +304,7 @@ Benchmark results.
 
 ---
 
-#### Limitations
+### Limitations
 
 __Jin__ can handle all kind of JSON. Except single content JSONs
 
@@ -319,7 +318,7 @@ That kind of JSONs are forbidden.
 
 ---
 
-#### Upcomming
+### Upcomming
 
 We are currently working on, 
 
@@ -333,7 +332,7 @@ If you want does functions quickly, give us a heads-up with star count.
 
 ---
 
-#### Contribute
+### Contribute
 
 If you want to contribute this work feel free to fork it.
 
