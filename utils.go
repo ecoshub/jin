@@ -95,7 +95,7 @@ func space(curr byte) bool {
 	return false
 }
 
-// Flatten() is tool for formatting json strings.
+// Flatten is tool for formatting json strings.
 // flattens indent formations.
 func Flatten(json []byte) []byte {
 	newJson := make([]byte, 0, len(json))
@@ -136,7 +136,7 @@ func createTabs(n int) []byte {
 	return res
 }
 
-// Indent() is tool for formatting JSON strings.
+// Indent is tool for formatting JSON strings.
 // Adds Indentation to JSON string.
 // It uses tab indentation.
 func Indent(json []byte) []byte {

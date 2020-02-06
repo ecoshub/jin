@@ -1,12 +1,13 @@
 package jin
 
 import "strconv"
-
-// Get returns the value that path has pointed.
-// It stripes quotation marks from string values.
-// Path can point anything, a key-value pair, a value, an array, an object.
-// Path variable can not be null,
-// otherwise it will provide an error message.
+/*
+Get returns the value that path has pointed.
+It stripes quotation marks from string values.
+Path can point anything, a key-value pair, a value, an array, an object.
+Path variable can not be null,
+otherwise it will provide an error message.
+*/
 func Get(json []byte, path ...string) ([]byte, error) {
 	if len(path) == 0 {
 		return json, nil
