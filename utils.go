@@ -308,7 +308,9 @@ func formatType(val string) string {
 		if isFloat(val) {
 			return val
 		}
-		if val[0] == 34 && val[len(val)-1] == 34 {
+		start := val[0]
+		end := val[len(val)-1]
+		if (start == 34 && end == 34) || (start == 91 && end == 93) || (start == 123 && end == 125){
 			return val
 		}
 		return `"` + val + `"`

@@ -172,6 +172,19 @@ key  : uuid
 value: 4a1531c25d5ef124295a*/
 }
 
+func ExampleMakeArray() {
+	var years []byte = MakeArray(2005,2009,2013,2019)
+	// [2005,2009,2013,2019]
+	var active []byte = MakeArray(false,true,true,true)
+	// [false,true,true,true]
+	var languages []byte = MakeArray("visual-basic","java","python","go")
+	// ["visual-basic","java","python","go"]
+
+	all := MakeArrayBytes(years, active, languages)
+	fmt.Println(string(all))
+	// Output: [[2005,2009,2013,2019],[false,true,true,true],["visual-basic","java","python","go"]]
+}
+
 
 // func ExampleParser_Add() {
 //     fmt.Println("hi")
