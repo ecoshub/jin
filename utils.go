@@ -13,7 +13,7 @@ func makeSeq(length int) *sequance {
 	return &s
 }
 
-func (s *sequance) Push(element int) {
+func (s *sequance) push(element int) {
 	if s.index > s.length-1 {
 		newList := make([]int, s.length+4)
 		copy(newList, s.list)
@@ -24,7 +24,7 @@ func (s *sequance) Push(element int) {
 	s.index++
 }
 
-func (s *sequance) Pop() int {
+func (s *sequance) pop() int {
 	if s.index > -1 {
 		s.index--
 		return s.list[s.index]
@@ -32,24 +32,24 @@ func (s *sequance) Pop() int {
 	return 0
 }
 
-func (s *sequance) Last() int {
+func (s *sequance) last() int {
 	return s.list[s.index-1]
 }
 
-func (s *sequance) GetList() []int {
+func (s *sequance) getlist() []int {
 	return s.list[:s.index]
 }
 
-func (s *sequance) Inc() {
+func (s *sequance) inc() {
 	s.list[s.index-1]++
 }
 
 func replace(json, newValue []byte, start, end int) []byte {
-	newJson := make([]byte, 0, len(json)-end+start+len(newValue))
-	newJson = append(newJson, json[:start]...)
-	newJson = append(newJson, newValue...)
-	newJson = append(newJson, json[end:]...)
-	return newJson
+	newJSON := make([]byte, 0, len(json)-end+start+len(newValue))
+	newJSON = append(newJSON, json[:start]...)
+	newJSON = append(newJSON, newValue...)
+	newJSON = append(newJSON, json[end:]...)
+	return newJSON
 }
 
 func trimSpace(str string, start, eoe int) string {
@@ -98,34 +98,34 @@ func space(curr byte) bool {
 // Flatten is tool for formatting json strings.
 // flattens indent formations.
 func Flatten(json []byte) []byte {
-	newJson := make([]byte, 0, len(json))
+	newJSON := make([]byte, 0, len(json))
 	inQuote := false
 	for i := 0; i < len(json); i++ {
 		curr := json[i]
 		if curr == 92 {
-			newJson = append(newJson, curr)
+			newJSON = append(newJSON, curr)
 			if i+1 < len(json) {
-				newJson = append(newJson, json[i+1])
+				newJSON = append(newJSON, json[i+1])
 			}
 			i++
 			continue
 		}
 		if curr == 34 {
-			newJson = append(newJson, curr)
+			newJSON = append(newJSON, curr)
 			inQuote = !inQuote
 			continue
 		}
 		if inQuote {
-			newJson = append(newJson, curr)
+			newJSON = append(newJSON, curr)
 			continue
 		} else {
 			if !space(curr) {
-				newJson = append(newJson, curr)
+				newJSON = append(newJSON, curr)
 				continue
 			}
 		}
 	}
-	return newJson
+	return newJSON
 }
 
 func createTabs(n int) []byte {
@@ -141,13 +141,13 @@ func createTabs(n int) []byte {
 // It uses tab indentation.
 func Indent(json []byte) []byte {
 	json = Flatten(json)
-	newJson := make([]byte, 0, len(json))
+	newJSON := make([]byte, 0, len(json))
 	inQuote := false
 	level := 0
 	for i := 0; i < len(json); i++ {
 		curr := json[i]
 		if curr == 34 {
-			newJson = append(newJson, curr)
+			newJSON = append(newJSON, curr)
 			if json[i-1] == 92 {
 				continue
 			}
@@ -155,72 +155,73 @@ func Indent(json []byte) []byte {
 			continue
 		}
 		if inQuote {
-			newJson = append(newJson, curr)
+			newJSON = append(newJSON, curr)
 			continue
 		} else {
 			if !space(curr) {
 				if curr == 91 {
 					level++
 					// add curr
-					newJson = append(newJson, curr)
+					newJSON = append(newJSON, curr)
 					// NL
-					newJson = append(newJson, 10)
+					newJSON = append(newJSON, 10)
 					// tab
-					newJson = append(newJson, createTabs(level)...)
+					newJSON = append(newJSON, createTabs(level)...)
 					continue
 				}
 				if curr == 93 {
 					level--
 					// NL
-					newJson = append(newJson, 10)
+					newJSON = append(newJSON, 10)
 					// tab
-					newJson = append(newJson, createTabs(level)...)
+					newJSON = append(newJSON, createTabs(level)...)
 					// add curr
-					newJson = append(newJson, curr)
+					newJSON = append(newJSON, curr)
 					continue
 				}
 				if curr == 123 {
 					level++
 					// add curr
-					newJson = append(newJson, curr)
+					newJSON = append(newJSON, curr)
 					// NL
-					newJson = append(newJson, 10)
+					newJSON = append(newJSON, 10)
 					// tab
-					newJson = append(newJson, createTabs(level)...)
+					newJSON = append(newJSON, createTabs(level)...)
 					continue
 				}
 				if curr == 125 {
 					level--
 					// NL
-					newJson = append(newJson, 10)
+					newJSON = append(newJSON, 10)
 					// tab
-					newJson = append(newJson, createTabs(level)...)
+					newJSON = append(newJSON, createTabs(level)...)
 					// add curr
-					newJson = append(newJson, curr)
+					newJSON = append(newJSON, curr)
 					continue
 				}
 				if curr == 44 {
-					newJson = append(newJson, curr)
+					newJSON = append(newJSON, curr)
 					// NL
-					newJson = append(newJson, 10)
+					newJSON = append(newJSON, 10)
 					// tab
-					newJson = append(newJson, createTabs(level)...)
+					newJSON = append(newJSON, createTabs(level)...)
 					continue
 				}
 				if curr == 58 {
-					newJson = append(newJson, curr)
+					newJSON = append(newJSON, curr)
 					// space
-					newJson = append(newJson, 32)
+					newJSON = append(newJSON, 32)
 					continue
 				}
-				newJson = append(newJson, curr)
+				newJSON = append(newJSON, curr)
 				continue
 			}
 		}
 	}
-	return newJson
+	return newJSON
 }
 
+// ParseArray is a parse function for converting string type arrays to string slices
 func ParseArray(arr string) []string {
 	if len(arr) < 2 {
 		return []string{}

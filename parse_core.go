@@ -10,7 +10,7 @@ func pCore(json []byte, core *node) error {
 	inQuote := false
 	braceList := makeSeq(4)
 	indexList := makeSeq(4)
-	indexList.Push(0)
+	indexList.push(0)
 	var start int
 	var end int
 	var key []byte
@@ -69,12 +69,12 @@ func pCore(json []byte, core *node) error {
 					core.down = append(core.down, newNode)
 					core = newNode
 				default:
-					newNode := &node{up: core, label: strconv.Itoa(indexList.Last())}
+					newNode := &node{up: core, label: strconv.Itoa(indexList.last())}
 					core.down = append(core.down, newNode)
 					core = newNode
 				}
-				indexList.Push(0)
-				braceList.Push(i)
+				indexList.push(0)
+				braceList.push(i)
 				valStart = i + 1
 				last = curr
 				continue
@@ -84,12 +84,12 @@ func pCore(json []byte, core *node) error {
 					newNode := &node{up: core, label: string(key), value: json[valStart:i]}
 					core.down = append(core.down, newNode)
 				case 44:
-					newNode := &node{up: core, label: strconv.Itoa(indexList.Last()), value: json[valStart:i]}
+					newNode := &node{up: core, label: strconv.Itoa(indexList.last()), value: json[valStart:i]}
 					core.down = append(core.down, newNode)
 					valStart = i + 1
 				}
-				core.value = json[braceList.Pop() : i+1]
-				indexList.Pop()
+				core.value = json[braceList.pop() : i+1]
+				indexList.pop()
 				core = core.up
 				last = curr
 				continue
@@ -104,10 +104,10 @@ func pCore(json []byte, core *node) error {
 					newNode := &node{up: core, label: string(key), value: json[valStart:i]}
 					core.down = append(core.down, newNode)
 				case 44, 91:
-					newNode := &node{up: core, label: strconv.Itoa(indexList.Last()), value: json[valStart:i]}
+					newNode := &node{up: core, label: strconv.Itoa(indexList.last()), value: json[valStart:i]}
 					core.down = append(core.down, newNode)
 				}
-				indexList.Inc()
+				indexList.inc()
 				valStart = i + 1
 				last = 44
 				continue

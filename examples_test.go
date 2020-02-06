@@ -11,7 +11,7 @@ func ExampleGet() {
 	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
 
 	value, err := Get(json, path...)
-	// or
+	// or without path variable
 	// value, err := Get(json, "following", "social")
 	if err != nil {
 		fmt.Println(err.Error())
@@ -19,6 +19,38 @@ func ExampleGet() {
 	}
 	fmt.Println(string(value))
 	// Output: dev.to
+}
+
+func ExampleSet() {
+	path := []string{"following"}
+	newValue := []byte(`["computerphile","numberphile"]`)
+	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
+
+	json, err := Set(json, newValue, path...)
+	// or without path variable
+	// value, err := Set(json, newValue, "following")
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	fmt.Println(string(json))
+	// Output: {"user":"eco","languages":["go","java","python","C","Cpp"],"following":["computerphile","numberphile"]}
+}
+
+func ExampleSetKey() {
+	path := []string{"following"}
+	newKey := "sites"
+	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
+
+	json, err := jin.SetKey(json, newKey, path...)
+	// or without path variable
+	// json, err := Set(json, newKey, "following")
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	fmt.Println(string(json))
+	// Output: {"user":"eco","languages":["go","java","python","C","Cpp"],"sites":{"social":"dev.to","code":"github"}}
 }
 
 func ExampleAdd() {
@@ -191,6 +223,47 @@ func ExampleIndent() {
 	//}
 }
 
+func ExampleParseArray() {
+	arrayStr := `["eco", 1992, 28, false, "github", "jin"]`
+	array := ParseArray(arrayStr)
+	fmt.Printf("val:%v, type:%T\n", array, array)
+	// Output: val:[eco 1992 28 false github jin], type:[]string
+}
+
+func ExampleTree() {
+	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
+	parse, _ := Parse(json)
+	tree := parse.Tree()
+	fmt.Println(tree)
+	// Output: ─ user
+	//─ languages
+	//	└  0
+	//	└  1
+	//	└  2
+	//	└  3
+	//	└  4
+	//─ following
+	//	└  social
+	//	└  code
+}
+
+func ExampleTreeFull() {
+	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
+	parse, _ := Parse(json)
+	tree := parse.TreeFull()
+	fmt.Println(tree)
+	// Output: ─ user   : "eco"
+	//─ languages : ["go","java","python","C","Cpp"]
+	//	└  0      : "go"
+	//	└  1      : "java"
+	//	└  2      : "python"
+	//	└  3      : "C"
+	//	└  4      : "Cpp"
+	//─ following : {"social":"dev.to","code":"github"}
+	//	└  social : "dev.to"
+	//	└  code   : "github"
+}
+
 func ExampleScheme_MakeJson() {
 	// without Scheme
 	json := MakeEmptyJson()
@@ -222,7 +295,7 @@ func ExampleScheme() {
 	// Add(), Remove(), Save(), Restore(),
 	// GetOriginalKeys(), GetCurrentKeys() functions.
 
-	person := jin.MakeScheme("name", "lastname", "age")
+	person := MakeScheme("name", "lastname", "age")
 	eco := person.MakeJson("eco", "hub", "28")
 	fmt.Println(string(eco))
 	// {"name":"eco","lastname":"hub","age":28}
@@ -262,4 +335,97 @@ func ExampleScheme() {
 	//{"name":"ted","lastname":"stinson","age":38}
 	//[name lastname age]
 	//[name lastname age]
+}
+
+func ExampleParser_Get() {
+	path := []string{"following", "social"}
+	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
+
+	pars, err := Parse(json)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	// get() returns whole JSON.
+	json, err = pars.Get(path...)
+	// or without path variable
+	// json, err := Get("following", "social")
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	fmt.Println(string(json))
+	// Output: dev.to
+}
+
+func ExampleParser_Set() {
+	path := []string{"following"}
+	newValue := []byte(`["computerphile","numberphile"]`)
+	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
+
+	pars, err := Parse(json)
+
+	err = pars.Set(newValue, path...)
+	// or without path variable
+	// json, err := Set(newValue, "following")
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	// get() returns whole JSON.
+	json, err = pars.Get()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	fmt.Println(string(json))
+	// Output: {"user":"eco","languages":["go","java","python","C","Cpp"],"following":["computerphile","numberphile"]}
+}
+
+func ExampleParser_SetKey() {
+	path := []string{"following"}
+	newKey := "sites"
+	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
+
+	pars, err := Parse(json)
+
+	err = pars.SetKey(newKey, path...)
+	// or without path variable
+	// json, err := Set(newKey, "following")
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+
+	json, err = pars.Get()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	fmt.Println(string(json))
+	// Output: {"user":"eco","languages":["go","java","python","C","Cpp"],"sites":{"social":"dev.to","code":"github"}}
+}
+
+func ExampleParser_Add() {
+	newValue := []byte(`"godoc.org/github.com/ecoshub"`)
+	json := []byte(`{"user":"eco","links":["github.com/ecoshub"]}`)
+
+	pars, err := Parse(json)
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	err = pars.Add(newValue, "links")
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	// get() returns whole JSON.
+	json, err = pars.Get()
+	if err != nil {
+		fmt.Println(err.Error())
+		return
+	}
+	fmt.Println(string(json))
+	// Output: {"user":"eco","links":["github.com/ecoshub","godoc.org/github.com/ecoshub"]}
 }
