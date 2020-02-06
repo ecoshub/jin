@@ -1,4 +1,7 @@
 /*
+
+**UNDER CONSTRUCTION**
+
 Copyright (c) 2020 eco.
 
 license that can be found in the LICENSE file.
@@ -8,17 +11,19 @@ Package Jin is a comprehensive JSON manipulation tools bundle.
 It provides parse, interpret, build and format tools.
 Third party packages only used for benchmark. No dependency need for core functions.
 
-There is four type of tools in  Jin:
+There are four types of tools in  Jin:
 
-* Interpreter
+- Interpreter
 
-* Parser
+- Parser
 
-* Builder
+- Builder
 
-* Formater
+- Formater
 
 PARSER AND INTERPRETER
+
+INTERPRETER
 
 Major difference between parsing and interpreting is,
 parser has to read all data before answer your needs.
@@ -29,17 +34,19 @@ But there is a time cost to parse data, and this cost can increase as data conte
 
 QUICK START
 
-Interpreter:
+INTERPRETER
 
 Interpreter is core element of this package, no need for instanciate, just call which function you want!
+First let's look at function parameters.
 
 	// All interperter functions need one JSON as byte slice format. 
 	json := []byte(`{"git":"ecoshub","repo":{"id":233809925,"name":"ecoshub/jin"}}`)
 	
-	// And most of them needs a path value for navigate
+	// And most of them needs a path value for navigate.
 	path := []string{"repo", "name"}
 
 Let's take the function Get()
+
 Get function returns the value that path has pointed.
 
 	value, err := jin.Get(json, path...)
@@ -47,14 +54,14 @@ Get function returns the value that path has pointed.
 		return err
 	}
 
-path value can be a string slice or hard or hard coded
+path value can be a string slice or hard coded
 
 	value, err := jin.Get(json, "repo", "name")
 	if err != nil {
 		return err
 	}
 
-Get() return 'value' as byte slice.
+Get() function return type is byte slice.
 
 All variations of return types are implemented as different functions.
 
@@ -70,11 +77,11 @@ All interpreter functions (except function variations) has own example provided 
 
 The Interpreter has 36 functions.
 
-Importent functions;
+Other Importent functions
 
-- Get
+- func Get(json []byte, path ...string) ([]byte, error)
 
-- Add
+- func Add(json []byte, value []byte, path ...string) ([]byte, error)
 
 - AddKeyValue
 
@@ -89,6 +96,7 @@ Importent functions;
 - IterateArray
 
 - IterateKeyValue
+
 
 
 */
