@@ -1,5 +1,9 @@
 package jin
 
+
+// IterateArray() is a callback function that can iterate any array and return value as byte slice.
+// It stripes quotation marks from string values befour return.
+// Path value can be left blank for access main JSON.
 func IterateArray(json []byte, callback func([]byte) bool, path ...string) error {
 	var start int
 	var end int
@@ -35,7 +39,7 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 			if curr == 34 {
 				for k := i - 1; k > 0; k-- {
 					if json[k] != 92 {
-						if (i-1-k)%2 == 0 {
+						if (i-k)%2 != 0 {
 							inQuote = !inQuote
 						}
 						break
@@ -115,6 +119,9 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 	return arrayExpectedError()
 }
 
+// IterateKeyValue() is a callback function that can iterate any object and return key-value pair as byte slices.
+// It stripes quotation marks from string values befour return.
+// Path value can be left blank for access main JSON.
 func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...string) error {
 	var start int
 	var err error
@@ -139,7 +146,6 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...st
 		isJsonChar[v] = true
 	}
 	if json[start] == 123 {
-		start++
 		keyStart := 0
 		keyEnd := 0
 		inQuote := false
@@ -151,9 +157,9 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...st
 				continue
 			}
 			if curr == 34 {
-				for k := i - 1; k > 0; k-- {
-					if json[k] != 92 {
-						if (i-1-k)%2 == 0 {
+				for n := i - 1; n > -1; n-- {
+					if json[n] != 92 {
+						if (i-n)%2 != 0 {
 							inQuote = !inQuote
 							break
 						} else {
@@ -178,11 +184,11 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...st
 					continue
 				}
 				if curr == 93 || curr == 125 {
-					if level < 1 {
+					if level < 2 {
 						return nil
 					}
 					if curr == 125 {
-						if level == 0 {
+						if level == 1 {
 							for j := start; j < i; j++ {
 								if !space(json[j]) {
 									start = j
@@ -206,7 +212,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...st
 					level--
 					continue
 				}
-				if level == 0 {
+				if level == 1 {
 					if curr == 44 {
 						end = i - 1
 						for j := start; j < i; j++ {

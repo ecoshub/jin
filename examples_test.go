@@ -125,6 +125,54 @@ func ExampleInsert() {
     // Output: {"user":"eco","languages":["go","java","visual basic,"python","C","Cpp"]}
 }
 
+func ExampleIterateArray() {
+    var err error
+	var json []byte = []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"]}`)
+
+	err = IterateArray(json, func(value []byte) bool {
+		fmt.Println(string(value))
+		// this return is some kind control mechanism for escape the iteration any time you want.
+		// true means keep iterate. false means stop iteration.
+		return true
+	}, "languages")
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+    /* Output: go
+java
+python
+C*/
+}
+
+func ExampleIterateKeyValue() {
+    var err error
+	var json []byte = []byte(`{"index":42,"user":"eco","language":"go","uuid":"4a1531c25d5ef124295a","active":true}`)
+
+	err = IterateKeyValue(json, func(key, value []byte) bool {
+		fmt.Println("key  :", string(key))
+		fmt.Println("value:", string(value))
+		// this return is some kind control mechanism for escape the iteration any time you want.
+		// true means keep iterate. false means stop iteration.
+		return true
+	})
+
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+    /* Output: key  : index
+value: 42
+key  : user
+value: eco
+key  : language
+value: go
+key  : uuid
+value: 4a1531c25d5ef124295a*/
+}
+
+
 // func ExampleParser_Add() {
 //     fmt.Println("hi")
 //     // Output: hi
