@@ -66,6 +66,9 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 	return json, objectExpectedError()
 }
 
+// Add() adds a value to an array.
+// It must point to an array,
+// otherwise it will provide an error message through 'err' variable
 func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 	var start int
 	var end int

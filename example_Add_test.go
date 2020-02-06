@@ -6,22 +6,18 @@ func Example() {
 
 }
 
-// Add() adds a value to an array
-// it must point to an array
-// otherwise it will provide an error message through 'err' variable
 func ExampleAdd() {
     var err error
-	var exampleJSON []byte = []byte(`{"user":"eco","year":2020,"links":["https://github.com/ecoshub"]}`)
-	
 	var newLink []byte = []byte(`"https://dev.to/eco9999"`)
+	var json []byte = []byte(`{"user":"eco","links":["https://github.com/ecoshub"]}`)
 
-	exampleJSON, err = jin.Add(exampleJSON, newLink, "links")
+	json, err = jin.Add(json, newLink, "links")
 	if err != nil {
 		fmt.Println(err.Error())
 		return 
 	}
-	fmt.Println(string(exampleJSON))
-    // Output: {"user":"eco","year":2020,"links":["https://github.com/ecoshub","https://dev.to/eco9999"]}
+	fmt.Println(string(json))
+    // Output: {"user":"eco","links":["https://github.com/ecoshub","https://dev.to/eco9999"]}
 }
 
 // func ExampleParser_Add() {
