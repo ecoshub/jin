@@ -4,19 +4,19 @@ Copyright (c) 2020 eco.
 license that can be found in the LICENSE file.
 
 
-Package jin is a comprehensive JSON manipulation tools bundle.
+Package Jin is a comprehensive JSON manipulation tools bundle.
 It provides parse, interpret, build and format tools.
 Third party packages only used for benchmark. No dependency need for core functions.
 
 There is four type of tools in  Jin:
 
-- Interpreter
+* Interpreter
 
-- Parser
+* Parser
 
-- Builders
+* Builder
 
-- Formaters
+* Formater
 
 PARSER AND INTERPRETER
 
@@ -25,7 +25,7 @@ parser has to read all data before answer your needs.
 On the other hand interpreter reads up to find the path you need.
 
 Once the parse is complete you can access any data with no time.
-But there is a time cost, and this cost can increase as data content grows.
+But there is a time cost to parse data, and this cost can increase as data content grows.
 
 QUICK START
 
@@ -36,20 +36,35 @@ Interpreter is core element of this package, no need for instanciate, just call 
 	// All interperter functions need one JSON as byte slice format. 
 	json := []byte(`{"git":"ecoshub","repo":{"id":233809925,"name":"ecoshub/jin"}}`)
 	
-	// And most of them needs a path value as string slice
+	// And most of them needs a path value for navigate
 	path := []string{"repo", "name"}
 
-	// path can be provided as variable
+Let's take the function Get()
+Get function returns the value that path has pointed.
+
 	value, err := jin.Get(json, path...)
+	if err != nil {
+		return err
+	}
 
-	// or hard coded
+path value can be a string slice or hard or hard coded
+
 	value, err := jin.Get(json, "repo", "name")
+	if err != nil {
+		return err
+	}
 
-	// type of 'value' is byte slice
+Get() return 'value' as byte slice.
 
-	// if needed any other type to return all variations implemented as different functions.
-	// for example. if you need 'value' to return as string.
+All variations of return types are implemented as different functions.
+
+for example. if you need 'value' as string.
+then you can use GetString() like this.
+
 	value, err := jin.GetString(json, "repo", "name")
+	if err != nil {
+		return err
+	}
 
 All interpreter functions (except function variations) has own example provided in godoc.
 
@@ -74,6 +89,7 @@ Importent functions;
 - IterateArray
 
 - IterateKeyValue
+
 
 */
 package jin
