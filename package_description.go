@@ -1,11 +1,7 @@
 /*
-
-**UNDER CONSTRUCTION**
-
 Copyright (c) 2020 eco.
 
 License that can be found in the LICENSE file.
-
 
 Package Jin is a comprehensive JSON manipulation tools bundle.
 All functions tested with random data against NODEJS.
@@ -23,25 +19,24 @@ In conclusion the results of the benchmark 'Jin' was the fastest and lightweight
 
 For more information take a look at BENCHMARK section.
 
-
 PARSER VS INTERPRETER
 
 Major difference between parsing and interpreting is,
 parser has to read all data before answer your needs.
 On the other hand interpreter reads up to find the path you need.
 
-Once the parse is complete you can access any data with no time.
+Once the parse is complete you can get access any data with no time.
 But there is a time cost to parse data, and this cost can increase as data content grows.
 
-If you need to access all keys of a JSON then I am simply recommend you to user Parser.
-But if you need to access some keys of a JSON I strongly refoment you to use Interperter, it will be much faster than parser. 
-
+If you need to access all keys of a JSON then we are simply recommend you to use Parser.
+But if you need to access some keys of a JSON I strongly recommend you to use Interperter, it will be much faster than parser. 
 
 QUICK START
 
 INTERPRETER
 
-Interpreter is core element of this package, no need for instanciate, just call which function you want!
+Interpreter is core element of this package, no need for instantiate, just call which function you want!
+
 First let's look at function parameters.
 
 	// All interperter functions need one JSON as byte slice format. 
@@ -56,14 +51,14 @@ Get function returns the value that path has pointed.
 
 	value, err := jin.Get(json, path...)
 	if err != nil {
-	return err
+		return err
 	}
 
-path value can be a string slice or hard coded
+path variable can be a string slice or hard coded
 
 	value, err := jin.Get(json, "repo", "name")
 	if err != nil {
-	return err
+		return err
 	}
 
 Get() function return type is byte slice.
@@ -71,16 +66,18 @@ Get() function return type is byte slice.
 All variations of return types are implemented as different functions.
 
 For example. If you need 'value' as string,
+
 then you can use GetString() like this.
 
 	value, err := jin.GetString(json, "repo", "name")
 	if err != nil {
-	return err
+		return err
 	}
 
 PARSER
 
 Parser is another alternative for manipulation JSON.
+
 We recommend to use this structure when you need to access all or most of the keys in the JSON.
 
 Parser constructor need only one parameter.
@@ -92,14 +89,14 @@ Lets Parse it with Parse function.
 
 	prs, err := jin.Parse(json)
 	if err != nil {
-	return err
+		return err
 	}
 
 Let's take the function Parser.Get()
 
 	value, err := prs.Get("repo")
 	if err != nil {
-	return err
+		return err
 	}
 
 *About path value look above. 
@@ -109,11 +106,12 @@ Parser.Get() function return type is byte slice like Get() function of interpret
 All variations of return types are implemented as different functions.
 
 For example. If you need 'value' as string.
+
 Then you can use Parser.GetString() like this.
 
 	value, err := prs.GetString("repo")
 	if err != nil {
-	return err
+		return err
 	}
 
 All interpreter/parser functions (except function variations line GetString()) has own example provided in godoc.
@@ -121,6 +119,8 @@ All interpreter/parser functions (except function variations line GetString()) h
 Other important functions of interpreter/parser. 
 
 - func Add(), AddKeyValue(), Set(), SetKey() Delete(), Insert(), IterateArray(), IterateKeyValue()
+
+
 
 ITERATION TOOLS
 
@@ -142,12 +142,6 @@ For example let's look at IterateKey() function.
 	    return
 	}
 
-	//Output: 
-	//go
-	//java
-	//python
-	//C
-
 IterateKeyValue() function description and examples are in below.
 
 OTHER TOOLS
@@ -155,16 +149,18 @@ OTHER TOOLS
 FORMATTING
 
 There are two formatting functions. Flatten() and Indent()
+
 Both of them have their own examples on below.
 
 CONTROL FUNCTIONS
 
 Control functions are simple and easy way to check value types of any path.
+
 For example. jin.IsArray() controls the path, if path is points to an array.
+
 It will return true
 
 	json := []byte(`{"repo":{"name":"ecoshub/jin"},"others":["jin","penman"]}`)
-
 	fmt.Println(jin.IsArray(json, "repo"))
 	// Output: false
 
@@ -174,25 +170,46 @@ It will return true
 Or get value type of the path
 
 	json := []byte(`{"git":"ecoshub","repo":["jin","wsftp","penman"]}`)
-
 	fmt.Println(jin.GetType(json, "repo"))
 	// Output: array
 
-
-
 TESTING
+
+Almost all functions/methods tested with complicated randomly creted JSONs.
+
+Like This.
+
+	{
+		"g;}\\=LUG[5pwAizS!lfkdRULF=": true,
+		"gL1GG'S+-U~#fUz^R^=#genWFVGA$O": {
+			"Nmg}xK&V5Z": -1787764711,
+			"=B7a(KoF%m5r|qG#En}dl\"y`117)WC&w~": -572664066,
+			"Dj_{6evoMr&< 4]%b|LQR^@(*eFMx6pB$?5m+1u{W!'zf;cl": ":mqp<s6('Y|-7@3.krrj+{U6K{|(o5&??yG#)qpMs=H?",
+			",Qx_5V(ceN)%0d-h.\"\"0v}8fqG-zgEBz;!C{zHZ#9Hfg%no*": false,
+			"l&d>": true
+		},
+		"jhww/SRq?,Y\"5O1'{": "]\"4s{WH]b9aR+[$-'PQm8WW:B",
+		":e": "Lu9(>9IbrLyx60E;9R]NHml@A~} QHgAUR5$TUCm&z,]d\">",
+		"e&Kk^`rz`T!EZopgIo\\5)GT'MkSCf]2<{dt+C_H": 599287421.0854483
+	}
+
+Some packages not event runs properly with this kind of JSONS.
+We did not see such packages as competitors to ourselves.
+And that's because we didn't even bother to benchmark against them.
+
 
 Test files are in the /test directory.
 Main test function needs NODEJS for path and value creation.
-Befour make any test be sure that your machine has a valid version of NODEJS.
+Before make any test be sure that your machine has a valid version of NODEJS.
+
 This package developed with NODEJS v13.7.0.
 
-If you want to test another JSON file that is not in the tests folder.
-Just drag and drop it to the tests folder all process is automated.
+If you want to test another JSON file that is not in the tests folder just drag and drop it to the tests folder all process is automated.
 
 BENCHMARK
 
 Benchmark results.
+
 *Benchmark prefix removed to make more room for results.
 
 	goos: linux
@@ -200,53 +217,83 @@ Benchmark results.
 	pkg: jin/benchmark
 
 	// Delete Function.
-	JsonParserDeleteSmall-8          2092 ns/op       704 B/op    4 allocs/op
-	JinDeleteSmall-8                 1211 ns/op       640 B/op    4 allocs/op
-	JsonParserDeleteMedium-8        11096 ns/op      6912 B/op    3 allocs/op
-	JinDeleteMedium-8                5429 ns/op      6144 B/op    3 allocs/op
-	JsonParserDeleteLarge-8        130838 ns/op    114688 B/op    4 allocs/op
-	JinDeleteLarge-8                85999 ns/op    114688 B/op    4 allocs/op
+	JsonParserDeleteSmall-8             2092 ns/op          704 B/op       4 allocs/op
+	JinDeleteSmall-8                    1211 ns/op          640 B/op       4 allocs/op
+	JsonParserDeleteMedium-8           11096 ns/op         6912 B/op       3 allocs/op
+	JinDeleteMedium-8                   5429 ns/op         6144 B/op       3 allocs/op
+	JsonParserDeleteLarge-8           130838 ns/op       114688 B/op       4 allocs/op
+	JinDeleteLarge-8                   85999 ns/op       114688 B/op       4 allocs/op
 
 	// Get Function.
-	JsonparserGetSmall-8              826 ns/op         0 B/op    0 allocs/op
-	JinGetSmall-8                     792 ns/op         0 B/op    0 allocs/op
-	JsonparserGetMedium-8            7734 ns/op         0 B/op    0 allocs/op
-	JinGetMedium-8                   5793 ns/op         0 B/op    0 allocs/op
-	JsonparserGetLarge-8            62319 ns/op         0 B/op    0 allocs/op
-	JinGetLarge-8                   56575 ns/op         0 B/op    0 allocs/op
+	JsonparserGetSmall-8                 826 ns/op            0 B/op       0 allocs/op
+	JinGetSmall-8                        792 ns/op            0 B/op       0 allocs/op
+	JsonparserGetMedium-8               7734 ns/op            0 B/op       0 allocs/op
+	JinGetMedium-8                      5793 ns/op            0 B/op       0 allocs/op
+	JsonparserGetLarge-8               62319 ns/op            0 B/op       0 allocs/op
+	JinGetLarge-8                      56575 ns/op            0 B/op       0 allocs/op
 
 	// Iterators Function.
-	IterateArrayGetJsonparser-8     12932 ns/op         0 B/op    0 allocs/op
-	IterateArrayGetJin-8            12787 ns/op         0 B/op    0 allocs/op
-	IterateObjectGetJsonparser-8     6381 ns/op         0 B/op    0 allocs/op
-	IterateObjectGetJin-8            4638 ns/op         0 B/op    0 allocs/op
+	IterateArrayGetJsonparser-8        12932 ns/op            0 B/op       0 allocs/op
+	IterateArrayGetJin-8               12787 ns/op            0 B/op       0 allocs/op
+	IterateObjectGetJsonparser-8        6381 ns/op            0 B/op       0 allocs/op
+	IterateObjectGetJin-8               4638 ns/op            0 B/op       0 allocs/op
 
 	// Set Function.
-	JsonParserSetSmall-8             1268 ns/op       704 B/op    4 allocs/op
-	JinSetSmall-8                    1213 ns/op       704 B/op    4 allocs/op
-	JsonParserSetMedium-8            7014 ns/op      6912 B/op    3 allocs/op
-	JinSetMedium-8                   5767 ns/op      6912 B/op    3 allocs/op
-	JsonParserSetLarge-8           126726 ns/op    114688 B/op    4 allocs/op
-	JinSetLarge-8                   87239 ns/op    114688 B/op    4 allocs/op
+	JsonParserSetSmall-8                1268 ns/op          704 B/op       4 allocs/op
+	JinSetSmall-8                       1213 ns/op          704 B/op       4 allocs/op
+	JsonParserSetMedium-8               7014 ns/op         6912 B/op       3 allocs/op
+	JinSetMedium-8                      5767 ns/op         6912 B/op       3 allocs/op
+	JsonParserSetLarge-8              126726 ns/op       114688 B/op       4 allocs/op
+	JinSetLarge-8                      87239 ns/op       114688 B/op       4 allocs/op
 
 	// Parser Get Small Function.
-	JsoniteratorGetSmall-8           4006 ns/op       874 B/op    1 allocs/op
-	FastjsonGetSmall-8               2773 ns/op      3408 B/op    1 allocs/op
-	JinParseGetSmall-8               2040 ns/op      1252 B/op    8 allocs/op
+	JsoniteratorGetSmall-8              4006 ns/op          874 B/op       1 allocs/op
+	FastjsonGetSmall-8                  2773 ns/op         3408 B/op       1 allocs/op
+	JinParseGetSmall-8                  2040 ns/op         1252 B/op       8 allocs/op
 
 	// Parser Get Medium Function.
-	JsoniteratorGetMedium-8         29936 ns/op      9730 B/op    5 allocs/op
-	FastjsonGetMedium-8             16190 ns/op     17304 B/op    4 allocs/op
-	JinParseGetMedium-8             14016 ns/op      8304 B/op    1 allocs/op
+	JsoniteratorGetMedium-8            29936 ns/op         9730 B/op       5 allocs/op
+	FastjsonGetMedium-8                16190 ns/op        17304 B/op       4 allocs/op
+	JinParseGetMedium-8                14016 ns/op         8304 B/op       1 allocs/op
 
 	// Parser Get Large Function.
-	JsoniteratorGetLarge-8         634964 ns/op    219307 B/op    3 allocs/op
-	FastjsonGetLarge-8             221918 ns/op    283200 B/op    0 allocs/op
-	JinParseGetLarge-8             218904 ns/op    134704 B/op    3 allocs/op
+	JsoniteratorGetLarge-8            634964 ns/op       219307 B/op       3 allocs/op
+	FastjsonGetLarge-8                221918 ns/op       283200 B/op       0 allocs/op
+	JinParseGetLarge-8                218904 ns/op       134704 B/op       3 allocs/op
 
 	// Parser Set Function.
-	FastjsonSetSmall-8               3662 ns/op      3792 B/op    9 allocs/op
-	JinParseSetSmall-8               3382 ns/op      1968 B/op    6 allocs/op
+	FastjsonSetSmall-8                  3662 ns/op         3792 B/op       9 allocs/op
+	JinParseSetSmall-8                  3382 ns/op         1968 B/op       6 allocs/op
+
+LIMITATIONS
+
+Jin can handle all kind JSONs. Except signle content JSONs
+
+Like this.
+
+	{"golang"}
+	{42}
+	{false}
+
+That kind JSONs are forbidden.
+
+UPCOMMING
+
+We are currently working on, 
+
+- Marshall and Unmarshall functions.
+
+- http.Request parser/interperter
+
+- builder functions for http.ResponseWriter
+
+If you want does functions quickly, give us a heads-up with star count. 
+
+CONTRIBUTE
+
+If you want to contribute this work feel free to fork it.
+
+We want to fill this section with contributors.
 
 */
 package jin
