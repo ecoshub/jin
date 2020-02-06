@@ -3,9 +3,9 @@ Copyright (c) 2020 eco.
 
 License that can be found in the LICENSE file.
 
-Package Jin is a comprehensive JSON manipulation tools bundle.
-All functions tested with random data against NODEJS.
-All test-path and test-value cases created automatically with NODEJS.
+Jin is a comprehensive JSON manipulation tool bundle.
+All functions tested with random data against Node.js.
+All test-path and test-value cases created automatically with Node.js.
 It provides parse, interpret, build and format tools.
 Third-party packages only used for the benchmark. No dependency need for core functions.
 
@@ -82,7 +82,7 @@ We recommend to use this structure when you need to access all or most of the ke
 
 Parser constructor need only one parameter.
 
-	// Parser constructor function jin.Parse() need one JSON as byte slice format. 
+	// Parser constructor function jin.Parse() need one JSON as byte slice type. 
 	json := []byte(`{"git":"ecoshub","repo":{"id":233809925,"name":"ecoshub/jin"}}`)
 
 Lets Parse it with Parse function.
@@ -173,6 +173,18 @@ Or get value type of the path
 	fmt.Println(jin.GetType(json, "repo"))
 	// Output: array
 
+BUILD TOOLS
+
+There are lots of JSON build functions in this package and all of them has its own examples.
+
+We just want to mention a couple of them.
+
+Scheme is simple and powerfull tool for create JSON schemes.
+
+MakeJson(), MakeArray() functions and other variations is easy to user functions
+
+Go end take a look at them from godoc.
+
 TESTING
 
 Almost all functions/methods tested with complicated randomly creted JSONs.
@@ -184,7 +196,7 @@ Like This.
 		"gL1GG'S+-U~#fUz^R^=#genWFVGA$O": {
 			"Nmg}xK&V5Z": -1787764711,
 			"=B7a(KoF%m5r|qG#En}dl\"y`117)WC&w~": -572664066,
-			"Dj_{6evoMr&< 4]%b|LQR^@(*eFMx6pB$?5m+1u{W!'zf;cl": ":mqp<s6('Y|-7@3.krrj+{U6K{|(o5&??yG#)qpMs=H?",
+			"Dj_{6evoMr&< 4m+1u{W!'zf;cl": ":mqp<s6('&??yG#)qpMs=H?",
 			",Qx_5V(ceN)%0d-h.\"\"0v}8fqG-zgEBz;!C{zHZ#9Hfg%no*": false,
 			"l&d>": true
 		},
@@ -198,11 +210,11 @@ We did not see such packages as competitors to ourselves.
 And that's because we didn't even bother to benchmark against them.
 
 
-Test files are in the /test directory.
-Main test function needs NODEJS for path and value creation.
-Before make any test be sure that your machine has a valid version of NODEJS.
+Test files are in the /tests directory.
+Main test function needs Node.js for path and value creation.
+Before make any test be sure that your machine has a valid version of Node.js.
 
-This package developed with NODEJS v13.7.0.
+This package developed with Node.js v13.7.0.
 
 If you want to test another JSON file that is not in the tests folder just drag and drop it to the tests folder all process is automated.
 
@@ -216,60 +228,60 @@ Benchmark results.
 	goarch: amd64
 	pkg: jin/benchmark
 
-	// Delete Function.
-	JsonParserDeleteSmall-8             2092 ns/op          704 B/op       4 allocs/op
-	JinDeleteSmall-8                    1211 ns/op          640 B/op       4 allocs/op
-	JsonParserDeleteMedium-8           11096 ns/op         6912 B/op       3 allocs/op
-	JinDeleteMedium-8                   5429 ns/op         6144 B/op       3 allocs/op
-	JsonParserDeleteLarge-8           130838 ns/op       114688 B/op       4 allocs/op
-	JinDeleteLarge-8                   85999 ns/op       114688 B/op       4 allocs/op
-
 	// Get Function.
-	JsonparserGetSmall-8                 826 ns/op            0 B/op       0 allocs/op
-	JinGetSmall-8                        792 ns/op            0 B/op       0 allocs/op
-	JsonparserGetMedium-8               7734 ns/op            0 B/op       0 allocs/op
-	JinGetMedium-8                      5793 ns/op            0 B/op       0 allocs/op
-	JsonparserGetLarge-8               62319 ns/op            0 B/op       0 allocs/op
-	JinGetLarge-8                      56575 ns/op            0 B/op       0 allocs/op
-
-	// Iterators Function.
-	IterateArrayGetJsonparser-8        12932 ns/op            0 B/op       0 allocs/op
-	IterateArrayGetJin-8               12787 ns/op            0 B/op       0 allocs/op
-	IterateObjectGetJsonparser-8        6381 ns/op            0 B/op       0 allocs/op
-	IterateObjectGetJin-8               4638 ns/op            0 B/op       0 allocs/op
+	JsonparserGetSmall-8                  826 ns/op             0 B/op        0 allocs/op
+	JinGetSmall-8                         792 ns/op             0 B/op        0 allocs/op
+	JsonparserGetMedium-8                7734 ns/op             0 B/op        0 allocs/op
+	JinGetMedium-8                       5793 ns/op             0 B/op        0 allocs/op
+	JsonparserGetLarge-8                62319 ns/op             0 B/op        0 allocs/op
+	JinGetLarge-8                       56575 ns/op             0 B/op        0 allocs/op
 
 	// Set Function.
-	JsonParserSetSmall-8                1268 ns/op          704 B/op       4 allocs/op
-	JinSetSmall-8                       1213 ns/op          704 B/op       4 allocs/op
-	JsonParserSetMedium-8               7014 ns/op         6912 B/op       3 allocs/op
-	JinSetMedium-8                      5767 ns/op         6912 B/op       3 allocs/op
-	JsonParserSetLarge-8              126726 ns/op       114688 B/op       4 allocs/op
-	JinSetLarge-8                      87239 ns/op       114688 B/op       4 allocs/op
+	JsonParserSetSmall-8                 1268 ns/op           704 B/op        4 allocs/op
+	JinSetSmall-8                        1213 ns/op           704 B/op        4 allocs/op
+	JsonParserSetMedium-8                7014 ns/op          6912 B/op        3 allocs/op
+	JinSetMedium-8                       5767 ns/op          6912 B/op        3 allocs/op
+	JsonParserSetLarge-8               126726 ns/op        114688 B/op        4 allocs/op
+	JinSetLarge-8                       87239 ns/op        114688 B/op        4 allocs/op
+
+	// Delete Function.
+	JsonParserDeleteSmall-8              2092 ns/op           704 B/op        4 allocs/op
+	JinDeleteSmall-8                     1211 ns/op           640 B/op        4 allocs/op
+	JsonParserDeleteMedium-8            11096 ns/op          6912 B/op        3 allocs/op
+	JinDeleteMedium-8                    5429 ns/op          6144 B/op        3 allocs/op
+	JsonParserDeleteLarge-8            130838 ns/op        114688 B/op        4 allocs/op
+	JinDeleteLarge-8                    85999 ns/op        114688 B/op        4 allocs/op
+
+	// Iterators Function.
+	IterateArrayGetJsonparser-8         12932 ns/op             0 B/op        0 allocs/op
+	IterateArrayGetJin-8                12787 ns/op             0 B/op        0 allocs/op
+	IterateObjectGetJsonparser-8         6381 ns/op             0 B/op        0 allocs/op
+	IterateObjectGetJin-8                4638 ns/op             0 B/op        0 allocs/op
 
 	// Parser Get Small Function.
-	JsoniteratorGetSmall-8              4006 ns/op          874 B/op       1 allocs/op
-	FastjsonGetSmall-8                  2773 ns/op         3408 B/op       1 allocs/op
-	JinParseGetSmall-8                  2040 ns/op         1252 B/op       8 allocs/op
+	JsoniteratorGetSmall-8               4006 ns/op           874 B/op        1 allocs/op
+	FastjsonGetSmall-8                   2773 ns/op          3408 B/op        1 allocs/op
+	JinParseGetSmall-8                   2040 ns/op          1252 B/op        8 allocs/op
 
 	// Parser Get Medium Function.
-	JsoniteratorGetMedium-8            29936 ns/op         9730 B/op       5 allocs/op
-	FastjsonGetMedium-8                16190 ns/op        17304 B/op       4 allocs/op
-	JinParseGetMedium-8                14016 ns/op         8304 B/op       1 allocs/op
+	JsoniteratorGetMedium-8             29936 ns/op          9730 B/op        5 allocs/op
+	FastjsonGetMedium-8                 16190 ns/op         17304 B/op        4 allocs/op
+	JinParseGetMedium-8                 14016 ns/op          8304 B/op        1 allocs/op
 
 	// Parser Get Large Function.
-	JsoniteratorGetLarge-8            634964 ns/op       219307 B/op       3 allocs/op
-	FastjsonGetLarge-8                221918 ns/op       283200 B/op       0 allocs/op
-	JinParseGetLarge-8                218904 ns/op       134704 B/op       3 allocs/op
+	JsoniteratorGetLarge-8             634964 ns/op        219307 B/op        3 allocs/op
+	FastjsonGetLarge-8                 221918 ns/op        283200 B/op        0 allocs/op
+	JinParseGetLarge-8                 218904 ns/op        134704 B/op        3 allocs/op
 
 	// Parser Set Function.
-	FastjsonSetSmall-8                  3662 ns/op         3792 B/op       9 allocs/op
-	JinParseSetSmall-8                  3382 ns/op         1968 B/op       6 allocs/op
+	FastjsonSetSmall-8                   3662 ns/op          3792 B/op        9 allocs/op
+	JinParseSetSmall-8                   3382 ns/op          1968 B/op        6 allocs/op
 
 LIMITATIONS
 
-Jin can handle all kind JSONs. Except signle content JSONs
+Jin can handle all kind JSONs. Except single content JSONs
 
-Like this.
+Like those.
 
 	{"golang"}
 	{42}
