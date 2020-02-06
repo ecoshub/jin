@@ -4,62 +4,62 @@ import "errors"
 import "fmt"
 
 func nullPathError() error {
-	return errors.New("ERROR_CODE:00 Error: Path cannot be null")
+	return errors.New("error: path cannot be null error_code:00 ")
 }
 func nullNewValueError() error {
-	return errors.New("ERROR_CODE:01 Error: New value cannot be null")
+	return errors.New("error: new value cannot be null error_code:01 ")
 }
 func emptyArrayError() error {
-	return errors.New("ERROR_CODE:02 Error: Array is empty")
+	return errors.New("error: array is empty error_code:02 ")
 }
 func indexExpectedError() error {
-	return errors.New("ERROR_CODE:03 Error: Index expected, got key value")
+	return errors.New("error: index expected, got key value error_code:03 ")
 }
 func keyExpectedError() error {
-	return errors.New("ERROR_CODE:04 Error: Key expected, got index")
+	return errors.New("error: key expected, got index error_code:04 ")
 }
 func objectExpectedError() error {
-	return errors.New("ERROR_CODE:05 Error: Last path must be pointed at an object")
+	return errors.New("error: last path must be pointed at an object error_code:05 ")
 }
 func arrayExpectedError() error {
-	return errors.New("ERROR_CODE:06 Error: Last path must be pointed at an array")
+	return errors.New("error: last path must be pointed at an array error_code:06 ")
 }
 func indexOutOfRangeError() error {
-	return errors.New("ERROR_CODE:07 Error: Index out of range")
+	return errors.New("error: index out of range error_code:07 ")
 }
 func keyNotFoundError() error {
-	return errors.New("ERROR_CODE:08 Error: Key not found")
+	return errors.New("error: key not found error_code:08 ")
 }
-func badJSONError(index int) error {
-	return fmt.Errorf("ERROR_CODE:09 Error: Bad JSON format. at:%v", index)
+func badJSONError(val int) error {
+	return fmt.Errorf("error: bad json format. at:'%v' error_code:09 ", val)
 }
 func badKeyError() error {
-	return errors.New("ERROR_CODE:10 Error: Key value cannot contain quote symbol")
+	return errors.New("error: key value cannot contain quote symbol. error_code:10")
 }
 func keyAlreadyExistsError() error {
-	return errors.New("ERROR_CODE:11 Error: Key already exist")
+	return errors.New("error: key already exist error_code:11 ")
 }
 func intParseError(val string) error {
-	return fmt.Errorf("ERROR_CODE:12 Parse Error: '%v' Cannot be converted to int", val)
+	return fmt.Errorf("parse error: '%v' cannot be converted to int. error_code:12", val)
 }
 func floatParseError(val string) error {
-	return fmt.Errorf("ERROR_CODE:13 Parse Error: '%v' Cannot be converted to float", val)
+	return fmt.Errorf("parse error: '%v' cannot be converted to float. error_code:13", val)
 }
 func boolParseError(val string) error {
-	return fmt.Errorf("ERROR_CODE:14 Parse Error: '%v' Cannot be converted to bool", val)
+	return fmt.Errorf("parse error: '%v' cannot be converted to bool. error_code:14", val)
 }
 func stringArrayParseError(val string) error {
-	return fmt.Errorf("ERROR_CODE:15 Parse Error: '%v' Cannot be converted to []string", val)
+	return fmt.Errorf("parse error: '%v' cannot be converted to []string. error_code:15", val)
 }
 func intArrayParseError(val string) error {
-	return fmt.Errorf("ERROR_CODE:16 Parse Error: '%v' Cannot be converted to []int", val)
+	return fmt.Errorf("parse error: '%v' cannot be converted to []int. error_code:16", val)
 }
 func floatArrayParseError(val string) error {
-	return fmt.Errorf("ERROR_CODE:17 Parse Error: '%v' Cannot be converted to []float", val)
+	return fmt.Errorf("parse error: '%v' cannot be converted to []float. error_code:17", val)
 }
 func boolArrayParseError(val string) error {
-	return fmt.Errorf("ERROR_CODE:18 Parse Error: '%v' Cannot be converted to []bool", val)
+	return fmt.Errorf("parse error: '%v' cannot be converted to []bool. error_code:18", val)
 }
 func nullKeyError() error {
-	return errors.New("ERROR_CODE:01 Error: New key cannot be null")
+	return errors.New("error: new key cannot be null error_code:19 ")
 }
