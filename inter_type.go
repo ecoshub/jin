@@ -1,5 +1,8 @@
 package jin
 
+// IsObject() is a type control function.
+// If path points to an object it will return true, otherwise it will return false.
+// In this instance 'object' means everything that has starts and ends with curly brace.
 func IsObject(json []byte, path ...string) (bool, error) {
 	state, _, err := typeControlCore(json, []byte{91, 123}, true, path...)
 	if err != nil {
@@ -8,6 +11,9 @@ func IsObject(json []byte, path ...string) (bool, error) {
 	return state, nil
 }
 
+// IsArray() is a type control function.
+// If path points to an array it will return true, otherwise it will return false.
+// In this instance 'array' means everything that has starts and ends with square brace.
 func IsArray(json []byte, path ...string) (bool, error) {
 	state, _, err := typeControlCore(json, []byte{91}, true, path...)
 	if err != nil {
@@ -16,6 +22,9 @@ func IsArray(json []byte, path ...string) (bool, error) {
 	return state, nil
 }
 
+// IsValue() is a type control function.
+// If path points to an value it will return true, otherwise it will return false.
+// In this instance 'value' means everything that has not starts and ends with any brace.
 func IsValue(json []byte, path ...string) (bool, error) {
 	state, _, err := typeControlCore(json, []byte{91, 123}, false, path...)
 	if err != nil {
@@ -24,6 +33,11 @@ func IsValue(json []byte, path ...string) (bool, error) {
 	return state, nil
 }
 
+// IsValue() is a type return function.
+// If path points to an value it will return 'value' string.
+// If path points to an array it will return 'array' string.
+// If path points to an object it will return 'object' string.
+// otherwise it will pretn 'ERROR' string.
 func GetType(json []byte, path ...string) (string, error) {
 	_, start, err := typeControlCore(json, []byte{}, false, path...)
 	if err != nil {
@@ -40,6 +54,10 @@ func GetType(json []byte, path ...string) (string, error) {
 	return "ERROR", nil
 }
 
+// IsEmpty() is a control function.
+// If path points to an value it will return 'value' string
+// If path points to an array that has zero element in it, 
+// then it will return true, otherwise it will return false.
 func IsEmpty(json []byte, path ...string) (bool, error) {
 	var start int
 	var end int = len(json) - 1
