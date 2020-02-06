@@ -1,7 +1,6 @@
-package example
+package jin
 
 import "fmt"
-import "jin"
 
 func Example() {
 
@@ -12,7 +11,7 @@ func ExampleAdd() {
 	var newLink []byte = []byte(`"godoc.org/github.com/ecoshub"`)
 	var json []byte = []byte(`{"user":"eco","links":["github.com/ecoshub"]}`)
 
-	json, err = jin.Add(json, newLink, "links")
+	json, err = Add(json, newLink, "links")
 	if err != nil {
 		fmt.Println(err.Error())
 		return 
@@ -26,7 +25,7 @@ func ExampleAddKeyValue() {
 	var newValue []byte = []byte(`"go"`)
 	var json []byte = []byte(`{"user":"eco"}`)
 
-	json, err = jin.AddKeyValue(json, "language", newValue)
+	json, err = AddKeyValue(json, "language", newValue)
 	if err != nil {
 		fmt.Println(err.Error())
 		return 
@@ -39,7 +38,7 @@ func ExampleDelete() {
     var err error
 	var json []byte = []byte(`{"user":"eco","languages":["go","java","python","C", "Cpp"]}`)
 
-	json, err = jin.Delete(json, "languages", "1")
+	json, err = Delete(json, "languages", "1")
 	if err != nil {
 		fmt.Println(err.Error())
 		return 
@@ -47,13 +46,55 @@ func ExampleDelete() {
 	// After first deletion.
     // {"user":"eco","languages":["go","python","C", "Cpp"]}
 
-	json, err = jin.Delete(json, "user")
+	json, err = Delete(json, "user")
 	if err != nil {
 		fmt.Println(err.Error())
 		return 
 	}
 	fmt.Println(string(json))
     // Output: {"languages":["go","python","C", "Cpp"]}
+}
+
+func ExampleFlatten() {
+	var json []byte = []byte(`{
+	"user": "eco",
+	"languages": [
+		"go",
+		"java",
+		"python",
+		"C",
+		"Cpp"
+	],
+	"following": {
+		"social": "dev.to",
+		"code": "github"
+	}
+}`)
+
+	json = Flatten(json)
+	fmt.Println(string(json))
+    // Output: {"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}
+}
+
+func ExampleFormat() {
+	var json []byte = []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
+
+	json = Indent(json)
+	fmt.Println(string(json))
+    /* Output: {
+	"user": "eco",
+	"languages": [
+		"go",
+		"java",
+		"python",
+		"C",
+		"Cpp"
+	],
+	"following": {
+		"social": "dev.to",
+		"code": "github"
+	}
+}*/
 }
 
 // func ExampleParser_Add() {
