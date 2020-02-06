@@ -9,57 +9,57 @@ import (
 func BenchmarkJsonParserDeleteSmall(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jsonparser.Delete(SmallFixture, "uuid")
-		jsonparser.Delete(SmallFixture, "tz")
-		jsonparser.Delete(SmallFixture, "ua")
-		jsonparser.Delete(SmallFixture, "st")
+		jsonparser.Delete(smallfixture, "uuid")
+		jsonparser.Delete(smallfixture, "tz")
+		jsonparser.Delete(smallfixture, "ua")
+		jsonparser.Delete(smallfixture, "st")
 	}
 }
 
-func BenchmarkJintDeleteSmall(b *testing.B) {
+func BenchmarkJinDeleteSmall(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jin.Delete(SmallFixture, "uuid")
-		jin.Delete(SmallFixture, "tz")
-		jin.Delete(SmallFixture, "ua")
-		jin.Delete(SmallFixture, "st")
+		jin.Delete(smallfixture, "uuid")
+		jin.Delete(smallfixture, "tz")
+		jin.Delete(smallfixture, "ua")
+		jin.Delete(smallfixture, "st")
 	}
 }
 
 func BenchmarkJsonParserDeleteMedium(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jsonparser.Delete(MediumFixture, "person", "name", "fullName")
-		jsonparser.Delete(MediumFixture, "person", "github", "followers")
-		jsonparser.Delete(MediumFixture, "company")
+		jsonparser.Delete(mediumfixture, "person", "name", "fullName")
+		jsonparser.Delete(mediumfixture, "person", "github", "followers")
+		jsonparser.Delete(mediumfixture, "company")
 	}
 }
 
-func BenchmarkJintDeleteMedium(b *testing.B) {
+func BenchmarkJinDeleteMedium(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jin.Delete(MediumFixture, "person", "name", "fullName")
-		jin.Delete(MediumFixture, "person", "github", "followers")
-		jin.Delete(MediumFixture, "company")
+		jin.Delete(mediumfixture, "person", "name", "fullName")
+		jin.Delete(mediumfixture, "person", "github", "followers")
+		jin.Delete(mediumfixture, "company")
 	}
 }
 
 func BenchmarkJsonParserDeleteLarge(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jsonparser.Delete(LargeFixture, "users", "[0]", "id")
-		jsonparser.Delete(LargeFixture, "users", "[31]", "id")
-		jsonparser.Delete(LargeFixture, "topics", "topics", "[0]", "id")
-		jsonparser.Delete(LargeFixture, "topics", "topics", "[29]", "id")
+		jsonparser.Delete(largefixture, "users", "[0]", "id")
+		jsonparser.Delete(largefixture, "users", "[31]", "id")
+		jsonparser.Delete(largefixture, "topics", "topics", "[0]", "id")
+		jsonparser.Delete(largefixture, "topics", "topics", "[29]", "id")
 	}
 }
 
-func BenchmarkJintDeleteLarge(b *testing.B) {
+func BenchmarkJinDeleteLarge(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jin.Delete(LargeFixture, "users", "0", "id")
-		jin.Delete(LargeFixture, "users", "31", "id")
-		jin.Delete(LargeFixture, "topics", "topics", "0", "id")
-		jin.Delete(LargeFixture, "topics", "topics", "29", "id")
+		jin.Delete(largefixture, "users", "0", "id")
+		jin.Delete(largefixture, "users", "31", "id")
+		jin.Delete(largefixture, "topics", "topics", "0", "id")
+		jin.Delete(largefixture, "topics", "topics", "29", "id")
 	}
 }

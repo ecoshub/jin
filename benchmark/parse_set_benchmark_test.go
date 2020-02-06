@@ -10,7 +10,7 @@ func BenchmarkFastjsonSetSmall(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
 		var p fastjson.Parser
-		prs, _ := p.ParseBytes(SmallFixture)
+		prs, _ := p.ParseBytes(smallfixture)
 		prs.Set("uuid", fastjson.MustParse(`"test-value"`))
 		prs.Set("tz", fastjson.MustParse(`"test-value"`))
 		prs.Set("ua", fastjson.MustParse(`"test-value"`))
@@ -18,10 +18,10 @@ func BenchmarkFastjsonSetSmall(b *testing.B) {
 	}
 }
 
-func BenchmarkJintParseSetSmall(b *testing.B) {
+func BenchmarkJinParseSetSmall(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		prs, _ := jin.Parse(SmallFixture)
+		prs, _ := jin.Parse(smallfixture)
 		prs.Set([]byte(`"test-value"`), "uuid")
 		prs.Set([]byte(`"test-value"`), "tz")
 		prs.Set([]byte(`"test-value"`), "ua")

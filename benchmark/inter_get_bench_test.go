@@ -11,45 +11,45 @@ func nop(_ ...interface{}) {}
 func BenchmarkJsonparserGetSmall(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jsonparser.Get(SmallFixture, "uuid")
-		jsonparser.Get(SmallFixture, "tz")
-		jsonparser.Get(SmallFixture, "ua")
-		jsonparser.Get(SmallFixture, "st")
+		jsonparser.Get(smallfixture, "uuid")
+		jsonparser.Get(smallfixture, "tz")
+		jsonparser.Get(smallfixture, "ua")
+		jsonparser.Get(smallfixture, "st")
 	}
 }
 
-func BenchmarkJintGetSmall(b *testing.B) {
+func BenchmarkJinGetSmall(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jin.Get(SmallFixture, "uuid")
-		jin.Get(SmallFixture, "tz")
-		jin.Get(SmallFixture, "ua")
-		jin.Get(SmallFixture, "st")
+		jin.Get(smallfixture, "uuid")
+		jin.Get(smallfixture, "tz")
+		jin.Get(smallfixture, "ua")
+		jin.Get(smallfixture, "st")
 	}
 }
 
 func BenchmarkJsonparserGetMedium(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jsonparser.Get(MediumFixture, "person", "name", "fullName")
-		jsonparser.Get(MediumFixture, "person", "github", "followers")
-		jsonparser.Get(MediumFixture, "company")
+		jsonparser.Get(mediumfixture, "person", "name", "fullName")
+		jsonparser.Get(mediumfixture, "person", "github", "followers")
+		jsonparser.Get(mediumfixture, "company")
 
-		jsonparser.ArrayEach(MediumFixture, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+		jsonparser.ArrayEach(mediumfixture, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
 			jsonparser.Get(value, "url")
 			nop()
 		}, "person", "gravatar", "avatars")
 	}
 }
 
-func BenchmarkJintGetMedium(b *testing.B) {
+func BenchmarkJinGetMedium(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jin.Get(MediumFixture, "person", "name", "fullName")
-		jin.Get(MediumFixture, "person", "github", "followers")
-		jin.Get(MediumFixture, "company")
+		jin.Get(mediumfixture, "person", "name", "fullName")
+		jin.Get(mediumfixture, "person", "github", "followers")
+		jin.Get(mediumfixture, "company")
 
-		jin.IterateArray(MediumFixture, func(value []byte) bool {
+		jin.IterateArray(mediumfixture, func(value []byte) bool {
 			jin.Get(value, "url")
 			nop()
 			return true
@@ -60,12 +60,12 @@ func BenchmarkJintGetMedium(b *testing.B) {
 func BenchmarkJsonparserGetLarge(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jsonparser.ArrayEach(LargeFixture, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+		jsonparser.ArrayEach(largefixture, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
 			jsonparser.Get(value, "username")
 			nop()
 		}, "users")
 
-		jsonparser.ArrayEach(LargeFixture, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+		jsonparser.ArrayEach(largefixture, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
 			jsonparser.Get(value, "id")
 			jsonparser.Get(value, "slug")
 			nop()
@@ -73,15 +73,15 @@ func BenchmarkJsonparserGetLarge(b *testing.B) {
 	}
 }
 
-func BenchmarkJintGetLarge(b *testing.B) {
+func BenchmarkJinGetLarge(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jin.IterateArray(LargeFixture, func(value []byte) bool {
+		jin.IterateArray(largefixture, func(value []byte) bool {
 			jin.Get(value, "username")
 			return true
 		}, "users")
 
-		jin.IterateArray(LargeFixture, func(value []byte) bool {
+		jin.IterateArray(largefixture, func(value []byte) bool {
 			jin.Get(value, "id")
 			jin.Get(value, "slug")
 			return true
@@ -93,17 +93,17 @@ func BenchmarkIterateArrayGetJsonparser(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		jsonparser.ArrayEach(FakeArray, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
+		jsonparser.ArrayEach(fakearray, func(value []byte, dataType jsonparser.ValueType, offset int, err error) {
 			nop(value)
 		})
 	}
 }
 
-func BenchmarkIterateArrayGetJint(b *testing.B) {
+func BenchmarkIterateArrayGetJin(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		jin.IterateArray(FakeArray, func(value []byte) bool {
+		jin.IterateArray(fakearray, func(value []byte) bool {
 			nop(value)
 			return true
 		})
@@ -114,18 +114,18 @@ func BenchmarkIterateObjectGetJsonparser(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		jsonparser.ObjectEach(FakeObject, func(key []byte, value []byte, dataType jsonparser.ValueType, offset int) error {
+		jsonparser.ObjectEach(fakeobject, func(key []byte, value []byte, dataType jsonparser.ValueType, offset int) error {
 			nop(key, value)
 			return nil
 		})
 	}
 }
 
-func BenchmarkIterateObjectGetJint(b *testing.B) {
+func BenchmarkIterateObjectGetJin(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		jin.IterateKeyValue(FakeObject, func(key []byte, value []byte) bool {
+		jin.IterateKeyValue(fakeobject, func(key []byte, value []byte) bool {
 			nop(key, value)
 			return true
 		})
