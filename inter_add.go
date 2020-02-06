@@ -2,9 +2,11 @@ package jin
 
 import "strconv"
 
-// AddKeyValue() adds a key-value pair to an object.
-// Path variable must point to an object,
-// otherwise it will provide an error message.
+/*
+AddKeyValue() adds a key-value pair to an object.
+Path variable must point to an object,
+otherwise it will provide an error message.
+*/
 func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte, error) {
 	var start int
 	var end int
