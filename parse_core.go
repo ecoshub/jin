@@ -17,9 +17,9 @@ func pCore(json []byte, core *node) error {
 	var valStart int
 	var last byte
 	chars := []byte{34, 44, 58, 91, 93, 123, 125}
-	isJsonChar := make([]bool, 256)
+	isJSONChar := make([]bool, 256)
 	for _, v := range chars {
-		isJsonChar[v] = true
+		isJSONChar[v] = true
 	}
 	for space(json[start]) {
 		if start > len(json)-1 {
@@ -29,7 +29,7 @@ func pCore(json []byte, core *node) error {
 	}
 	for i := start; i < lenj; i++ {
 		curr := json[i]
-		if !isJsonChar[curr] {
+		if !isJSONChar[curr] {
 			continue
 		}
 		if curr == 34 {
