@@ -3,9 +3,46 @@ package jin
 import "strconv"
 import "fmt"
 
-// Scheme is a tool for creating non-nested JSON.
-// It provides a struct for saveing a JSON scheme for later usage.
-// Do not access or manipulate this struct. Please use methods. 
+/*
+Scheme is a tool for creating non-nested JSONs.
+It provides a struct for saveing a JSON scheme for later usage.
+Do not access or manipulate this struct.
+Please use methods provided for.
+
+This Sections provides examples for all Scheme.Method.
+
+	person := jin.MakeScheme("name","lastname","age")
+	eco := person.MakeJson("eco","hub","28")
+	fmt.Println(string(eco))
+	// Output: {"name":"eco","lastname":"hub","age":28}
+
+	person.Add("ip")
+	person.Add("location")
+	sheldon := person.MakeJson("Sheldon","Bloom","42","192.168.1.105", "USA")
+	fmt.Println(string(sheldon))
+	// Output: {"name":"Sheldon","lastname":"Bloom","age":42,"ip":"192.168.1.105","location":"USA"}
+
+	fmt.Println(person.GetCurrentKeys())
+	// Output: [name lastname age ip location]
+	fmt.Println(person.GetOriginalKeys())
+	// Output: [name lastname age]
+
+	person.Remove("location")
+	john := person.MakeJson("John","Wiki","28","192.168.1.102")
+	fmt.Println(string(john))
+	// Output: {"name":"John","lastname":"Wiki","age":28,"ip":"192.168.1.102"}
+
+	// restores original form of scheme
+	person.Restore()
+	ted := person.MakeJson("ted","stinson","38")
+	fmt.Println(string(ted))
+	// Output: {"name":"ted","lastname":"stinson","age":38}
+
+	person.Save()
+	fmt.Println(person.GetCurrentKeys())
+	// Output: [name lastname age ip location]
+	fmt.Println(person.GetOriginalKeys())
+	// Output: [name lastname age]*/
 type Scheme struct {
 	originalKeys []string
 	keys         []string
@@ -18,13 +55,13 @@ func MakeScheme(keys ...string) *Scheme {
 	return &Scheme{keys: keys, originalKeys: keys}
 }
 
-// Scheme.MakeJson is main creation method for creating JSON's from Schemes.
+// MakeJson is main creation method for creating JSON's from Schemes.
 func (s *Scheme) MakeJson(values ...interface{}) []byte {
 	return MakeJson(s.keys, values)
 }
 
 // Add adds a new key value to the current scheme.
-// Example is in MakeScheme mathod.
+// If given key is already exists it returns false, otherwise returns true.
 func (s *Scheme) Add(key string) bool {
 	for _, k := range s.keys {
 		if k == key {
@@ -36,7 +73,8 @@ func (s *Scheme) Add(key string) bool {
 }
 
 // Remove removes the key value to the current scheme.
-// Example is in MakeScheme mathod.
+// If given key is not exists it returns false, otherwise returns true.
+// More information on Scheme.Add methods example.
 func (s *Scheme) Remove(key string) bool {
 	newKeys := make([]string, 0, len(s.keys))
 	result := false
@@ -52,22 +90,27 @@ func (s *Scheme) Remove(key string) bool {
 }
 
 // Save saves current keys for protect them temporary changes.
-// Example is in MakeScheme mathod.
+// More information on Scheme.Add methods example.
 func (s *Scheme) Save() {
 	s.originalKeys = s.keys
 }
 
 // Restore Schemes original form.
-// Example is in MakeScheme mathod.
+// More information on Scheme.Add methods example.
 func (s *Scheme) Restore() {
 	s.keys = s.originalKeys
 }
 
-// Print ssimple print function for take a peak to Schemes original and current keys.
-// Example is in MakeScheme mathod.
-func (s *Scheme) Print() {
-	fmt.Println("Current  Keys : ", s.keys)
-	fmt.Println("Original Keys : ", s.originalKeys)
+// GetOriginalKeys is a simple get function for get Schemes original keys.
+// More information on Scheme.Add methods example.
+func (s *Scheme) GetOriginalKeys() []string {
+	return s.originalKeys
+}
+
+// GetCurrentKeys is a simple get function for get Schemes current keys.
+// More information on Scheme.Add methods example.
+func (s *Scheme) GetCurrentKeys() []string {
+	return s.keys
 }
 
 // MakeEmptyArray simply creates "[]" this as byte slice.
