@@ -68,7 +68,10 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 
 // Add() adds a value to an array.
 // It must point to an array,
-// otherwise it will provide an error message through 'err' variable
+// otherwise it will provide an error message.
+/*
+	json, err := Add(json, newValue, "some-key", "some-other-key")
+*/
 func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 	var start int
 	var end int
@@ -238,22 +241,26 @@ func AddKeyValueBool(json []byte, key string, value bool, path ...string) ([]byt
 	}
 	return AddKeyValue(json, key, []byte("false"), path...)
 }
-
+// AddString() is a variation of Add() func.
+// New value can be a string type.
 func AddString(json []byte, value string, path ...string) ([]byte, error) {
 	if value[0] != 34 && value[len(value)-1] != 34 {
 		return Add(json, []byte(`"`+value+`"`), path...)
 	}
 	return Add(json, []byte(value), path...)
 }
-
+// AddInt() is a variation of Add() func.
+// New value can be a int type.
 func AddInt(json []byte, value int, path ...string) ([]byte, error) {
 	return Add(json, []byte(strconv.Itoa(value)), path...)
 }
-
+// AddFloat() is a variation of Add() func.
+// New value can be a float type.
 func AddFloat(json []byte, value float64, path ...string) ([]byte, error) {
 	return Add(json, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
-
+// AddBool() is a variation of Add() func.
+// New value can be a bool type.
 func AddBool(json []byte, value bool, path ...string) ([]byte, error) {
 	if value {
 		return Add(json, []byte("true"), path...)
