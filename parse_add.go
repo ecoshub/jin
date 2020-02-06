@@ -2,6 +2,9 @@ package jin
 
 import "strconv"
 
+// AddKeyValue adds a key-value pair to an object.
+// Path variable must point to an object,
+// otherwise it will provide an error message.
 func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 	lenp := len(path)
 	lenv := len(key)
@@ -108,6 +111,9 @@ func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 	return badJSONError(0)
 }
 
+// Add adds a value to an array.
+// Path variable must point to an array,
+// otherwise it will provide an error message.
 func (p *Parser) Add(newVal []byte, path ...string) error {
 	lenp := len(path)
 	lenv := len(newVal)
@@ -211,6 +217,9 @@ func (p *Parser) Add(newVal []byte, path ...string) error {
 	return badJSONError(0)
 }
 
+// Insert inserts a value to an array.
+// Path variable must point to an array,
+// otherwise it will provide an error message.
 func (p *Parser) Insert(newIndex int, newVal []byte, path ...string) error {
 	lenp := len(path)
 	lenv := len(newVal)
@@ -327,40 +336,71 @@ func (p *Parser) Insert(newIndex int, newVal []byte, path ...string) error {
 	return badJSONError(0)
 }
 
+// AddKeyValueString is a variation of AddKeyValue() func.
+// Type of new value must be a string.
 func (p *Parser) AddKeyValueString(key, value string, path ...string) error {
-	return p.AddKeyValue(key, []byte(value), path...)
+	if len(value) == 0 {
+		return nullKeyError()
+	}
+	if len(key) == 0 {
+		return nullNewValueError()
+	}
+	return p.AddKeyValue(key, []byte(formatType(value)), path...)
 }
 
+// AddKeyValueInt is a variation of AddKeyValue() func.
+// Type of new value must be an integer.
 func (p *Parser) AddKeyValueInt(key string, value int, path ...string) error {
+	if len(key) == 0 {
+		return nullNewValueError()
+	}
 	return p.AddKeyValue(key, []byte(strconv.Itoa(value)), path...)
 }
 
+// AddKeyValueFloat is a variation of AddKeyValue() func.
+// Type of new value must be a float64.
 func (p *Parser) AddKeyValueFloat(key string, value float64, path ...string) error {
+	if len(key) == 0 {
+		return nullNewValueError()
+	}
 	return p.AddKeyValue(key, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
+// AddKeyValueBool is a variation of AddKeyValue() func.
+// Type of new value must be a boolean.
 func (p *Parser) AddKeyValueBool(key string, value bool, path ...string) error {
+	if len(key) == 0 {
+		return nullNewValueError()
+	}
 	if value {
 		return p.AddKeyValue(key, []byte("true"), path...)
 	}
 	return p.AddKeyValue(key, []byte("false"), path...)
 }
 
+// AddString is a variation of Add() func.
+// Type of new value must be an string.
 func (p *Parser) AddString(value string, path ...string) error {
-	if value[0] != 34 && value[len(value)-1] != 34 {
-		return p.Add([]byte(`"`+value+`"`), path...)
+	if len(value) == 0 {
+		return nullNewValueError()
 	}
-	return p.Add([]byte(value), path...)
+	return p.Add([]byte(formatType(value)), path...)
 }
 
+// AddInt is a variation of Add() func.
+// Type of new value must be an integer.
 func (p *Parser) AddInt(value int, path ...string) error {
 	return p.Add([]byte(strconv.Itoa(value)), path...)
 }
 
+// AddFloat is a variation of Add() func.
+// Type of new value must be an float64.
 func (p *Parser) AddFloat(value float64, path ...string) error {
 	return p.Add([]byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
+// AddBool is a variation of Add() func.
+// Type of new value must be an boolean.
 func (p *Parser) AddBool(value bool, path ...string) error {
 	if value {
 		return p.Add([]byte("true"), path...)
@@ -368,22 +408,42 @@ func (p *Parser) AddBool(value bool, path ...string) error {
 	return p.Add([]byte("false"), path...)
 }
 
+// InsertString is a variation of Insert() func.
+// Type of new value must be an string.
 func (p *Parser) InsertString(index int, value string, path ...string) error {
-	if value[0] != 34 && value[len(value)-1] != 34 {
-		return p.Insert(index, []byte(`"`+value+`"`), path...)
+	if len(value) == 0 {
+		return nullKeyError()
 	}
-	return p.Insert(index, []byte(value), path...)
+	if index < 0 {
+		return indexOutOfRangeError()
+	}
+	return p.Insert(index, []byte(formatType(value)), path...)
 }
 
+// InsertInt is a variation of Insert() func.
+// Type of new value must be an integer.
 func (p *Parser) InsertInt(index, value int, path ...string) error {
+	if index < 0 {
+		return indexOutOfRangeError()
+	}
 	return p.Insert(index, []byte(strconv.Itoa(value)), path...)
 }
 
+// InsertFloat is a variation of Insert() func.
+// Type of new value must be an float64.
 func (p *Parser) InsertFloat(index int, value float64, path ...string) error {
+	if index < 0 {
+		return indexOutOfRangeError()
+	}
 	return p.Insert(index, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
 
+// InsertBool is a variation of Insert() func.
+// Type of new value must be an boolean.
 func (p *Parser) InsertBool(index int, value bool, path ...string) error {
+	if index < 0 {
+		return indexOutOfRangeError()
+	}
 	if value {
 		return p.Insert(index, []byte("true"), path...)
 	}
