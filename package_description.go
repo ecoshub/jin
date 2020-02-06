@@ -193,61 +193,60 @@ Just drag and drop it to the tests folder all process is automated.
 BENCHMARK
 
 Benchmark results.
+*Benchmark prefix removed to make more room for results.
 
 	goos: linux
 	goarch: amd64
 	pkg: jin/benchmark
 
 	// Delete Function.
-	BenchmarkJsonParserDeleteSmall-8    	  543441	    2092 ns/op	 	   704 B/op	4 allocs/op
-	BenchmarkJinDeleteSmall-8           	  998816	    1211 ns/op	 	   640 B/op	4 allocs/op
-	BenchmarkJsonParserDeleteMedium-8   	   99340	   11096 ns/op	 	  6912 B/op	3 allocs/op
-	BenchmarkJinDeleteMedium-8          	  211236	    5429 ns/op	 	  6144 B/op	3 allocs/op
-	BenchmarkJsonParserDeleteLarge-8    	    7863	  130838 ns/op	 	114688 B/op	4 allocs/op
-	BenchmarkJinDeleteLarge-8           	   14088	   85999 ns/op	 	114688 B/op	4 allocs/op
+	JsonParserDeleteSmall-8          2092 ns/op       704 B/op    4 allocs/op
+	JinDeleteSmall-8                 1211 ns/op       640 B/op    4 allocs/op
+	JsonParserDeleteMedium-8        11096 ns/op      6912 B/op    3 allocs/op
+	JinDeleteMedium-8                5429 ns/op      6144 B/op    3 allocs/op
+	JsonParserDeleteLarge-8        130838 ns/op    114688 B/op    4 allocs/op
+	JinDeleteLarge-8                85999 ns/op    114688 B/op    4 allocs/op
 
 	// Get Function.
-	BenchmarkJsonparserGetSmall-8       	 1457156	     826 ns/op	 	     0 B/op	0 allocs/op
-	BenchmarkJinGetSmall-8              	 1515829	     792 ns/op	 	     0 B/op	0 allocs/op
-	BenchmarkJsonparserGetMedium-8      	  148725	    7734 ns/op	 	     0 B/op	0 allocs/op
-	BenchmarkJinGetMedium-8             	  201876	    5793 ns/op	 	     0 B/op	0 allocs/op
-	BenchmarkJsonparserGetLarge-8       	   18853	   62319 ns/op	 	     0 B/op	0 allocs/op
-	BenchmarkJinGetLarge-8                	   20449	   56575 ns/op	 	     0 B/op	0 allocs/op
+	JsonparserGetSmall-8              826 ns/op         0 B/op    0 allocs/op
+	JinGetSmall-8                     792 ns/op         0 B/op    0 allocs/op
+	JsonparserGetMedium-8            7734 ns/op         0 B/op    0 allocs/op
+	JinGetMedium-8                   5793 ns/op         0 B/op    0 allocs/op
+	JsonparserGetLarge-8            62319 ns/op         0 B/op    0 allocs/op
+	JinGetLarge-8                   56575 ns/op         0 B/op    0 allocs/op
 
 	// Iterators Function.
-	BenchmarkIterateArrayGetJsonparser-8       90210	   12932 ns/op	 	     0 B/op	0 allocs/op
-	BenchmarkIterateArrayGetJin-8         	   92814	   12787 ns/op	 	     0 B/op	0 allocs/op
-	BenchmarkIterateObjectGetJsonparser-8     173838	    6381 ns/op	 	     0 B/op	0 allocs/op
-	BenchmarkIterateObjectGetJin-8      	  248893	    4638 ns/op	 	     0 B/op	0 allocs/op
+	IterateArrayGetJsonparser-8     12932 ns/op         0 B/op    0 allocs/op
+	IterateArrayGetJin-8            12787 ns/op         0 B/op    0 allocs/op
+	IterateObjectGetJsonparser-8     6381 ns/op         0 B/op    0 allocs/op
+	IterateObjectGetJin-8            4638 ns/op         0 B/op    0 allocs/op
 
 	// Set Function.
-	BenchmarkJsonParserSetSmall-8       	  942067	    1268 ns/op	 	   704 B/op	4 allocs/op
-	BenchmarkJinSetSmall-8              	  850646	    1213 ns/op	 	   704 B/op	4 allocs/op
-	BenchmarkJsonParserSetMedium-8      	  162196	    7014 ns/op	 	  6912 B/op	3 allocs/op
-	BenchmarkJinSetMedium-8             	  207309	    5767 ns/op	 	  6912 B/op	3 allocs/op
-	BenchmarkJsonParserSetLarge-8       	    9375	  126726 ns/op	 	114688 B/op	4 allocs/op
-	BenchmarkJinSetLarge-8              	   14323	   87239 ns/op	 	114688 B/op	4 allocs/op
+	JsonParserSetSmall-8             1268 ns/op       704 B/op    4 allocs/op
+	JinSetSmall-8                    1213 ns/op       704 B/op    4 allocs/op
+	JsonParserSetMedium-8            7014 ns/op      6912 B/op    3 allocs/op
+	JinSetMedium-8                   5767 ns/op      6912 B/op    3 allocs/op
+	JsonParserSetLarge-8           126726 ns/op    114688 B/op    4 allocs/op
+	JinSetLarge-8                   87239 ns/op    114688 B/op    4 allocs/op
 
 	// Parser Get Small Function.
-	BenchmarkJsoniteratorGetSmall-8     	  284790	    4006 ns/op	 	   874 B/op	1 allocs/op
-	BenchmarkFastjsonGetSmall-8         	  454034	    2773 ns/op	 	  3408 B/op	1 allocs/op
-	BenchmarkJinParseGetSmall-8         	  613586	    2040 ns/op	 	  1252 B/op	8 allocs/op
+	JsoniteratorGetSmall-8           4006 ns/op       874 B/op    1 allocs/op
+	FastjsonGetSmall-8               2773 ns/op      3408 B/op    1 allocs/op
+	JinParseGetSmall-8               2040 ns/op      1252 B/op    8 allocs/op
 
 	// Parser Get Medium Function.
-	BenchmarkJsoniteratorGetMedium-8    	   38133	   29936 ns/op	 	  9730 B/op	5 allocs/op
-	BenchmarkFastjsonGetMedium-8        	   75524	   16190 ns/op	 	 17304 B/op	4 allocs/op
-	BenchmarkJinParseGetMedium-8        	   81415	   14016 ns/op	 	  8304 B/op	1 allocs/op
+	JsoniteratorGetMedium-8         29936 ns/op      9730 B/op    5 allocs/op
+	FastjsonGetMedium-8             16190 ns/op     17304 B/op    4 allocs/op
+	JinParseGetMedium-8             14016 ns/op      8304 B/op    1 allocs/op
 
 	// Parser Get Large Function.
-	BenchmarkJsoniteratorGetLarge-8     	    1912	  634964 ns/op	 	219307 B/op	3 allocs/op
-	BenchmarkFastjsonGetLarge-8         	    6583	  221918 ns/op	 	283200 B/op	0 allocs/op
-	BenchmarkJinParseGetLarge-8         	    5158	  218904 ns/op	 	134704 B/op	3 allocs/op
+	JsoniteratorGetLarge-8         634964 ns/op    219307 B/op    3 allocs/op
+	FastjsonGetLarge-8             221918 ns/op    283200 B/op    0 allocs/op
+	JinParseGetLarge-8             218904 ns/op    134704 B/op    3 allocs/op
 
 	// Parser Set Function.
-	BenchmarkFastjsonSetSmall-8         	  345870	    3662 ns/op	 	  3792 B/op	9 allocs/op
-	BenchmarkJinParseSetSmall-8         	  388720	    3382 ns/op	 	  1968 B/op	6 allocs/op
-
-
+	FastjsonSetSmall-8               3662 ns/op      3792 B/op    9 allocs/op
+	JinParseSetSmall-8               3382 ns/op      1968 B/op    6 allocs/op
 
 */
 package jin
