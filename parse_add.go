@@ -340,10 +340,10 @@ func (p *Parser) Insert(newIndex int, newVal []byte, path ...string) error {
 // Type of new value must be a string.
 func (p *Parser) AddKeyValueString(key, value string, path ...string) error {
 	if len(value) == 0 {
-		return nullKeyError()
+		return nullNewValueError()
 	}
 	if len(key) == 0 {
-		return nullNewValueError()
+		return nullKeyError()
 	}
 	return p.AddKeyValue(key, []byte(formatType(value)), path...)
 }
@@ -352,7 +352,7 @@ func (p *Parser) AddKeyValueString(key, value string, path ...string) error {
 // Type of new value must be an integer.
 func (p *Parser) AddKeyValueInt(key string, value int, path ...string) error {
 	if len(key) == 0 {
-		return nullNewValueError()
+		return nullKeyError()
 	}
 	return p.AddKeyValue(key, []byte(strconv.Itoa(value)), path...)
 }
@@ -361,7 +361,7 @@ func (p *Parser) AddKeyValueInt(key string, value int, path ...string) error {
 // Type of new value must be a float64.
 func (p *Parser) AddKeyValueFloat(key string, value float64, path ...string) error {
 	if len(key) == 0 {
-		return nullNewValueError()
+		return nullKeyError()
 	}
 	return p.AddKeyValue(key, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
@@ -370,7 +370,7 @@ func (p *Parser) AddKeyValueFloat(key string, value float64, path ...string) err
 // Type of new value must be a boolean.
 func (p *Parser) AddKeyValueBool(key string, value bool, path ...string) error {
 	if len(key) == 0 {
-		return nullNewValueError()
+		return nullKeyError()
 	}
 	if value {
 		return p.AddKeyValue(key, []byte("true"), path...)
@@ -412,7 +412,7 @@ func (p *Parser) AddBool(value bool, path ...string) error {
 // Type of new value must be an string.
 func (p *Parser) InsertString(index int, value string, path ...string) error {
 	if len(value) == 0 {
-		return nullKeyError()
+		return nullNewValueError()
 	}
 	if index < 0 {
 		return indexOutOfRangeError()

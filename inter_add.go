@@ -227,10 +227,10 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 // Type of new value must be a string.
 func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, error) {
 	if len(value) == 0 {
-		return nil, nullKeyError()
+		return nil, nullNewValueError()
 	}
 	if len(key) == 0 {
-		return nil, nullNewValueError()
+		return nil, nullKeyError()
 	}
 	return AddKeyValue(json, key, []byte(formatType(value)), path...)
 }
@@ -239,7 +239,7 @@ func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, 
 // Type of new value must be an integer.
 func AddKeyValueInt(json []byte, key string, value int, path ...string) ([]byte, error) {
 	if len(key) == 0 {
-		return nil, nullNewValueError()
+		return nil, nullKeyError()
 	}
 	return AddKeyValue(json, key, []byte(strconv.Itoa(value)), path...)
 }
@@ -248,7 +248,7 @@ func AddKeyValueInt(json []byte, key string, value int, path ...string) ([]byte,
 // Type of new value must be a float64.
 func AddKeyValueFloat(json []byte, key string, value float64, path ...string) ([]byte, error) {
 	if len(key) == 0 {
-		return nil, nullNewValueError()
+		return nil, nullKeyError()
 	}
 	return AddKeyValue(json, key, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
@@ -257,7 +257,7 @@ func AddKeyValueFloat(json []byte, key string, value float64, path ...string) ([
 // Type of new value must be a boolean.
 func AddKeyValueBool(json []byte, key string, value bool, path ...string) ([]byte, error) {
 	if len(key) == 0 {
-		return nil, nullNewValueError()
+		return nil, nullKeyError()
 	}
 	if value {
 		return AddKeyValue(json, key, []byte("true"), path...)
@@ -299,7 +299,7 @@ func AddBool(json []byte, value bool, path ...string) ([]byte, error) {
 // Type of new value must be an string.
 func InsertString(json []byte, index int, value string, path ...string) ([]byte, error) {
 	if len(value) == 0 {
-		return nil, nullKeyError()
+		return nil, nullNewValueError()
 	}
 	if index < 0 {
 		return nil, indexOutOfRangeError()

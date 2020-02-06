@@ -14,19 +14,16 @@ func Set(json []byte, newValue []byte, path ...string) ([]byte, error) {
 	if err != nil {
 		return json, err
 	}
-	if json[start-1] == 34 && json[end] == 34 {
-		return replace(json, newValue, start-1, end+1), nil
-	}
-	return replace(json, newValue, start, end), nil
+	return replace(json, formatType(newValue), start, end), nil
 }
 
 // SetString is a variation of Set() func.
 // SetString takes the set value as string.
 func SetString(json []byte, newValue string, path ...string) ([]byte, error) {
-	if newValue[0] != 34 && newValue[len(newValue)-1] != 34 {
-		return Set(json, []byte(`"`+newValue+`"`), path...)
+	if len(newValue) == 0 {
+		return nil, nullNewValueError()
 	}
-	return Set(json, []byte(newValue), path...)
+	return Set(json, []byte(formatType(newValue)), path...)
 }
 
 // SetInt is a variation of Set() func.
@@ -56,7 +53,7 @@ func SetBool(json []byte, newValue bool, path ...string) ([]byte, error) {
 // Path variable can not be null,
 func SetKey(json []byte, newKey string, path ...string) ([]byte, error) {
 	if len(newKey) == 0 {
-		return json, nullNewValueError()
+		return json, nullKeyError()
 	}
 	if len(path) == 0 {
 		return json, nullPathError()
@@ -85,7 +82,7 @@ func SetKey(json []byte, newKey string, path ...string) ([]byte, error) {
 			}
 			return json, badJSONError(keyStart)
 		}
-		return json, keyExpectedError()
+		return json, err
 	}
-	return json, keyAlreadyExistsError()
+	return json, badJSONError(keyStart)
 }
