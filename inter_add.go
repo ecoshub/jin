@@ -230,7 +230,7 @@ func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, 
 }
 
 // AddKeyValueInt() is a variation of AddKeyValue() func.
-// New value can be a int type.
+// New value can be a integer type.
 func AddKeyValueInt(json []byte, key string, value int, path ...string) ([]byte, error) {
 	return AddKeyValue(json, key, []byte(strconv.Itoa(value)), path...)
 }
@@ -258,7 +258,7 @@ func AddString(json []byte, value string, path ...string) ([]byte, error) {
 	return Add(json, []byte(value), path...)
 }
 // AddInt() is a variation of Add() func.
-// New value can be a int type.
+// New value can be aboolParseErrortype.
 func AddInt(json []byte, value int, path ...string) ([]byte, error) {
 	return Add(json, []byte(strconv.Itoa(value)), path...)
 }

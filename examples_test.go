@@ -99,16 +99,16 @@ func ExampleFormat() {
 
 func ExampleGet() {
     var err error
-	var newLink []byte = []byte(`"godoc.org/github.com/ecoshub"`)
-	var json []byte = []byte(`{"user":"eco","links":["github.com/ecoshub"]}`)
+    var value []byte
+	var json []byte = []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
 
-	json, err = Add(json, newLink, "links")
+	value, err = Get(json, "following", "social")
 	if err != nil {
 		fmt.Println(err.Error())
 		return 
 	}
-	fmt.Println(string(json))
-    // Output: {"user":"eco","links":["github.com/ecoshub","godoc.org/github.com/ecoshub"]}
+	fmt.Println(string(value))
+    // Output: dev.to
 }
 
 // func ExampleParser_Add() {

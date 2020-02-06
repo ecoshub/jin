@@ -2,6 +2,11 @@ package jin
 
 import "strconv"
 
+// Get() returns the value that path has pointed.
+// It stripes quotation marks from string values.
+// Path can point anything, a key-value pair, a value, an array, an object.
+// Path variable can not be null,
+// otherwise it will provide an error message.
 func Get(json []byte, path ...string) ([]byte, error) {
 	if len(path) == 0 {
 		return json, nil
@@ -13,6 +18,8 @@ func Get(json []byte, path ...string) ([]byte, error) {
 	return json[start:end], err
 }
 
+// GetString() is a variation of Get() func.
+// GetString() returns the value that path has pointed as string.
 func GetString(json []byte, path ...string) (string, error) {
 	val, err := Get(json, path...)
 	if err != nil {
@@ -21,6 +28,9 @@ func GetString(json []byte, path ...string) (string, error) {
 	return string(val), err
 }
 
+// GetInt() is a variation of Get() func.
+// GetInt() returns the value that path has pointed as integer.
+// returns an error message if the value to be returned cannot be converted to an integer
 func GetInt(json []byte, path ...string) (int, error) {
 	val, err := GetString(json, path...)
 	if err != nil {
@@ -33,6 +43,9 @@ func GetInt(json []byte, path ...string) (int, error) {
 	return intVal, nil
 }
 
+// GetFloat() is a variation of Get() func.
+// GetFloat() returns the value that path has pointed as float.
+// returns an error message if the value to be returned cannot be converted to an float
 func GetFloat(json []byte, path ...string) (float64, error) {
 	val, err := GetString(json, path...)
 	if err != nil {
@@ -45,6 +58,9 @@ func GetFloat(json []byte, path ...string) (float64, error) {
 	return floatVal, nil
 }
 
+// GetBool() is a variation of Get() func.
+// GetBool() returns the value that path has pointed as boolean.
+// returns an error message if the value to be returned cannot be converted to an boolean
 func GetBool(json []byte, path ...string) (bool, error) {
 	val, err := GetString(json, path...)
 	if err != nil {
@@ -59,6 +75,9 @@ func GetBool(json []byte, path ...string) (bool, error) {
 	return false, boolParseError(val)
 }
 
+// GetStringArray() is a variation of Get() func.
+// GetStringArray() returns the value that path has pointed as string slice.
+// returns an error message if the value to be returned cannot be converted to an string slice.
 func GetStringArray(json []byte, path ...string) ([]string, error) {
 	val, err := GetString(json, path...)
 	if err != nil {
@@ -78,6 +97,9 @@ func GetStringArray(json []byte, path ...string) ([]string, error) {
 	return nil, stringArrayParseError(val)
 }
 
+// GetIntArray() is a variation of Get() func.
+// GetIntArray() returns the value that path has pointed as integer slice.
+// returns an error message if the value to be returned cannot be converted to an integer slice.
 func GetIntArray(json []byte, path ...string) ([]int, error) {
 	val, err := GetString(json, path...)
 	if err != nil {
@@ -141,6 +163,9 @@ func GetIntArray(json []byte, path ...string) ([]int, error) {
 	return nil, intArrayParseError(val)
 }
 
+// GetFloatArray() is a variation of Get() func.
+// GetFloatArray() returns the value that path has pointed as float slice.
+// returns an error message if the value to be returned cannot be converted to an float slice.
 func GetFloatArray(json []byte, path ...string) ([]float64, error) {
 	val, err := GetString(json, path...)
 	if err != nil {
@@ -204,6 +229,9 @@ func GetFloatArray(json []byte, path ...string) ([]float64, error) {
 	return nil, floatArrayParseError(val)
 }
 
+// GetBoolArray() is a variation of Get() func.
+// GetBoolArray() returns the value that path has pointed as boolean slice.
+// returns an error message if the value to be returned cannot be converted to an boolean slice.
 func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 	val, err := GetString(json, path...)
 	if err != nil {
