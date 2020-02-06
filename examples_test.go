@@ -185,6 +185,15 @@ func ExampleMakeArray() {
 	// Output: [[2005,2009,2013,2019],[false,true,true,true],["visual-basic","java","python","go"]]
 }
 
+func ExampleMakeJson() {
+	var keys  []string = []string{"username","ip","mac","active"}
+	var values []interface{} = []interface{}{"eco","192.168.1.108","bc:ae:c5:13:84:f9",true}
+
+	var user []byte = MakeJson(keys, values)
+
+	fmt.Println(string(user))
+	// Output: {"username":"eco","ip":"192.168.1.108","mac":"bc:ae:c5:13:84:f9","active":true}
+}
 
 // func ExampleParser_Add() {
 //     fmt.Println("hi")
