@@ -279,7 +279,7 @@ Benchmark results.
 
 LIMITATIONS
 
-Jin can handle all kind JSONs. Except single content JSONs
+Jin can handle all kind of JSON. Except single content JSONs
 
 Like those.
 

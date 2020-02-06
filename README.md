@@ -22,8 +22,20 @@ In conclusion the results of the benchmark __'Jin'__ was the fastest and lightwe
 For more information take a look at __BENCHMARK__ section.
 
 ---
+#### Parser vs Interpreter
 
-### __`QUICK START`__
+Major difference between parsing and interpreting is,
+parser has to read all data before answer your needs.
+On the other hand interpreter reads up to find the path you need.
+
+Once the parse is complete you can get access any data with no time.
+But there is a time cost to parse data, and this cost can increase as data content grows.
+
+If you need to access all keys of a JSON then we are simply recommend you to use Parser.
+But if you need to access some keys of a JSON I strongly recommend you to use Interperter, it will be much faster than parser. 
+
+---
+### __QUICK START__
 
 #### `Interpreter`
 
@@ -70,7 +82,7 @@ then you can use `GetString()` like this.
 	//Output: ecoshub/jin
 ```
 ---
-### `Parser`
+### Parser
 
 Parser is another alternative for manipulation JSON.
 
@@ -127,7 +139,7 @@ There is a detailed doctumentation with lots of examples in __[GoDoc](https://go
 ---
 
 
-### `Iteration Tools`
+### Iteration Tools
 
 Iteration tools provide funcions for access each key-value pair or each values of an array
 
@@ -149,29 +161,17 @@ For example let's look at `IterateKey()` function.
 ```
 `IterateKeyValue()` function description and examples are in below.
 
-#### Parser vs Interpreter
-
-Major difference between parsing and interpreting is,
-parser has to read all data before answer your needs.
-On the other hand interpreter reads up to find the path you need.
-
-Once the parse is complete you can get access any data with no time.
-But there is a time cost to parse data, and this cost can increase as data content grows.
-
-If you need to access all keys of a JSON then we are simply recommend you to use Parser.
-But if you need to access some keys of a JSON I strongly recommend you to use Interperter, it will be much faster than parser. 
-
 ---
 
-#### `Other Tools`
+#### Other Tools
 
-##### `Formatting`
+##### Formatting
 
 There are two formatting functions. Flatten() and Indent()
 
 Both of them have their own examples on below.
 
-#### `Control Functions`
+#### Control Functions
 
 Control functions are simple and easy way to check value types of any path.
 
@@ -194,7 +194,7 @@ Or get value type of the path
 ```
 ---
 
-#### `JSON Build Tools`
+#### JSON Build Tools
 
 There are lots of JSON build functions in this package and all of them has its own examples.
 
@@ -208,7 +208,7 @@ Go end take a look at them from __[GoDoc](https://godoc.org/github.com/ecoshub/j
 
 ---
 
-#### `Testing`
+#### Testing
 
 Almost all functions/methods tested with complicated randomly creted JSONs.
 
@@ -243,7 +243,7 @@ If you want to test another JSON file that is not in the tests folder just drag 
 
 ---
 
-### `Benchmark`
+### Benchmark
 
 Benchmark results.
 
@@ -305,9 +305,9 @@ Benchmark results.
 
 ---
 
-#### `Limitations`
+#### Limitations
 
-__Jin__ can handle all kind JSONs. Except single content JSONs
+__Jin__ can handle all kind of JSON. Except single content JSONs
 
 Like those:
 ```go
@@ -315,11 +315,11 @@ Like those:
 	{42}
 	{false}
 ```
-That kind JSONs are forbidden.
+That kind of JSONs are forbidden.
 
 ---
 
-#### `Upcomming`
+#### Upcomming
 
 We are currently working on, 
 
@@ -333,7 +333,7 @@ If you want does functions quickly, give us a heads-up with star count.
 
 ---
 
-#### `Contribute`
+#### Contribute
 
 If you want to contribute this work feel free to fork it.
 
