@@ -111,6 +111,20 @@ func ExampleGet() {
     // Output: dev.to
 }
 
+func ExampleInsert() {
+    var err error
+	var newValue []byte = []byte(`"visual basic`)
+	var json []byte = []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"]}`)
+
+	json, err = Insert(json, 2, newValue, "languages")
+	if err != nil {
+		fmt.Println(err.Error())
+		return 
+	}
+	fmt.Println(string(json))
+    // Output: {"user":"eco","languages":["go","java","visual basic,"python","C","Cpp"]}
+}
+
 // func ExampleParser_Add() {
 //     fmt.Println("hi")
 //     // Output: hi
