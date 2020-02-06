@@ -12,8 +12,7 @@ type node struct {
 	down  []*node
 }
 
-// Parser is a tool for Parse JSON.
-// It provides a struct for saving a JSON as nodes.
+// Parser is provides a struct for saving a JSON as nodes.
 // Do not access or manipulate this struct.
 // Please use methods provided for.
 type Parser struct {
@@ -92,7 +91,7 @@ func (n *node) getIndex() int {
 }
 
 // Tree is a simple tool for visualizing JSONs as semi-tree formation.
-// This function retuns that form as string.
+// This function returns that form as string.
 func (p *Parser) Tree() string {
 	str := ""
 	p.core.createTree(p.json, 0, false, &str)

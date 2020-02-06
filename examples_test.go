@@ -230,7 +230,7 @@ func ExampleParseArray() {
 	// Output: val:[eco 1992 28 false github jin], type:[]string
 }
 
-func ExampleTree() {
+func ExampleParser_Tree() {
 	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
 	parse, _ := Parse(json)
 	tree := parse.Tree()
@@ -247,7 +247,7 @@ func ExampleTree() {
 	//	└  code
 }
 
-func ExampleTreeFull() {
+func ExampleParser_TreeFull() {
 	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
 	parse, _ := Parse(json)
 	tree := parse.TreeFull()
@@ -295,14 +295,22 @@ func ExampleScheme() {
 	// Add(), Remove(), Save(), Restore(),
 	// GetOriginalKeys(), GetCurrentKeys() functions.
 
+	// MakeScheme need keys for construct a JSON scheme.
 	person := MakeScheme("name", "lastname", "age")
+
+	// now we can instantiate a JSON with values.
 	eco := person.MakeJson("eco", "hub", "28")
+
 	fmt.Println(string(eco))
 	// {"name":"eco","lastname":"hub","age":28}
 
+	// Add simply adds a new key to scheme.
 	person.Add("ip")
 	person.Add("location")
+
+	// now with addition above we can assign two more value.
 	sheldon := person.MakeJson("Sheldon", "Bloom", "42", "192.168.1.105", "USA")
+
 	fmt.Println(string(sheldon))
 	// {"name":"Sheldon","lastname":"Bloom","age":42,"ip":"192.168.1.105","location":"USA"}
 
@@ -311,16 +319,20 @@ func ExampleScheme() {
 	fmt.Println(person.GetOriginalKeys())
 	// [name lastname age]
 
+	// for remove a certain key.
 	person.Remove("location")
+
 	john := person.MakeJson("John", "Wiki", "28", "192.168.1.102")
 	fmt.Println(string(john))
 	// {"name":"John","lastname":"Wiki","age":28,"ip":"192.168.1.102"}
 
 	// restores original form of scheme
 	person.Restore()
+	// and instantiate another
 	ted := person.MakeJson("ted", "stinson", "38")
 	fmt.Println(string(ted))
 
+	//save saves current keys, now this is original scheme
 	person.Save()
 	fmt.Println(person.GetCurrentKeys())
 	// [name lastname age ip location]
