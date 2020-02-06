@@ -135,6 +135,7 @@ func createTabs(n int) []byte {
 	}
 	return res
 }
+
 // Indent() is tool for formatting JSON strings.
 // Adds Indentation to JSON string.
 // It uses tab indentation.
@@ -310,7 +311,7 @@ func formatType(val string) string {
 		}
 		start := val[0]
 		end := val[len(val)-1]
-		if (start == 34 && end == 34) || (start == 91 && end == 93) || (start == 123 && end == 125){
+		if (start == 34 && end == 34) || (start == 91 && end == 93) || (start == 123 && end == 125) {
 			return val
 		}
 		return `"` + val + `"`

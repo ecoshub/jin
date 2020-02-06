@@ -164,7 +164,7 @@ func MakeArrayFloat(values []float64) []byte {
 	return js
 }
 
-func MakeArrayBytes(values...[]byte) []byte {
+func MakeArrayBytes(values ...[]byte) []byte {
 	if values == nil {
 		return []byte{91, 93}
 	}
@@ -208,6 +208,7 @@ func MakeJson(keys []string, values []interface{}) []byte {
 	js = append(js, 125)
 	return js
 }
+
 // MakeJsonString() creates an JSON formation from given key and value string slices, and returns them as byte slice.
 func MakeJsonString(keys, values []string) []byte {
 	if len(keys) != len(values) {

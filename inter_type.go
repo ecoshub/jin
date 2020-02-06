@@ -56,7 +56,7 @@ func GetType(json []byte, path ...string) (string, error) {
 
 // IsEmpty() is a control function.
 // If path points to an value it will return 'value' string
-// If path points to an array that has zero element in it, 
+// If path points to an array that has zero element in it,
 // then it will return true, otherwise it will return false.
 func IsEmpty(json []byte, path ...string) (bool, error) {
 	var start int

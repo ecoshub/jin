@@ -3,6 +3,6 @@
 
 /*
 Package jin is a comprehensive JSON manipulation tools bundle.It provides parse, interpert, build and format tools.
-Third party packages only used for benchmark. No dependency need for core functions, 
+Third party packages only used for benchmark. No dependency need for core functions,
 */
 package jin
