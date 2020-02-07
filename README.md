@@ -6,7 +6,7 @@ __Jin__ is a comprehensive JSON manipulation tool bundle.
 All functions tested with random data against __Node.js__.
 All test-path and test-value cases created automatically with __Node.js__.
 
-It provides parse, interpret, build and format tools.
+It provides parse, interpret, build and format tools for JSON.
 Third-party packages only used for the benchmark. No dependency need for core functions.
 
 ---
@@ -17,11 +17,20 @@ Benchmark against.
     github.com/valyala/fastjson
     github.com/json-iterator/go
 ```
-In conclusion the results of the benchmark __'Jin'__ was the fastest and lightweight package
+In conclusion, the result of the benchmark __Jin__ was the fastest and lightweight package.
 
 For more information take a look at __BENCHMARK__ section.
 
 ---
+
+### Documentation
+
+There is a detailed doctumentation in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__ with lots of examples in it.
+
+---
+
+### QUICK START
+
 ### Parser vs Interpreter
 
 Major difference between parsing and interpreting is,
@@ -33,9 +42,6 @@ But there is a time cost to parse data, and this cost can increase as data conte
 
 If you need to access all keys of a JSON then we are simply recommend you to use Parser.
 But if you need to access some keys of a JSON I strongly recommend you to use Interperter, it will be much faster than parser. 
-
----
-### QUICK START
 
 #### Interpreter
 
@@ -71,6 +77,8 @@ path variable can be a string slice or hard coded
 
 All variations of return types are implemented as different functions.
 
+And slice types. (`GetStringArray()`, `GetIntArray()`, etc.)
+
 For example. If you need 'value' as string,
 
 then you can use `GetString()` like this.
@@ -84,7 +92,7 @@ then you can use `GetString()` like this.
 ---
 #### Parser
 
-Parser is another alternative for manipulation JSON.
+Parser is another alternative for JSON manipulation.
 
 We recommend to use this structure when you need to access all or most of the keys in the JSON.
 
@@ -100,7 +108,7 @@ Lets Parse it with Parse function.
 		return err
 	}
 ```
-Let's take the function Parser.Get()
+Let's look at Parser.Get()
 ```go
 	value, err := prs.Get("repo")
 	if err != nil {
@@ -110,9 +118,11 @@ Let's take the function Parser.Get()
 ```
 *About path value look above.* 
 
-`Parser.Get()` function return type is byte slice like `Get()` function of interpreter.
+`Parser.Get()` functions return type is byte slice like `Get()` function of interpreter.
 
-All variations of return types are implemented as different functions.
+Like interpreter, parser has all variations of return types implemented as different functions to.
+
+Even slice types. (`GetStringArray()`, `GetIntArray()`, etc.)
 
 For example. If you need 'value' as string.
 
@@ -124,7 +134,7 @@ Then you can use `Parser.GetString()` like this.
 	}
 	//String Output: {"id":233809925,"name":"ecoshub/jin"}
 ```
-All interpreter/parser functions (except function variations line GetString()) has own example provided in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
+All interpreter/parser functions (except function variations line `GetString()`) has own example provided in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
 
 Other important functions of interpreter/parser. 
 
@@ -132,18 +142,11 @@ Other important functions of interpreter/parser.
 
 ---
 
-### Documentation
-
-There is a detailed doctumentation with lots of examples in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
-
----
-
-
 ### Iteration Tools
 
 Iteration tools provide funcions for access each key-value pair or each values of an array
 
-For example let's look at `IterateKey()` function.
+Let's look at `IterateArray()` function.
 ```go
 	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"]}`)
 
@@ -158,8 +161,13 @@ For example let's look at `IterateKey()` function.
 	    fmt.Println(err)
 	    return
 	}
+	// Output: go
+	// java
+	// python
+	// C
+	// Cpp
 ```
-`IterateKeyValue()` function description and examples are in below.
+Another usefull function is `IterateKeyValue()`. Description and examples in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
 
 ---
 
@@ -169,7 +177,7 @@ For example let's look at `IterateKey()` function.
 
 There are two formatting functions. Flatten() and Indent()
 
-Both of them have their own examples on below.
+Both of them have their own examples in Documentation.
 
 #### Control Functions
 
@@ -180,6 +188,7 @@ For example. `jin.IsArray()` controls the path, if path is points to an array.
 It will return true
 ```go
 	json := []byte(`{"repo":{"name":"ecoshub/jin"},"others":["jin","penman"]}`)
+
 	fmt.Println(jin.IsArray(json, "repo"))
 	// Output: false
 
@@ -189,6 +198,7 @@ It will return true
 Or get value type of the path
 ```go
 	json := []byte(`{"git":"ecoshub","repo":["jin","wsftp","penman"]}`)
+
 	fmt.Println(jin.GetType(json, "repo"))
 	// Output: array
 ```
@@ -199,10 +209,22 @@ There are lots of JSON build functions in this package and all of them has its o
 We just want to mention a couple of them.
 
 `Scheme` is simple and powerfull tool for create JSON schemes.
+```go
+	// MakeScheme need keys for construct a JSON scheme.
+	person := MakeScheme("name", "lastname", "age")
 
-`MakeJson()`, `MakeArray()` functions and other variations is easy to user functions
+	// now we can instantiate a JSON with values.
+	eco := person.MakeJson("eco", "hub", "28")
+	// {"name":"eco","lastname":"hub","age":28}
 
-Go end take a look at them from __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
+	koko := person.MakeJson("koko", "Bloom", "42")
+	//{"name":"koko","lastname":"Bloom","age":42}
+```
+
+`MakeJson()`, `MakeArray()` functions and other variations is easy to use functions.
+
+Go and take a look.  __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
+
 
 ---
 
@@ -237,7 +259,7 @@ Before make any test be sure that your machine has a valid version of __Node.js_
 
 This package developed with __Node.js__ v13.7.0.
 
-If you want to test another JSON file that is not in the tests folder just drag and drop it to the tests folder all process is automated.
+If you want to test another JSON file that is not in the /tests folder just drag and drop it to the /tests folder, and ron `go test`.
 
 ---
 
@@ -327,8 +349,6 @@ We are currently working on,
 - http.Request parser/interperter
 
 - Builder functions for http.ResponseWriter
-
-If you want does functions quickly, give us a heads-up with star count. 
 
 ---
 
