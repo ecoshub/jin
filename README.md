@@ -50,10 +50,10 @@ Interpreter is core element of this package, no need for instantiate, just call 
 First let's look at function parameters.
 ```go
 	// All interpreter functions need one JSON as byte slice type. 
-	json := []byte(`{"git":"ecoshub","repo":{"id":233809925,"name":"ecoshub/jin"}}`)
+	json := []byte(`{"git":"ecoshub","repo":{"id":233809925,"name":["eco","jin"]}}`)
 
 	// And most of them needs a path value for navigate.
-	path := []string{"repo", "name"}
+	path := []string{"repo", "name", "1"}
 ```
 Let's take the function `Get()`
 
@@ -61,17 +61,19 @@ Get function returns the value that path has pointed.
 ```go
 	value, err := jin.Get(json, path...)
 	if err != nil {
-		return err
+		log.Println(err)
+		return
 	}
-	//String Output: ecoshub/jin
+	//String Output: jin
 ```
 path variable can be a string slice or hard coded
 ```go
-	value, err := jin.Get(json, "repo", "name")
+	value, err := jin.Get(json, "repo", "name", "1")
 	if err != nil {
-		return err
+		log.Println(err)
+		return
 	}
-	//String Output: ecoshub/jin
+	//String Output: jin
 ```
 `Get()` function return type is byte slice.
 
@@ -83,11 +85,12 @@ For example. If you need 'value' as string,
 
 then you can use `GetString()` like this.
 ```go
-	value, err := jin.GetString(json, "repo", "name")
+	value, err := jin.GetString(json, "repo", "name", "1")
 	if err != nil {
-		return err
+		log.Println(err)
+		return
 	}
-	//Output: ecoshub/jin
+	//Output: jin
 ```
 ---
 #### Parser
@@ -105,14 +108,16 @@ Lets Parse it with Parse function.
 ```go
 	prs, err := jin.Parse(json)
 	if err != nil {
-		return err
+		log.Println(err)
+		return
 	}
 ```
 Let's look at Parser.Get()
 ```go
 	value, err := prs.Get("repo")
 	if err != nil {
-		return err
+		log.Println(err)
+		return
 	}
 	//String Output: {"id":233809925,"name":"ecoshub/jin"}
 ```
@@ -158,8 +163,8 @@ Let's look at `IterateArray()` function.
 	}, "languages")
 
 	if err != nil {
-	    fmt.Println(err)
-	    return
+		log.Println(err)
+		return
 	}
 	// Output: go
 	// java
