@@ -59,7 +59,7 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 					continue
 				}
 				if curr == 93 || curr == 125 {
-					if level < 1 {
+					if level < 0 {
 						return nil
 					}
 					if curr == 93 {
