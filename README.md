@@ -136,7 +136,7 @@ Then you can use `Parser.GetString()` like this.
 ```
 All interpreter/parser functions (except function variations line `GetString()`) has own example provided in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
 
-Other important functions of interpreter/parser. 
+**Other usefull functions of interpreter/parser.**
 
 -`Add()`, `AddKeyValue()`, `Set()`, `SetKey()` `Delete()`, `Insert()`, `IterateArray()`, `IterateKeyValue()`
 
