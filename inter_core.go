@@ -104,7 +104,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 					if curr == 34 {
 						for n := i - 1; n > -1; n-- {
 							if json[n] != 92 {
-								if (i-n)%2 != 0 {
+								if (i-n)&1 != 0 {
 									inQuote = !inQuote
 									break
 								} else {
@@ -217,7 +217,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 					// escape char ccontrol algorithm
 					for n := i - 1; n > -1; n-- {
 						if json[n] != 92 {
-							if (i-n)%2 != 0 {
+							if (i-n)&1 != 0 {
 								inQuote = !inQuote
 								break
 							} else {
