@@ -300,7 +300,7 @@ func TestInterperterIterateArray(t *testing.T) {
 			return true
 		}, path...)
 		if count != len(array) {
-			t.Logf("error. iteration count and real arrays count is diffrent.\n")
+			t.Logf("error. iteration count and real arrays count is different.\n")
 			done = false
 		}
 		if err != nil {

@@ -26,7 +26,7 @@ Major difference between parsing and interpreting is, parser has to read all dat
 
 Once the parse is complete you can get access any data with no time. But there is a time cost to parse data, and this cost can increase as data content grows.
 
-If you need to access all keys of a JSON then we are simply recommend you to use Parser. But if you need to access some keys of a JSON I strongly recommend you to use Interperter, it will be much faster than parser.
+If you need to access all keys of a JSON then we are simply recommend you to use Parser. But if you need to access some keys of a JSON I strongly recommend you to use interpreter, it will be much faster than parser.
 
 Interpreter
 Interpreter is core element of this package, no need for instantiate, just call which function you want!
