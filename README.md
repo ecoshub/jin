@@ -163,7 +163,7 @@ Then you can use `Parser.GetString()` like this.
 	//String Output: {"id":233809925,"name":"ecoshub/jin"}
 
 ```
-All interpreter/parser functions (except function variations line `GetString()`) has own example provided in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
+All interpreter/parser functions (except function variations like `GetString()`) has own example provided in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
 
 **Other usefull functions of interpreter/parser.**
 
@@ -182,8 +182,8 @@ Let's look at `IterateArray()` function.
 
 	err := jin.IterateArray(json, func(value []byte) bool {
 	    fmt.Println(string(value))
-	    // this return is some kind control mechanism for escape the iteration any time you want.
-	    // true means keep iterate. false means stop iteration.
+	    // this return is some kind of control mechanism for escape from iteration any time.
+	    // true means keep iterate. false means stop the iteration.
 	    return true
 	}, "languages")
 
@@ -208,15 +208,15 @@ Another usefull function is `IterateKeyValue()`. Description and examples in __[
 
 There are two formatting functions. Flatten() and Indent()
 
-Both of them have their own examples in Documentation.
+Both of them have their own examples in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__..
 
 #### Control Functions
 
 Control functions are simple and easy way to check value types of any path.
 
-For example. `jin.IsArray()` controls the path, if path is points to an array.
+For example. `jin.IsArray()` function is controls the where path is pointing, is it an array or not.
 
-It will return true
+It will return true if its pointing to an array.
 ```go
 
 	json := []byte(`{"repo":{"name":"ecoshub/jin"},"others":["jin","penman"]}`)
@@ -228,7 +228,7 @@ It will return true
 	// Output: true
 
 ```
-Or get value type of the path
+Or you can use `GetType()` function like this.
 ```go
 
 	json := []byte(`{"git":"ecoshub","repo":["jin","wsftp","penman"]}`)
@@ -271,7 +271,7 @@ Testing is very important for this type of packages and it shows how reliable it
 
 For that reasons we use __Node.js__ for unit testing.
 
-The testing process has three steps. But first, lets look at folder arrangement. 
+Lets look at folder arrangement and working principle. 
 
 - __test/__ folder:
 
@@ -287,11 +287,13 @@ The testing process has three steps. But first, lets look at folder arrangement.
 
 	- All files in this folder is a test-case. But it doesn't mean that you can't change anything, on the contrary, all test-cases are creating automatically based on this folder. You can add or remove any __.json__ file that you want.
 
+	- All `GO` side test-case automation functions are in __core_test.go__ file.
+
 This package developed with __Node.js__ v13.7.0. please make sure that your machine has a valid version of __Node.js__ befoure testing.
 
 All functions and methods are tested with complicated randomly created __.json__ files.
 
-Like this file __original-test-case.json__.
+Like this.
 ```go
 
 	{
