@@ -2,10 +2,6 @@ package jin
 
 import "fmt"
 
-// func Example() {
-
-// }
-
 func ExampleGet() {
 	path := []string{"following", "social"}
 	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"],"following":{"social":"dev.to","code":"github"}}`)
@@ -131,6 +127,7 @@ func ExampleIterateArray() {
 	//java
 	//python
 	//C
+	//Cpp
 }
 
 func ExampleIterateKeyValue() {
