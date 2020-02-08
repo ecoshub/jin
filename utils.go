@@ -386,7 +386,7 @@ func cleanValue(str []byte) []byte {
 		}
 		start++
 	}
-	for i := end; i > start+1; i-- {
+	for i := end; i > start; i-- {
 		if !space(str[i]) {
 			break
 		}
