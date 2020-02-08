@@ -2,8 +2,6 @@ package jin
 
 import "strconv"
 
-// import "fmt"
-
 // Only this function commented, other Get() and Set() functions based on same logic.
 // Do not use with zero length path! no control for that
 // Not for public usage
@@ -315,6 +313,9 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 										continue
 									}
 									if curr == 93 || curr == 125 {
+										if level < k+1 {
+											return -1, -1, -1, keyNotFoundError()
+										}
 										level--
 										continue
 									}
@@ -374,6 +375,9 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 					}
 					// Close brace
 					if curr == 93 || curr == 125 {
+						if level < k+1 {
+							return -1, -1, -1, keyNotFoundError()
+						}
 						level--
 						continue
 					}
