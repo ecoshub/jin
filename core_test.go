@@ -45,7 +45,7 @@ func triggerNode(state string, fileName string) error {
 	test.WriteFile(testFileDir, test.ReadFile(testsDir+fileName))
 	str, err := test.ExecuteNode(state)
 	if err != nil {
-		return fmt.Errorf("err:%v inner:%v", warningTriggerFailed, str)
+		return fmt.Errorf("err:%v inner:%v", errorTriggerFailed, str)
 	}
 	return nil
 }
@@ -53,18 +53,18 @@ func triggerNode(state string, fileName string) error {
 func getComponents(file string) ([]string, []string, []byte, error) {
 	json := test.ReadFile(testsDir + file)
 	if json == nil {
-		return nil, nil, nil, warningSkipJSON
+		return nil, nil, nil, errorSkipJSON
 	}
 
 	pathFile := string(test.ReadFile(pathsFileNameDir))
 	if pathFile == "" {
-		return nil, nil, nil, warningSkipPath
+		return nil, nil, nil, errorSkipPath
 	}
 	paths := strings.Split(pathFile, "\n")
 
 	valueFile := string(test.ReadFile(valuesFileNameDir))
 	if valueFile == "" {
-		return nil, nil, nil, warningSkipValue
+		return nil, nil, nil, errorSkipValue
 	}
 	values := strings.Split(valueFile, "\n")
 	return paths, values, json, nil
@@ -141,7 +141,7 @@ func TestInterperterSet(t *testing.T) {
 	coreTestFunction(t, "all", func(json []byte, path []string, expected string) ([]byte, error, string, string) {
 		sticker := "Set"
 		if len(path) == 0 {
-			t.Logf("warning: %v, func: %v, path: %v", warningEmptyPath.Error(), sticker, path)
+			t.Logf("warning: %v, func: %v, path: %v", errorEmptyPath.Error(), sticker, path)
 			return []byte(expected), nil, expected, sticker
 		}
 		testVal := []byte(`test-value`)
@@ -183,7 +183,7 @@ func TestInterperterAddKeyValue(t *testing.T) {
 			return nil, err, "*expected*", sticker + "/GetControl"
 		}
 		if string(value) == "null" {
-			t.Logf("warning: %v, func: %v, path: %v", warningNullValue.Error(), sticker, path)
+			t.Logf("warning: %v, func: %v, path: %v", errorNullValue.Error(), sticker, path)
 			return []byte(expected), nil, expected, sticker
 		}
 		json, err = AddKeyValue(json, newKey, []byte("test-value"), path...)
@@ -219,7 +219,7 @@ func TestInterperterInsert(t *testing.T) {
 	coreTestFunction(t, "array", func(json []byte, path []string, expected string) ([]byte, error, string, string) {
 		sticker := "Insert"
 		if expected == "[]" {
-			t.Logf("warning: %v, func: %v, path: %v", warningNullArray.Error(), sticker, path)
+			t.Logf("warning: %v, func: %v, path: %v", errorNullArray.Error(), sticker, path)
 			return []byte(expected), nil, expected, sticker
 		}
 		newVal := []byte("test-value")
@@ -257,7 +257,7 @@ func TestInterperterDelete(t *testing.T) {
 	})
 	coreTestFunction(t, "object", func(json []byte, path []string, expected string) ([]byte, error, string, string) {
 		if string(expected) == "null" {
-			t.Logf("warning: %v, func: %v, path: %v", warningNullValue.Error(), sticker, path)
+			t.Logf("warning: %v, func: %v, path: %v", errorNullValue.Error(), sticker, path)
 			return []byte(expected), nil, expected, sticker
 		}
 		json, err := AddKeyValue(json, newKey, newVal, path...)
@@ -280,7 +280,7 @@ func TestInterperterIterateArray(t *testing.T) {
 	coreTestFunction(t, "array", func(json []byte, path []string, expected string) ([]byte, error, string, string) {
 		sticker := "IterateArray"
 		if expected == "[]" {
-			t.Logf("warning: %v, func: %v, path: %v", warningNullArray.Error(), sticker, path)
+			t.Logf("warning: %v, func: %v, path: %v", errorNullArray.Error(), sticker, path)
 			return []byte(expected), nil, expected, sticker
 		}
 		array := ParseArray(expected)
@@ -318,7 +318,7 @@ func TestInterperterIterateKeyValue(t *testing.T) {
 	coreTestFunction(t, "object", func(json []byte, path []string, expected string) ([]byte, error, string, string) {
 		sticker := "IterateKeyValue"
 		if string(expected) == "null" {
-			t.Logf("warning: %v, func: %v, path: %v", warningNullValue.Error(), sticker, path)
+			t.Logf("warning: %v, func: %v, path: %v", errorNullValue.Error(), sticker, path)
 			return []byte(expected), nil, expected, sticker
 		}
 		done := true
@@ -367,7 +367,7 @@ func TestParserSet(t *testing.T) {
 	coreTestFunction(t, "all", func(json []byte, path []string, expected string) ([]byte, error, string, string) {
 		sticker := "Parser.Set"
 		if len(path) == 0 {
-			t.Logf("warning: %v, func: %v, path: %v", warningEmptyPath.Error(), sticker, path)
+			t.Logf("warning: %v, func: %v, path: %v", errorEmptyPath.Error(), sticker, path)
 			return []byte(expected), nil, expected, sticker
 		}
 		prs, err := Parse(json)
@@ -424,7 +424,7 @@ func TestParserAddKeyValue(t *testing.T) {
 			return nil, err, "*expected*", sticker + "/GetControl"
 		}
 		if string(value) == "null" {
-			t.Logf("warning: %v, func: %v, path: %v", warningNullValue.Error(), sticker, path)
+			t.Logf("warning: %v, func: %v, path: %v", errorNullValue.Error(), sticker, path)
 			return []byte(expected), nil, expected, sticker
 		}
 		err = prs.AddKeyValue(newKey, []byte("test-value"), path...)
@@ -465,7 +465,7 @@ func TestParserInsert(t *testing.T) {
 	coreTestFunction(t, "array", func(json []byte, path []string, expected string) ([]byte, error, string, string) {
 		sticker := "Parser.Insert"
 		if expected == "[]" {
-			t.Logf("warning: %v, func: %v, path: %v", warningNullArray.Error(), sticker, path)
+			t.Logf("warning: %v, func: %v, path: %v", errorNullArray.Error(), sticker, path)
 			return []byte(expected), nil, expected, sticker
 		}
 		prs, err := Parse(json)
@@ -513,7 +513,7 @@ func TestParserDelete(t *testing.T) {
 	})
 	coreTestFunction(t, "object", func(json []byte, path []string, expected string) ([]byte, error, string, string) {
 		if string(expected) == "null" {
-			t.Logf("warning: %v, func: %v, path: %v", warningNullValue.Error(), sticker, path)
+			t.Logf("warning: %v, func: %v, path: %v", errorNullValue.Error(), sticker, path)
 			return []byte(expected), nil, expected, sticker
 		}
 		prs, err := Parse(json)
