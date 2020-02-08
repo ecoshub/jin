@@ -379,11 +379,17 @@ func cleanValueString(str string) string {
 func cleanValue(str []byte) []byte {
 	start := 0
 	lens := len(str)
-	for space(str[start]) && start < lens-1 {
+	end := lens - 1
+	for i := start; i < lens-1; i++ {
+		if !space(str[i]) {
+			break
+		}
 		start++
 	}
-	end := lens - 1
-	for space(str[end]) && end > 1 {
+	for i := end; i > start+1; i-- {
+		if !space(str[i]) {
+			break
+		}
 		end--
 	}
 	if str[start] == 34 && str[end] == 34 {
