@@ -1,15 +1,15 @@
 package jin
 
+// import "fmt"
 // IterateArray is a callback function that can iterate any array and return value as byte slice.
 // It stripes quotation marks from string values befour return.
 // Path value can be left blank for access main JSON.
 func IterateArray(json []byte, callback func([]byte) bool, path ...string) error {
 	var start int
-	var end int
 	var err error
 	if len(path) == 0 {
 		for space(json[start]) {
-			if start > len(json)-1 {
+			if start > len(json)-2 {
 				return badJSONError(start)
 			}
 			start++
@@ -26,100 +26,68 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 	for _, v := range chars {
 		isJSONChar[v] = true
 	}
-	if json[start] == 91 {
-		start++
-		inQuote := false
-		level := 0
-		for i := start; i < len(json); i++ {
-			curr := json[i]
-			if !isJSONChar[curr] {
-				continue
-			}
-			if curr == 34 {
-				if inQuote {
-					for k := i - 1; k > 0; k-- {
-						if json[k] != 92 {
-							if (i-k)%2 != 0 {
-								inQuote = !inQuote
-							}
-							break
-						}
+	if json[start] != 91 {
+		return arrayExpectedError()
+	}
+	start++
+	inQuote := false
+	level := 0
+	for i := start; i < len(json); i++ {
+		curr := json[i]
+		if !isJSONChar[curr] {
+			continue
+		}
+		if curr == 34 {
+			if inQuote {
+				for k := i - 1; k > 0; k-- {
+					if json[k] == 92 {
 						continue
 					}
-					continue
+					if (i-k)%2 != 0 {
+						inQuote = !inQuote
+						goto cont
+					}
+					break
 				}
+			} else {
 				inQuote = !inQuote
 				continue
 			}
-			if inQuote {
+		cont:
+			continue
+		}
+		if inQuote {
+			continue
+		} else {
+			if curr == 91 || curr == 123 {
+				level++
 				continue
-			} else {
-				if curr == 91 || curr == 123 {
-					level++
-					continue
+			}
+			if curr == 93 || curr == 125 {
+				if level < 0 {
+					return nil
 				}
-				if curr == 93 || curr == 125 {
-					if level < 0 {
+				if curr == 93 {
+					if level == 0 {
+						callback(cleanValue(json[start:i]))
 						return nil
 					}
-					if curr == 93 {
-						if level == 0 {
-							for j := start; j < i; j++ {
-								if !space(json[j]) {
-									start = j
-									break
-								}
-							}
-							for j := i - 1; j > start; j-- {
-								if !space(json[j]) {
-									end = j
-									break
-								}
-							}
-							if json[start] == 34 && json[end] == 34 {
-								callback(json[start+1 : end])
-								return nil
-							}
-							callback(json[start : end+1])
-							return nil
-						}
-					}
-					level--
-					continue
 				}
-				if level == 0 {
-					if curr == 44 {
-						end = i - 1
-						for j := start; j < i; j++ {
-							if !space(json[j]) {
-								start = j
-								break
-							}
-						}
-						for j := end; j > start; j-- {
-							if !space(json[j]) {
-								end = j
-								break
-							}
-						}
-						if json[start] == 34 && json[end] == 34 {
-							if !callback(json[start+1 : end]) {
-								return nil
-							}
-						} else {
-							if !callback(json[start : end+1]) {
-								return nil
-							}
-						}
-						start = i + 1
-						continue
+				level--
+				continue
+			}
+			if level == 0 {
+				if curr == 44 {
+					if !callback(cleanValue(json[start:i])) {
+						return nil
 					}
+					start = i + 1
+					continue
 				}
 			}
 		}
-		return nil
 	}
-	return arrayExpectedError()
+	return badJSONError(start)
 }
 
 // IterateKeyValue is a callback function that can iterate any object and return key-value pair as byte slices.
@@ -154,7 +122,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...st
 		inQuote := false
 		level := 0
 		var key []byte
-		for i := start+1; i < len(json); i++ {
+		for i := start + 1; i < len(json); i++ {
 			curr := json[i]
 			if !isJSONChar[curr] {
 				continue
@@ -172,7 +140,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...st
 						}
 						continue
 					}
-				}else{
+				} else {
 					inQuote = !inQuote
 				}
 				if inQuote {
