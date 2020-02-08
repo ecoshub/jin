@@ -2,6 +2,8 @@ package jin
 
 import "strconv"
 
+// import "fmt"
+
 // Get returns the value that path has pointed.
 // It stripes quotation marks from string values.
 // Path can point anything, a key-value pair, a value, an array, an object.
@@ -15,6 +17,7 @@ func (p *Parser) Get(path ...string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
+	// fmt.Printf("*>%v<\n", string(curr.value))
 	return cleanValue(curr.value), nil
 }
 
