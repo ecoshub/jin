@@ -33,7 +33,7 @@ Interpreter is core element of this package, no need for instantiate, just call 
 
 First let’s look at function parameters.
 
-	// All interpreter functions need one JSON as byte slice type. 
+	// All interpreter functions need one JSON as byte slice type.
 	json := []byte(`{"git":"ecoshub","repo":{"id":233809925,"name":"ecoshub/jin"}}`)
 
 	// And most of them needs a path value for navigate.
@@ -78,7 +78,7 @@ We recommend to use this structure when you need to access all or most of the ke
 
 Parser constructor need only one parameter.
 
-	// Parser constructor function jin.Parse() need one JSON as byte slice format. 
+	// Parser constructor function jin.Parse() need one JSON as byte slice format.
 	json := []byte(`{"git":"ecoshub","repo":{"id":233809925,"name":"ecoshub/jin"}}`)
 Lets Parse it with Parse function.
 
@@ -232,53 +232,53 @@ Benchmark between ‘buger/jsonparser’ and ‘ecoshub/jin’ use the same payl
 	pkg: jin/benchmark
 
 	// Get Function.
-	JsonparserGetSmall-8                  826 ns/op             0 B/op        0 allocs/op 
-	JinGetSmall-8                         792 ns/op             0 B/op        0 allocs/op 
-	JsonparserGetMedium-8                7734 ns/op             0 B/op        0 allocs/op 
-	JinGetMedium-8                       5793 ns/op             0 B/op        0 allocs/op 
-	JsonparserGetLarge-8                62319 ns/op             0 B/op        0 allocs/op 
-	JinGetLarge-8                       56575 ns/op             0 B/op        0 allocs/op 
+	JsonparserGetSmall-8                  826 ns/op             0 B/op        0 allocs/op
+	JinGetSmall-8                         792 ns/op             0 B/op        0 allocs/op
+	JsonparserGetMedium-8                7734 ns/op             0 B/op        0 allocs/op
+	JinGetMedium-8                       5793 ns/op             0 B/op        0 allocs/op
+	JsonparserGetLarge-8                62319 ns/op             0 B/op        0 allocs/op
+	JinGetLarge-8                       56575 ns/op             0 B/op        0 allocs/op
 
 	// Set Function.
-	JsonParserSetSmall-8                 1268 ns/op           704 B/op        4 allocs/op 
-	JinSetSmall-8                        1213 ns/op           704 B/op        4 allocs/op 
-	JsonParserSetMedium-8                7014 ns/op          6912 B/op        3 allocs/op 
-	JinSetMedium-8                       5767 ns/op          6912 B/op        3 allocs/op 
-	JsonParserSetLarge-8               126726 ns/op        114688 B/op        4 allocs/op 
-	JinSetLarge-8                       87239 ns/op        114688 B/op        4 allocs/op 
+	JsonParserSetSmall-8                 1268 ns/op           704 B/op        4 allocs/op
+	JinSetSmall-8                        1213 ns/op           704 B/op        4 allocs/op
+	JsonParserSetMedium-8                7014 ns/op          6912 B/op        3 allocs/op
+	JinSetMedium-8                       5767 ns/op          6912 B/op        3 allocs/op
+	JsonParserSetLarge-8               126726 ns/op        114688 B/op        4 allocs/op
+	JinSetLarge-8                       87239 ns/op        114688 B/op        4 allocs/op
 
-	// Delete Function.                                                     
-	JsonParserDeleteSmall-8              2092 ns/op           704 B/op        4 allocs/op 
-	JinDeleteSmall-8                     1211 ns/op           640 B/op        4 allocs/op 
-	JsonParserDeleteMedium-8            11096 ns/op          6912 B/op        3 allocs/op 
-	JinDeleteMedium-8                    5429 ns/op          6144 B/op        3 allocs/op 
-	JsonParserDeleteLarge-8            130838 ns/op        114688 B/op        4 allocs/op 
-	JinDeleteLarge-8                    85999 ns/op        114688 B/op        4 allocs/op 
+	// Delete Function.
+	JsonParserDeleteSmall-8              2092 ns/op           704 B/op        4 allocs/op
+	JinDeleteSmall-8                     1211 ns/op           640 B/op        4 allocs/op
+	JsonParserDeleteMedium-8            11096 ns/op          6912 B/op        3 allocs/op
+	JinDeleteMedium-8                    5429 ns/op          6144 B/op        3 allocs/op
+	JsonParserDeleteLarge-8            130838 ns/op        114688 B/op        4 allocs/op
+	JinDeleteLarge-8                    85999 ns/op        114688 B/op        4 allocs/op
 
 	// Iterators Function.
-	IterateArrayGetJsonparser-8         12932 ns/op             0 B/op        0 allocs/op 
-	IterateArrayGetJin-8                12787 ns/op             0 B/op        0 allocs/op 
-	IterateObjectGetJsonparser-8         6381 ns/op             0 B/op        0 allocs/op 
-	IterateObjectGetJin-8                4638 ns/op             0 B/op        0 allocs/op 
+	IterateArrayGetJsonparser-8         12932 ns/op             0 B/op        0 allocs/op
+	IterateArrayGetJin-8                12787 ns/op             0 B/op        0 allocs/op
+	IterateObjectGetJsonparser-8         6381 ns/op             0 B/op        0 allocs/op
+	IterateObjectGetJin-8                4638 ns/op             0 B/op        0 allocs/op
 
 	// Parser Get Small Function.
-	JsoniteratorGetSmall-8               4006 ns/op           874 B/op        1 allocs/op 
-	FastjsonGetSmall-8                   2773 ns/op          3408 B/op        1 allocs/op 
-	JinParseGetSmall-8                   2040 ns/op          1252 B/op        8 allocs/op 
+	JsoniteratorGetSmall-8               4006 ns/op           874 B/op        1 allocs/op
+	FastjsonGetSmall-8                   2773 ns/op          3408 B/op        1 allocs/op
+	JinParseGetSmall-8                   2040 ns/op          1252 B/op        8 allocs/op
 
 	// Parser Get Medium Function.
-	JsoniteratorGetMedium-8             29936 ns/op          9730 B/op        5 allocs/op 
-	FastjsonGetMedium-8                 16190 ns/op         17304 B/op        4 allocs/op 
-	JinParseGetMedium-8                 14016 ns/op          8304 B/op        1 allocs/op 
+	JsoniteratorGetMedium-8             29936 ns/op          9730 B/op        5 allocs/op
+	FastjsonGetMedium-8                 16190 ns/op         17304 B/op        4 allocs/op
+	JinParseGetMedium-8                 14016 ns/op          8304 B/op        1 allocs/op
 
 	// Parser Get Large Function.
-	JsoniteratorGetLarge-8             634964 ns/op        219307 B/op        3 allocs/op 
-	FastjsonGetLarge-8                 221918 ns/op        283200 B/op        0 allocs/op 
-	JinParseGetLarge-8                 218904 ns/op        134704 B/op        3 allocs/op 
+	JsoniteratorGetLarge-8             634964 ns/op        219307 B/op        3 allocs/op
+	FastjsonGetLarge-8                 221918 ns/op        283200 B/op        0 allocs/op
+	JinParseGetLarge-8                 218904 ns/op        134704 B/op        3 allocs/op
 
 	// Parser Set Function.
-	FastjsonSetSmall-8                   3662 ns/op          3792 B/op        9 allocs/op 
-	JinParseSetSmall-8                   3382 ns/op          1968 B/op        6 allocs/op 
+	FastjsonSetSmall-8                   3662 ns/op          3792 B/op        9 allocs/op
+	JinParseSetSmall-8                   3382 ns/op          1968 B/op        6 allocs/op
 
 Limitations
 
