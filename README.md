@@ -272,8 +272,13 @@ If you want to test another JSON file that is not in the /tests folder just drag
 
 Benchmark results.
 
+
 - *Benchmark prefix removed to make more room for results.*
 - *Benchmark between 'buger/jsonparser' and 'ecoshub/jin' use the same payload (JSON test cases) that 'buger/jsonparser' package use for benchmark it self.*
+*github.com/ecoshub/jin 		-> Jin*
+*github.com/buger/jsonparser -> Jsonparser*
+*github.com/valyala/fastjson -> Fastjson*
+*github.com/json-iterator/go -> Jsoniterator*
 ```go
 	goos: linux
 	goarch: amd64
@@ -304,8 +309,8 @@ Benchmark results.
 	JinDeleteLarge-8                    85999 ns/op        114688 B/op        4 allocs/op 
 
 	// Iterators Function.
-	IterateArrayGetJsonparser-8         12932 ns/op             0 B/op        0 allocs/op 
-	IterateArrayGetJin-8                12787 ns/op             0 B/op        0 allocs/op 
+	IterateArrayGetJsonparser-8         12296 ns/op             0 B/op        0 allocs/op 
+	IterateArrayGetJin-8                11441 ns/op             0 B/op        0 allocs/op 
 	IterateObjectGetJsonparser-8         6381 ns/op             0 B/op        0 allocs/op 
 	IterateObjectGetJin-8                4638 ns/op             0 B/op        0 allocs/op 
 
