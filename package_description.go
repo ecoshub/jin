@@ -112,7 +112,7 @@ Then you can use Parser.GetString() like this.
 	}
 	//String Output: {"id":233809925,"name":"ecoshub/jin"}
 
-Other usefull functions of interpreter/parser.
+Other useful functions of interpreter/parser.
 
 -Add(), AddKeyValue(), Set(), SetKey() Delete(), Insert(), IterateArray(), IterateKeyValue()
 
@@ -177,7 +177,7 @@ There are lots of JSON build functions in this package and all of them has its o
 
 We just want to mention a couple of them.
 
-Scheme is simple and powerfull tool for create JSON schemes.
+Scheme is simple and powerful tool for create JSON schemes.
 
 	// MakeScheme need keys for construct a JSON scheme.
 	person := MakeScheme("name", "lastname", "age")
@@ -292,13 +292,13 @@ Like those:
 
 That kind of JSONs are forbidden.
 
-Upcomming
+Upcoming
 
 We are currently working on,
 
 Marshall() and Unmarshall() functions.
 
-http.Request parser/interperter
+http.Request parser/interpreterr
 
 Builder functions for http.ResponseWriter
 
