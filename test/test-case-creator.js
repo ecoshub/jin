@@ -1,195 +1,122 @@
 const fs = require('fs');
-var exec = require('child_process').execFile;
 
 let jsonFile  = 'test/test-json.json';
 let pathFile  = 'test/test-json-paths.json';
 let valueFile = 'test/test-json-values.json';
+let pathString = '';
+let valueString = '';
 
 const pathToString = (arr) => {
 	var result = '[';
-	arr.forEach((e) => {result += JSON.stringify(e) + ',';})
-	result = result.slice(0, result.length - 1);
+	arr.forEach((e) => {result += JSON.stringify(e) + ','});
+	if (result.length > 1) {
+		result = result.slice(0, result.length - 1);
+	}
 	result += ']';
 	return result;
 }
 
-const createPaths = (obj, type, key, tag, func) => {
-	let lastType = type;
-	const keys = Object.keys(obj);
-	const values = Object.values(obj);
-	for ( var i = 0 ; i < keys.length ; i ++ ){
-		if (values[i] !== null && values[i] !== undefined){
-			if (tag === 'all') {
-				values[i] = func(values[i]);
-				if ( values[i] !== undefined){
-					fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
-				}
-				key.push(keys[i]);
-				let path = pathToString(key);
-				fs.appendFileSync(pathFile, path + `\n`);
-				key.pop();
-			}
-			if (tag === 'object') {
-				if (typeof values[i] === 'object' && !Array.isArray(values[i])) {
-					values[i] = func(values[i]);
-					if ( values[i] !== undefined){
-						fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
-					}
-					key.push(keys[i]);
-					let path = pathToString(key);
-					fs.appendFileSync(pathFile, path + `\n`);
-					key.pop();
-				}
-			}
-			if (tag === 'array') {
-				if (typeof values[i] === 'object' && Array.isArray(values[i])) {			
-					values[i] = func(values[i]);
-					if ( values[i] !== undefined){
-						fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
-					}
-					key.push(keys[i]);
-					let path = pathToString(key);
-					fs.appendFileSync(pathFile, path + `\n`);
-					key.pop();
-				}
-			}
-			if (tag === 'arrayvalues') {
-				if (type === 'array'){
-						values[i] = func(values[i]);
-						if ( values[i] !== undefined){
-							fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
-						}
-						key.push(keys[i]);
-						let path = pathToString(key);
-						fs.appendFileSync(pathFile, path + `\n`);
-						key.pop();
-				}
-			}
-			if (tag === 'objectvalues') {
-				if (type === 'object'){
-						values[i] = func(values[i]);
-						if ( values[i] !== undefined){
-							fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
-						}
-						key.push(keys[i]);
-						let path = pathToString(key);
-						fs.appendFileSync(pathFile, path + `\n`);
-						key.pop();
-				}
-			}
-			if (tag === 'values') {
-				if (typeof values[i] !== 'object') {
-					values[i] = func(values[i]);
-					if ( values[i] !== undefined){
-						fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
-					}
-					key.push(keys[i]);
-					let path = pathToString(key);
-					fs.appendFileSync(pathFile, path + `\n`);
-					key.pop();
-				}
-			}
-			if (tag === 'notvalues') {
-				if (typeof values[i] === 'object') {
-					values[i] = func(values[i]);
-					if ( values[i] !== undefined){
-						fs.appendFileSync(valueFile, JSON.stringify(values[i]) + `\n`);
-					}
-					key.push(keys[i]);
-					let path = pathToString(key);
-					fs.appendFileSync(pathFile, path + `\n`);
-					key.pop();
-				}
-			}
-			if (typeof values[i] === 'object') {
-				if (Array.isArray(values[i])){
-					type = 'array';
-				}else{
-					type = 'object';
-				}
-				key.push(keys[i]);
-				createPaths(values[i], type, key, tag, func);
-				key.pop();
-				type = lastType;
-			}
-		}
-	}
-}
-
-const clearNewLine = (dir) => {
-	let file  = fs.readFileSync(dir);
-	file = file.slice(0, file.length - 1);
-	fs.writeFileSync(dir, file.toString());
-}
-
-const createTestCase = (json, content, func) => {
-	fs.writeFileSync(pathFile, '');
-	fs.writeFileSync(valueFile, '');
-	let type = '';
-	if (typeof json === 'object'){
+const getType = (json) => {
+	if (typeof json === 'object' ){
 		if (Array.isArray(json)){
-			type = 'array'
-		}else{
-			type = 'object'
+			return 'array';
 		}
-	}else{
-		type = 'value'
+		return 'object';
 	}
-	if (content === type ) {
-		fs.appendFileSync(pathFile, `[]` + '\n');
-		fs.appendFileSync(valueFile, JSON.stringify(func(json)) + `\n`);
+	return 'value';
+}
+
+// core walk func to walk through all elements and get specific properties.
+const walk = (json, paths, upType, myType, call) => {
+	// getting keys and values.
+	const keys = Object.keys(json);
+	const values = Object.values(json);
+	// upType is defines what this element in.
+	let upTypeIs = getType(json);
+	for (var i = 0; i < keys.length; i++) {
+		let val = values[i];
+		let key = keys[i];
+		// elements type
+		let myTypeIs = getType(val);
+		// for path creation push last key and pop after callback.
+		paths.push(key);
+		call(key, val, upTypeIs, myTypeIs, paths);
+		paths.pop();
+		// if it is an iterable object than recursively walk through.
+		if (typeof val === 'object' && val != null && val != undefined) {
+			// standart path creation.
+			paths.push(key);
+			walk(val, paths, upTypeIs, myTypeIs, call);
+			paths.pop();
+		}
 	}
-	createPaths(json, type, [], content, func);
-	clearNewLine(pathFile);
-	clearNewLine(valueFile);
+}
+
+const addPathAndValue = (path, value) => {
+	pathString += pathToString(path) + '\n';
+	valueString += JSON.stringify(value) + '\n';
+}
+
+const createCase = (json, pathType) => {
+	switch (pathType) {
+	case "all":
+		addPathAndValue([], json)
+		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
+			addPathAndValue(path, value)
+		});
+		break;
+	case "array":
+		if (getType(json) === 'array'){
+			addPathAndValue([], json)
+		}
+		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
+			if (myType === 'array'){
+				addPathAndValue(path, value)
+			}
+		});
+		break;
+	case "object":
+		if (getType(json) === 'object'){
+			addPathAndValue([], json)
+		}
+		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
+			if (myType === 'object'){
+				addPathAndValue(path, value)
+			}
+		});
+		break;
+	case "object-values":
+		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
+			if (upType === 'object'){
+				addPathAndValue(path, value)
+			}
+		});
+		break;
+	case "array-values":
+		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
+			if (upType === 'array'){
+				addPathAndValue(path, value)
+			}
+		});
+		break;
+	case "not-value":
+		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
+			if (myType !== 'value'){
+				addPathAndValue(path, value)
+			}
+		});
+		break;
+	}
+	if (pathString.length == 0) {
+		fs.writeFileSync(pathFile, "");
+		fs.writeFileSync(valueFile, "");
+	} else {
+		fs.writeFileSync(pathFile, pathString.slice(0, pathString.length - 1));
+		fs.writeFileSync(valueFile, valueString.slice(0, valueString.length - 1));
+	}
 }
 
 if (process.argv.length > 2) {
-	var mainArray = JSON.parse(fs.readFileSync(jsonFile));
-	if (process.argv[2] === 'get'){
-		createTestCase(mainArray, 'all', (val)=>{return val})
-	}
-	if (process.argv[2] === 'set'){
-		createTestCase(mainArray, 'values', (val) => {
-			return 'test-string';
-		})
-	}
-	if (process.argv[2] === 'addkv'){
-		createTestCase(mainArray, 'object', (val) => {
-			val['test-key'] = 'test-value';
-			return val;
-		})
-	}
-	if (process.argv[2] === 'add'){
-		createTestCase(mainArray, 'array', (arr) => {
-			arr.push('test-value');
-			return arr;
-		})
-	}
-	if (process.argv[2] === 'insert'){
-		createTestCase(mainArray, 'array', (arr) => {
-			arr.splice(0, 0, 'test-value')
-			return arr;
-		})
-	}
-	if (process.argv[2] === 'deleteKV'){
-		createTestCase(mainArray, 'object', (arr) => {
-			return arr;
-		})
-	}
-	if (process.argv[2] === 'deleteV'){
-		createTestCase(mainArray, 'array', (arr) => {
-			return arr;
-		})
-	}
-	if (process.argv[2] === 'arrayiter'){
-		createTestCase(mainArray, 'array', (arr) => {
-			return arr;
-		})
-	}
-	if (process.argv[2] === 'objectiter'){
-		createTestCase(mainArray, 'object', (arr) => {
-			return arr;
-		})
-	}
+	var json = JSON.parse(fs.readFileSync(jsonFile));
+	createCase(json, process.argv[2]);
 }
