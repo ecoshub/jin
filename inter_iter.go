@@ -1,6 +1,5 @@
 package jin
 
-// import "fmt"
 // IterateArray is a callback function that can iterate any array and return value as byte slice.
 // It stripes quotation marks from string values befour return.
 // Path value can be left blank for access main JSON.

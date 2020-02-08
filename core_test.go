@@ -24,13 +24,13 @@ var (
 	pathsFileNameDir  string = "test" + sep + pathsFileName
 	valuesFileNameDir string = "test" + sep + valuesFileName
 	// tempDir              string =
-	warningSkipPath      error = errors.New("skipped. no paths file found")
-	warningSkipValue     error = errors.New("skipped. no values file found")
-	warningSkipJSON      error = errors.New("skipped. no json file found")
-	warningTriggerFailed error = errors.New("skipped. node trigger failed")
-	warningEmptyPath     error = errors.New("skipped. empty path")
-	warningNullValue     error = errors.New("skipped. null value")
-	warningNullArray     error = errors.New("skipped. null array")
+	errorSkipPath      error = errors.New("skipped, no paths file found")
+	errorSkipValue     error = errors.New("skipped, no values file found")
+	errorSkipJSON      error = errors.New("skipped, no json file found")
+	errorTriggerFailed error = errors.New("skipped, node trigger failed")
+	errorEmptyPath     error = errors.New("skipped, empty path")
+	errorNullValue     error = errors.New("skipped, null value")
+	errorNullArray     error = errors.New("skipped, null array")
 )
 
 func init() {
@@ -38,14 +38,14 @@ func init() {
 }
 
 func errorMessage(where string) error {
-	return errors.New(fmt.Sprintf("%v: '%v'\n", failMessage, where))
+	return fmt.Errorf("%v: '%v'", failMessage, where)
 }
 
 func triggerNode(state string, fileName string) error {
 	test.WriteFile(testFileDir, test.ReadFile(testsDir+fileName))
 	str, err := test.ExecuteNode(state)
 	if err != nil {
-		return errors.New(fmt.Sprintf("err:%v inner:%v\n", warningTriggerFailed, str))
+		return fmt.Errorf("err:%v inner:%v", warningTriggerFailed, str)
 	}
 	return nil
 }
