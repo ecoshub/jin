@@ -35,8 +35,8 @@ func readFile(dir string) []byte {
 // ExecuteNode is NOT FOR PUBLIC USAGE.
 // This function is created for test-case creation automation
 // Please do not change any thing. And do not use them.
-func executeNode(file, par string) (string, error) {
-	cmd := exec.Command("node", file, par)
+func executeNode(first string, args...string) (string, error) {
+	cmd := exec.Command(first, args...)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
