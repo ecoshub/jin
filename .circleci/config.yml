@@ -6,8 +6,8 @@ jobs:
   build:
     docker:
       # specify the version
-      - image: circleci/golang:1.9
-      - run: apt-get install -y nodejs
+      - image: docker get circleci/golang:1.9
+      - image: docker get node
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
