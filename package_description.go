@@ -1,5 +1,10 @@
 /*
+Copyright (c) 2020 eco.
+
+License that can be found in the LICENSE file.
+
 WELCOME TO JIN
+
 "Your wish is my command"
 
 
@@ -404,6 +409,7 @@ Like those:
 That kind of JSONs are forbidden.
 
 
+
 UPCOMING
 
 We are currently working on, 
@@ -413,6 +419,7 @@ We are currently working on,
 - http.Request parser/interpreter
 
 - Builder functions for http.ResponseWriter
+
 
 
 CONTRIBUTE
