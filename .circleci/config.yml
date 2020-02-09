@@ -6,9 +6,9 @@ jobs:
   build:
     docker:
       # specify the version
-      - image: docker get circleci/golang:1.9
+      - image: docker get circleci/golang
 
-      - image: docker get circleci/node:latest
+      - image: docker get circleci/node
 
       # Specify service dependencies here if necessary
       # CircleCI maintains a library of pre-built images
