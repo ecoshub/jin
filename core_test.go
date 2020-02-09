@@ -3,7 +3,7 @@ package jin
 import (
 	"errors"
 	"fmt"
-	test "test"
+	"test"
 	"strconv"
 	"strings"
 	"testing"

@@ -2,7 +2,7 @@ package jin
 
 import (
 	"github.com/valyala/fastjson"
-	"jin"
+	"github.com/ecoshub/jin"
 	"testing"
 )
 

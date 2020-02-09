@@ -2,7 +2,7 @@ package jin
 
 import (
 	"github.com/buger/jsonparser"
-	"jin"
+	"github.com/ecoshub/jin"
 	"testing"
 )
 

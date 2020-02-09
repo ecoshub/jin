@@ -3,7 +3,7 @@ package jin
 import (
 	"github.com/json-iterator/go"
 	"github.com/valyala/fastjson"
-	"jin"
+	"github.com/ecoshub/jin"
 	"testing"
 )
 
