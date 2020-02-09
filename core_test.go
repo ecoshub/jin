@@ -3,7 +3,6 @@ package jin
 import (
 	"errors"
 	"fmt"
-	"github.com/ecoshub/jin/test"
 	"strconv"
 	"strings"
 	"testing"
@@ -18,11 +17,10 @@ const (
 )
 
 var (
-	sep               = test.Sep()
 	testFiles         []string
-	testFileDir       string = "test" + sep + testFileName
-	pathsFileNameDir  string = "test" + sep + pathsFileName
-	valuesFileNameDir string = "test" + sep + valuesFileName
+	testFileDir       string = "test" + sep() + testFileName
+	pathsFileNameDir  string = "test" + sep() + pathsFileName
+	valuesFileNameDir string = "test" + sep() + valuesFileName
 	// tempDir              string =
 	errorSkipPath      error = errors.New("skipped, no paths file found")
 	errorSkipValue     error = errors.New("skipped, no values file found")
@@ -34,7 +32,7 @@ var (
 )
 
 func init() {
-	testFiles = test.Dir(test.GetCurrentDir() + sep + testsDir)
+	testFiles = dir(getCurrentDir() + sep() + testsDir)
 }
 
 func errorMessage(where string) error {
@@ -42,8 +40,8 @@ func errorMessage(where string) error {
 }
 
 func triggerNode(state string, fileName string) error {
-	test.WriteFile(testFileDir, test.ReadFile(testsDir+fileName))
-	str, err := test.ExecuteNode(state)
+	writeFile(testFileDir, readFile(testsDir+fileName))
+	str, err := executeNode(state)
 	if err != nil {
 		return fmt.Errorf("err:%v inner:%v", errorTriggerFailed, str)
 	}
@@ -51,18 +49,18 @@ func triggerNode(state string, fileName string) error {
 }
 
 func getComponents(file string) ([]string, []string, []byte, error) {
-	json := test.ReadFile(testsDir + file)
+	json := readFile(testsDir + file)
 	if json == nil {
 		return nil, nil, nil, errorSkipJSON
 	}
 
-	pathFile := string(test.ReadFile(pathsFileNameDir))
+	pathFile := string(readFile(pathsFileNameDir))
 	if pathFile == "" {
 		return nil, nil, nil, errorSkipPath
 	}
 	paths := strings.Split(pathFile, "\n")
 
-	valueFile := string(test.ReadFile(valuesFileNameDir))
+	valueFile := string(readFile(valuesFileNameDir))
 	if valueFile == "" {
 		return nil, nil, nil, errorSkipValue
 	}
