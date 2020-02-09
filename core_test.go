@@ -128,7 +128,7 @@ func coreTestFunction(t *testing.T, state string, mainTest func(json []byte, pat
 }
 
 func TestNode(t *testing.T) {
-	str, err := executeNode("test/test-node.js", "")
+	str, err := executeNode(getCurrentDir + sep() + "test/test-node.js", "")
 	t.Logf(str)
 	if err != nil {
 		fmt.Errorf("err:%v inner:%v", errorTriggerFailed, str)
