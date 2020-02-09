@@ -2,6 +2,8 @@ version: 2
 jobs:
   build:
     working_directory: /go/src/github.com/ecoshub/jin
+    environment:
+      TEST_RESULTS: /tmp/test-results 
     docker:
     - image: circleci/golang:1.9
     - image: circleci/node
