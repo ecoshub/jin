@@ -9,5 +9,6 @@ jobs:
     - image: circleci/node
     steps:
     - checkout
+    - run: node --version
     - run: go get -v -t -d
     - run: go test -v
