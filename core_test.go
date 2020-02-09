@@ -3,7 +3,7 @@ package jin
 import (
 	"errors"
 	"fmt"
-	test "jin/test"
+	test "github.com/ecoshub/jin/test"
 	"strconv"
 	"strings"
 	"testing"
