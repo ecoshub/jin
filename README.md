@@ -172,11 +172,13 @@ There is all kind of return type methods for `Parser` like `Interpreter`.
 You can use `Parser.GetString()` like this.
 ```go
 
-	value, err := prs.GetString("repo")
+	value, err := prs.GetString("repo", "name")
 	if err != nil {
-		return err
+		log.Println(err)
+		return
 	}
-	//String Output: {"id":233809925,"name":"ecoshub/jin"}
+	fmt.Println(string(value))
+	//String Output: ecoshub/jin
 
 ```
 All interpreter/parser functions (except function variations like `GetString()`) has own example provided in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
@@ -242,11 +244,14 @@ For example. `IsArray()`.
 
 	json := []byte(`{"repo":{"name":"ecoshub/jin"},"others":["jin","penman"]}`)
 
-	fmt.Println(jin.IsArray(json, "repo"))
+	result, _ := jin.IsArray(json, "repo")
+	fmt.Println(result)
 	// Output: false
 
-	fmt.Println(jin.IsArray(json, "others"))
+	result, _ = jin.IsArray(json, "others")
+	fmt.Println(result)
 	// Output: true
+
 
 ```
 Or you can use `GetType()`.
@@ -254,7 +259,8 @@ Or you can use `GetType()`.
 
 	json := []byte(`{"git":"ecoshub","repo":["jin","wsftp","penman"]}`)
 
-	fmt.Println(jin.GetType(json, "repo"))
+	result, _ := jin.GetType(json, "repo")
+	fmt.Println(result)
 	// Output: array
 
 ```
