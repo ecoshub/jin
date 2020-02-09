@@ -128,7 +128,7 @@ func coreTestFunction(t *testing.T, state string, mainTest func(json []byte, pat
 }
 
 func TestNode(t *testing.T) {
-	str, err := executeNode("sudo", "node", "--version", "")
+	str, err := executeNode("ls", "-lah")
 	t.Logf(str)
 	if err != nil {
 		fmt.Errorf("err:%v inner:%v", errorTriggerFailed, str)
