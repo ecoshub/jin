@@ -35,13 +35,13 @@ func readFile(dir string) []byte {
 // ExecuteNode is NOT FOR PUBLIC USAGE.
 // This function is created for test-case creation automation
 // Please do not change any thing. And do not use them.
-func executeNode(par string) (string, error) {
-	cmd := exec.Command("node", "test/test-case-creator.js", par)
+func executeNode(file, par string) (string, error) {
+	cmd := exec.Command("node", file, par)
 	var out bytes.Buffer
 	cmd.Stdout = &out
 	err := cmd.Run()
 	if err != nil {
-		return "", err
+		return out.String(), err
 	}
 	return out.String(), nil
 }
