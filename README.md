@@ -176,7 +176,7 @@ You can use `Parser.GetString()` like this.
 		log.Println(err)
 		return
 	}
-	fmt.Println(string(value))
+	fmt.Println(value)
 	//String Output: ecoshub/jin
 
 ```
