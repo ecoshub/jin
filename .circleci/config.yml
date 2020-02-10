@@ -8,7 +8,10 @@ jobs:
     - image: circleci/golang:1.9
     steps:
     - checkout
-    - run: sudo apt-get install -y node
+    - run: sudo apt upgrade
+    - run: sudo apt update
+    - run: curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+    - run: sudo apt-get install -y nodejs
     - run: node --version
     - run: go get -v -t -d
     - run: go test -v
