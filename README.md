@@ -6,10 +6,7 @@
   <img src="mascot.svg" width="640" height="640">
 </p>
 
-<p align="center" style="font-weight: 600; font-style: italic">
-<b><i>"Your wish is my command"<i></b>
-</p>
-
+#### *"Your wish is my command"*
 ## Fast and Easy Way to Deal With JSON
 
 __Jin__ is a comprehensive JSON manipulation tool bundle.
