@@ -6,11 +6,11 @@ jobs:
       TEST_RESULTS: /tmp/test-results 
     docker:
     - image: circleci/golang:1.9
-    - run: sudo apt install curl
+    steps:
+    - run: sudo apt install -y curl
     - run: curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
     - run: sudo apt-get install -y nodejs
-    steps:
-    - checkout
     - run: node --version
+    - checkout
     - run: go get -v -t -d
     - run: go test -v
