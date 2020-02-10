@@ -2,9 +2,13 @@
 [![Go Report Card](https://goreportcard.com/badge/github.com/ecoshub/jin)](https://goreportcard.com/report/github.com/ecoshub/jin) ![License](https://img.shields.io/dub/l/vibe-d.svg) [![GoDoc](https://godoc.org/github.com/ecoshub/jin?status.svg)](https://godoc.org/github.com/ecoshub/jin)
 
 # Welcome To JIN
-<img src="mascot.svg" width="640" height="640">
+<p align="center">
+  <img src="mascot.svg" width="640" height="640">
+</p>
 
-#### *"Your wish is my command"*
+<p align="center" style="font-weight: 600; font-style: italic">
+"Your wish is my command"
+</p>
 
 ## Fast and Easy Way to Deal With JSON
 
