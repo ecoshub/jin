@@ -132,16 +132,15 @@ func TestNode(t *testing.T) {
 	t.Logf(str)
 	if err != nil {
 		fmt.Errorf("err:%v inner:%v", errorTriggerFailed, str)
-		return 
+		return
 	}
 	if str == "node is running well" {
 		t.Logf("node is running well")
-	}else{
+	} else {
 		fmt.Errorf("err:%v inner:%v", errorTriggerFailed, str)
-		return 
+		return
 	}
 }
-
 
 func TestInterperterGet(t *testing.T) {
 	coreTestFunction(t, "all", func(json []byte, path []string, expected string) ([]byte, error, string, string) {

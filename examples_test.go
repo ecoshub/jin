@@ -266,7 +266,7 @@ func ExampleScheme_MakeScheme() {
 	json := MakeEmptyJson()
 	json, _ = AddKeyValueString(json, "name", "eco")
 	json, _ = AddKeyValueString(json, "lastname", "hub")
-	json, _ = AddKeyValue(json, "age", []byte(`28`))
+	json, _ = AddKeyValueString(json, "age", "28")
 	// json = {"name":"eco","lastname":"hub","age":28}
 
 	// with Scheme
