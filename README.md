@@ -1,13 +1,13 @@
 ![CircleCI](https://circleci.com/gh/ecoshub/jin.svg?style=svg&circle-token=1dc9234c155730e02bf31bbae184add75920bec2)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ecoshub/jin)](https://goreportcard.com/report/github.com/ecoshub/jin) ![License](https://img.shields.io/dub/l/vibe-d.svg) [![GoDoc](https://godoc.org/github.com/ecoshub/jin?status.svg)](https://godoc.org/github.com/ecoshub/jin)
 
-# Welcome To JIN
+<center># Welcome To JIN</center>
 <p align="center">
   <img src="mascot.svg" width="640" height="640">
 </p>
 
 <p align="center" style="font-weight: 600; font-style: italic">
-"Your wish is my command"
+<b><i>"Your wish is my command"<i><b>
 </p>
 
 ## Fast and Easy Way to Deal With JSON
