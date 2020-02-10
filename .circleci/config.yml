@@ -10,6 +10,7 @@ jobs:
     - checkout
     - run: sudo apt upgrade
     - run: sudo apt update
+    - run: sudo apt install curl
     - run: curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
     - run: sudo apt-get install -y nodejs
     - run: node --version
