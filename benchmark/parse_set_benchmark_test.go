@@ -1,8 +1,8 @@
 package jin
 
 import (
-	"github.com/valyala/fastjson"
 	"github.com/ecoshub/jin"
+	"github.com/valyala/fastjson"
 	"testing"
 )
 

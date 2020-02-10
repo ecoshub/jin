@@ -1,9 +1,9 @@
 package jin
 
 import (
+	"github.com/ecoshub/jin"
 	"github.com/json-iterator/go"
 	"github.com/valyala/fastjson"
-	"github.com/ecoshub/jin"
 	"testing"
 )
 
