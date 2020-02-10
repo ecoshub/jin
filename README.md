@@ -7,7 +7,7 @@
 </p>
 
 <p align="center" style="font-weight: 600; font-style: italic">
-<b><i>"Your wish is my command"<i><b>
+<b><i>"Your wish is my command"<i></b>
 </p>
 
 ## Fast and Easy Way to Deal With JSON
