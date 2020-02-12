@@ -2,8 +2,6 @@ package jin
 
 import "strconv"
 
-// import "fmt"
-
 // Get returns the value that path has pointed.
 // It stripes quotation marks from string values.
 // Path can point anything, a key-value pair, a value, an array, an object.
@@ -17,8 +15,29 @@ func (p *Parser) Get(path ...string) ([]byte, error) {
 	if err != nil {
 		return nil, err
 	}
-	// fmt.Printf("*>%v<\n", string(curr.value))
 	return cleanValue(curr.value), nil
+}
+
+// GetNew returns the value that path has pointed.
+// It stripes quotation marks from string values.
+// Path can point anything, a key-value pair, a value, an array, an object.
+// Path variable can not be null,
+// otherwise it will provide an error message.
+func (p *Parser) GetNew(path ...string) []byte {
+	var err error
+	curr := p.core
+	if len(path) != 0 {
+		curr, err = p.core.walk(path)
+		if err != nil {
+			return nil
+		}
+	}
+	if len(curr.down) == 0 {
+		return cleanValue(curr.value)
+	}
+	temp := make([]byte, 0, 128)
+	temp = curr.dive(temp)
+	return cleanValue(temp)
 }
 
 // GetString is a variation of Get() func.

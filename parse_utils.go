@@ -25,6 +25,47 @@ func createNode(up *node) *node {
 	return &Node
 }
 
+func packKeyValue(label string, value []byte) []byte {
+	byteOutput := make([]byte, 0, 16)
+	byteOutput = append(byteOutput, 34)
+	byteOutput = append(byteOutput, []byte(label)...)
+	byteOutput = append(byteOutput, 34)
+	byteOutput = append(byteOutput, 58)
+	byteOutput = append(byteOutput, value...)
+	return byteOutput
+}
+
+func packValue(value []byte) []byte {
+	byteOutput := make([]byte, 0, 16)
+	byteOutput = append(byteOutput, value...)
+	return byteOutput
+}
+
+func (n *node) dive(bytes []byte) []byte {
+	temp := make([]byte, 0, 32)
+	temp = append(temp, n.value[0])
+	for _, d := range n.down {
+		val := d.value
+		if len(d.down) != 0 {
+			val = d.dive(bytes)
+		}
+		if d.up.value[0] == 123 {
+			temp = append(temp, packKeyValue(d.label, val)...)
+		}
+		if d.up.value[0] == 91 {
+			temp = append(temp, packValue(val)...)
+		}
+		temp = append(temp, 44)
+	}
+	if len(temp) == 0 {
+		return nil
+	}
+	temp = temp[:len(temp)-1]
+	temp = append(temp, n.value[0]+2)
+	bytes = append(bytes, temp...)
+	return bytes
+}
+
 // Parse is constructor method for creating Parsers.
 func Parse(json []byte) (*Parser, error) {
 	core := &node{up: nil}
@@ -37,6 +78,21 @@ func Parse(json []byte) (*Parser, error) {
 	}
 	core = core.down[0]
 	pars := Parser{core: core, json: json}
+	return &pars, nil
+}
+
+// ParseNew is constructor method for creating Parsers.
+func ParseNew(json []byte) (*Parser, error) {
+	core := &node{up: nil}
+	err := nCore(json, core)
+	if err != nil {
+		return nil, err
+	}
+	if core.down == nil {
+		return nil, badJSONError(0)
+	}
+	core = core.down[0]
+	pars := Parser{core: core}
 	return &pars, nil
 }
 
