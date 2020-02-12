@@ -4,8 +4,7 @@ import (
 	"github.com/buger/jsonparser"
 	"github.com/json-iterator/go"
 	"github.com/tidwall/gjson"
-	// "github.com/ecoshub/jin"
-	"jin"
+	"github.com/ecoshub/jin"
 	"testing"
 )
 
