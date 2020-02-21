@@ -65,7 +65,7 @@ func nCore(json []byte, core *node) error {
 			case 91, 123:
 				switch last {
 				case 58:
-					newNode := &node{up: core, label: string(key), value: []byte{curr}}
+					newNode := &node{up: core, label: byteArrayToString(key), value: []byte{curr}}
 					core.down = append(core.down, newNode)
 					core = newNode
 				default:
@@ -81,7 +81,7 @@ func nCore(json []byte, core *node) error {
 			case 93, 125:
 				switch last {
 				case 58:
-					newNode := &node{up: core, label: string(key), value: json[valStart:i]}
+					newNode := &node{up: core, label: byteArrayToString(key), value: json[valStart:i]}
 					core.down = append(core.down, newNode)
 				case 44:
 					newNode := &node{up: core, label: strconv.Itoa(indexList.last()), value: json[valStart:i]}
@@ -101,7 +101,7 @@ func nCore(json []byte, core *node) error {
 			case 44:
 				switch last {
 				case 58:
-					newNode := &node{up: core, label: string(key), value: json[valStart:i]}
+					newNode := &node{up: core, label: byteArrayToString(key), value: json[valStart:i]}
 					core.down = append(core.down, newNode)
 				case 44, 91:
 					newNode := &node{up: core, label: strconv.Itoa(indexList.last()), value: json[valStart:i]}
@@ -180,7 +180,7 @@ func pCore(json []byte, core *node) error {
 			case 91, 123:
 				switch last {
 				case 58:
-					newNode := &node{up: core, label: string(key)}
+					newNode := &node{up: core, label: byteArrayToString(key)}
 					core.down = append(core.down, newNode)
 					core = newNode
 				default:
@@ -196,7 +196,7 @@ func pCore(json []byte, core *node) error {
 			case 93, 125:
 				switch last {
 				case 58:
-					newNode := &node{up: core, label: string(key), value: json[valStart:i]}
+					newNode := &node{up: core, label: byteArrayToString(key), value: json[valStart:i]}
 					core.down = append(core.down, newNode)
 				case 44:
 					newNode := &node{up: core, label: strconv.Itoa(indexList.last()), value: json[valStart:i]}
@@ -216,7 +216,7 @@ func pCore(json []byte, core *node) error {
 			case 44:
 				switch last {
 				case 58:
-					newNode := &node{up: core, label: string(key), value: json[valStart:i]}
+					newNode := &node{up: core, label: byteArrayToString(key), value: json[valStart:i]}
 					core.down = append(core.down, newNode)
 				case 44, 91:
 					newNode := &node{up: core, label: strconv.Itoa(indexList.last()), value: json[valStart:i]}

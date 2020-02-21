@@ -1,6 +1,9 @@
 package jin
 
-import "strconv"
+import (
+	"strconv"
+	"unsafe"
+)
 
 type sequance struct {
 	list   []int
@@ -400,4 +403,12 @@ func cleanValue(str []byte) []byte {
 		end--
 	}
 	return str[start : end+1]
+}
+
+func stringToByteArray(str string) []byte {
+	return *(*[]byte)(unsafe.Pointer(&str))
+}
+
+func byteArrayToString(arr []byte) string {
+	return *(*string)(unsafe.Pointer(&arr))
 }
