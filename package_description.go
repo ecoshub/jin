@@ -378,22 +378,6 @@ Benchmark results.
 	JinParseSetSmall-8                 3265 ns/op         1968 B/op          36 allocs/op
 
 
-
-
-LIMITATIONS
-
-Jin can handle all kind of JSON except single content JSONs
-
-Like those:
-
-	{"golang"}
-	{42}
-	{false}
-
-
-That kind of JSONs are forbidden.
-
-
 UPCOMING
 
 We are currently working on,

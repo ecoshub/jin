@@ -424,22 +424,6 @@ Benchmark results.
 
 ---
 
-### Limitations
-
-__Jin__ can handle all kind of JSON except single content JSONs
-
-Like those:
-```go
-
-	{"golang"}
-	{42}
-	{false}
-
-```
-That kind of JSONs are forbidden.
-
----
-
 ### Upcoming
 
 We are currently working on, 
