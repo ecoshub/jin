@@ -11,12 +11,12 @@
 
 __Jin__ is a comprehensive JSON manipulation tool bundle.
 All functions tested with random data with help of __Node.js__.
-All test-path and test-value created automatically with __Node.js__.
+All test-path and test-value creation automated with __Node.js__.
 
 __Jin__ provides `parse`, `interpret`, `build` and `format` tools for JSON.
 Third-party packages only used for the benchmark. No dependency need for core functions.
 
-We make some benchmark with other packages like us.
+We make some benchmark with other packages like __Jin__.
 ```
     github.com/buger/jsonparser
     github.com/valyala/fastjson
@@ -41,7 +41,7 @@ And you are good to go. Import and start using.
 
 ### Documentation
 
-There is a detailed documentation in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__ with lots of examples in it.
+There is a detailed documentation in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__ with lots of examples.
 
 ---
 
@@ -50,20 +50,20 @@ There is a detailed documentation in __[GoDoc](https://godoc.org/github.com/ecos
 #### Parser vs Interpreter
 
 Major difference between parsing and interpreting is
-parser has to read all data before answer to your commands.
+parser has to read all data before answer your needs.
 On the other hand interpreter reads up to find the data you need.
 
-With parser, once the parse is complete you can get access any data with no time.
-But there is a time cost to parse a data and this cost can increase as data content grows.
+With parser, once the parse is complete you can access any data with no time.
+But there is a time cost to parse all data and this cost can increase as data content grows.
 
-If you need to access all keys of a JSON then we are simply recommend you to use `Parser`.
-But if you need to access some keys of a JSON we strongly recommend you to use `Interpreter`, it will be much faster than parser. 
+If you need to access all keys of a JSON then, we are simply recommend you to use `Parser`.
+But if you need to access some keys of a JSON then we strongly recommend you to use `Interpreter`, it will be much faster and much more memory-friendly than parser. 
 
 #### Interpreter
 
-`Interpreter` is core element of this package, no need to create an Interpreter type, just call which function you want!
+`Interpreter` is core element of this package, no need to create an Interpreter type, just call which function you want.
 
-First let's look at function parameters.
+First let's look at general function parameters.
 ```go
 
 	// All interpreter functions need one JSON as byte slice. 
@@ -72,12 +72,11 @@ First let's look at function parameters.
 	// And most of them needs a path value for navigate.
 	// Path value determines which part to navigate.
 	// In this example we want to access 'jin' value.
-	// So path must be 'repo' object -> 'name' array -> '1' 
-	// second element with index of one.
+	// So path must be 'repo' (object) -> 'name' (array) -> '1' (second element)
 	path := []string{"repo", "name", "1"}
 
 ```
-We are gonna use `Get()` function to return the value of path has pointed. In this case 'jin'.
+We are gonna use `Get()` function to access the value of path has pointed. In this case 'jin'.
 ```go
     
 	value, err := jin.Get(json, path...)
@@ -107,9 +106,7 @@ Path value can consist hard coded values.
 ```
 `Get()` function return type is `[]byte` but all other variations of return types are implemented with different functions.
 
-For example. If you need "value" as string,
-
-There is a function called `GetString()`.
+For example. If you need "value" as string use `GetString()`.
 ```go
 
 	value, err := jin.GetString(json, "repo", "name", "0")
@@ -144,7 +141,7 @@ Parser constructor need only one parameter.
 	}`)
 
 ```
-Parse it with Parse function.
+We can parse it with `Parse()` function.
 ```go
 
 	prs, err := jin.Parse(json)
@@ -154,7 +151,7 @@ Parse it with Parse function.
 	}
 
 ```
-Let's look at Parser.Get()
+Let's look at `Parser.Get()`
 ```go
 
 	value, err := prs.Get("repo", "url")
@@ -169,9 +166,9 @@ Let's look at Parser.Get()
 ```
 *About path value look above.* 
 
-There is all kind of return type methods for `Parser` like `Interpreter`.
+There is all return type variations of `Parser.Get()` function like `Interpreter`.
 
-You can use `Parser.GetString()` like this.
+For return string use `Parser.GetString()` like this,
 ```go
 
 	value, err := prs.GetString("repo", "name")
@@ -183,9 +180,9 @@ You can use `Parser.GetString()` like this.
 	//String Output: ecoshub/jin
 
 ```
-All interpreter/parser functions (except function variations like `GetString()`) has own example provided in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
+All functions has own example provided in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
 
-**Other usefull functions of interpreter/parser.**
+**Other usefull functions of Jin.**
 
 -`Add()`, `AddKeyValue()`, `Set()`, `SetKey()` `Delete()`, `Insert()`, `IterateArray()`, `IterateKeyValue()` `Tree()`.
 
@@ -193,7 +190,7 @@ All interpreter/parser functions (except function variations like `GetString()`)
 
 ### Iteration Tools
 
-Iteration tools provide functions for access each key-value pair or each values of an array
+Iteration tools provide functions for access each key-value pair or each value of an array
 
 Let's look at `IterateArray()` function.
 ```go
@@ -225,7 +222,7 @@ Let's look at `IterateArray()` function.
 	// Cpp
 
 ```
-Another useful function is `IterateKeyValue()`. Description and examples in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
+Another useful function is `IterateKeyValue()`check for example in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
 
 ---
 
@@ -233,9 +230,11 @@ Another useful function is `IterateKeyValue()`. Description and examples in __[G
 
 #### Formatting
 
-There are two formatting functions. Flatten() and Indent()
+There are two formatting functions. `Flatten()` and `Indent()`.
 
-Both of them have their own examples in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__..
+`Indent()` is adds indentation to JSON for nicer visualization and `Flatten()` removes this indentation.
+
+Examples in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
 
 #### Control Functions
 
@@ -287,14 +286,14 @@ We just want to mention a couple of them.
 
 ```
 
-`MakeJson()`, `MakeArray()` functions and other variations is easy to use functions. Go and take a look.  __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
+`MakeJson()`, `MakeArray()` functions and other variations are easy to use functions. Go and take a look.  __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
 
 
 ---
 
 ### Testing
 
-Testing is very important for this type of packages and it shows how reliable it is.
+Testing is very important thing for this type of packages and it shows how reliable it is.
 
 For that reasons we use __Node.js__ for unit testing.
 
@@ -304,11 +303,11 @@ Lets look at folder arrangement and working principle.
 
 	- __test-json.json__, this is a temporary file for testing. all other test-cases copying here with this name so they can process by __test-case-creator.js__.
 
-	- __test-case-creator.js__ is core path & value creation mechanism.	When it executed with `executeNode()` function. It reads the __test-json.json__ file and generates the paths and values from this files content. With command line arguments it can generate different paths and values. As a result, two files are created. the first of these files is __test-json-paths.json__ and the second is __test-json-values.json__
+	- __test-case-creator.js__ is core path & value creation mechanism.	When it executed with `executeNode()` function. It reads the __test-json.json__ file and generates the paths and values from this files content. With command line arguments it can generate different paths and values. As a result, two files are created with this process. the first of these files is __test-json-paths.json__ and the second is __test-json-values.json__
 
-	- __test-json-paths.json__ keeps all the path values.
+	- __test-json-paths.json__ has all the path values.
 
-	- __test-json-values.json__ keeps all the values that corresponding to path values.
+	- __test-json-values.json__ has all the values that corresponding to path values.
 
 - __tests/__ folder
 
@@ -316,11 +315,11 @@ Lets look at folder arrangement and working principle.
 
 	- All `GO` side test-case automation functions are in __core_test.go__ file.
 
-This package developed with __Node.js__ v13.7.0. please make sure that your machine has a valid version of __Node.js__ befoure testing.
+This package developed with __Node.js__ v13.7.0. please make sure that your machine has a valid version of __Node.js__ before testing.
 
-All functions and methods are tested with complicated randomly created __.json__ files.
+All functions and methods are tested with complicated randomly genereted __.json__ files.
 
-Like this.
+Like this,
 ```go
 
 	{
@@ -427,7 +426,7 @@ Benchmark results.
 
 ### Limitations
 
-__Jin__ can handle all kind of JSON. Except single content JSONs
+__Jin__ can handle all kind of JSON except single content JSONs
 
 Like those:
 ```go
@@ -445,7 +444,7 @@ That kind of JSONs are forbidden.
 
 We are currently working on, 
 
-- `Marshall()` and `Unmarshall()` functions.
+- `Marshal()` and `Unmarshal()` functions.
 
 - http.Request parser/interpreter
 
