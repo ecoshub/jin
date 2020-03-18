@@ -153,6 +153,8 @@ func ExampleIterateKeyValue() {
 	//value: go
 	//key  : uuid
 	//value: 4a1531c25d5ef124295a
+	//key  : active
+	//value: true
 }
 
 func ExampleMakeArray() {
