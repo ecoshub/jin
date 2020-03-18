@@ -158,7 +158,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...st
 					continue
 				}
 				if curr == 93 || curr == 125 {
-					if level < 1 {
+					if level < 0 {
 						return nil
 					}
 					if curr == 125 {
