@@ -4,6 +4,9 @@ package jin
 // It stripes quotation marks from string values befour return.
 // Path value can be left blank for access main JSON.
 func IterateArray(json []byte, callback func([]byte) bool, path ...string) error {
+	if string(json) == "[]" {
+		return generalEmptyError()
+	}
 	var start int
 	var err error
 	if len(path) == 0 {
@@ -93,6 +96,9 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 // It stripes quotation marks from string values befour return.
 // Path value can be left blank for access main JSON.
 func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...string) error {
+	if string(json) == "{}" {
+		return generalEmptyError()
+	}
 	var start int
 	var err error
 	var end int

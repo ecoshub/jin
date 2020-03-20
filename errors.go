@@ -1,7 +1,9 @@
 package jin
 
-import "errors"
-import "fmt"
+import (
+	"errors"
+	"fmt"
+)
 
 func nullPathError() error {
 	return errors.New("error: path cannot be null error_code:00 ")
@@ -62,4 +64,7 @@ func boolArrayParseError(val string) error {
 }
 func nullKeyError() error {
 	return errors.New("error: new key cannot be null error_code:19 ")
+}
+func generalEmptyError() error {
+	return errors.New("error: Object/Array is empty error_code:20 ")
 }
