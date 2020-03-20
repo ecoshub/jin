@@ -1,6 +1,8 @@
 package jin
 
-import "strconv"
+import (
+	"strconv"
+)
 
 // Get returns the value that path has pointed.
 // It stripes quotation marks from string values.
@@ -303,4 +305,95 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 		return newArray, nil
 	}
 	return nil, boolArrayParseError(val)
+}
+
+// not tested yet
+func GetKeys(json []byte, path ...string) ([]string, error) {
+	var keys []string
+	if string(json) == "{}" {
+		return nil, generalEmptyError()
+	}
+	var start int
+	var err error
+	// var end int
+	if len(path) == 0 {
+		for space(json[start]) {
+			if start > len(json)-1 {
+				return nil, badJSONError(start)
+			}
+			start++
+			continue
+		}
+	} else {
+		_, start, _, err = core(json, true, path...)
+		if err != nil {
+			return nil, err
+		}
+	}
+	chars := []byte{34, 44, 58, 91, 93, 123, 125}
+	isJSONChar := make([]bool, 256)
+	for _, v := range chars {
+		isJSONChar[v] = true
+	}
+	if json[start] == 123 {
+		keyStart := 0
+		keyEnd := 0
+		inQuote := false
+		level := 0
+		var key []byte
+		for i := start; i < len(json); i++ {
+			curr := json[i]
+			if !isJSONChar[curr] {
+				continue
+			}
+			if curr == 34 {
+				if inQuote {
+					for n := i - 1; n > -1; n-- {
+						if json[n] != 92 {
+							if (i-n)%2 != 0 {
+								inQuote = !inQuote
+								break
+							} else {
+								goto cont
+							}
+						}
+						continue
+					}
+				} else {
+					inQuote = !inQuote
+				}
+				if inQuote {
+					keyStart = i
+					continue
+				}
+				keyEnd = i
+			cont:
+				continue
+			}
+			if inQuote {
+				continue
+			} else {
+				if curr == 91 || curr == 123 {
+					level++
+					continue
+				}
+				if curr == 93 || curr == 125 {
+					if level == 1 {
+						break
+					}
+					level--
+					continue
+				}
+				if curr == 58 {
+					if level == 1 {
+						key = json[keyStart+1 : keyEnd]
+						keys = append(keys, string(key))
+					}
+					continue
+				}
+			}
+		}
+		return keys, nil
+	}
+	return nil, objectExpectedError()
 }
