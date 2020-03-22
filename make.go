@@ -1,7 +1,9 @@
 package jin
 
-import "strconv"
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 // Scheme is a tool for creating non-nested JSONs.
 // It provides a struct for saving a JSON scheme for later usage.
@@ -23,6 +25,12 @@ func MakeScheme(keys ...string) *Scheme {
 // More information on Type Scheme example.
 func (s *Scheme) MakeJson(values ...interface{}) []byte {
 	return MakeJson(s.keys, values)
+}
+
+// MakeJsonString is main creation method for creating JSON's from Schemes.
+// More information on Type Scheme example.
+func (s *Scheme) MakeJsonString(values ...string) []byte {
+	return MakeJsonString(s.keys, values)
 }
 
 // Add adds a new key value to the current scheme.
