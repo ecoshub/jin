@@ -33,6 +33,43 @@ func (s *Scheme) MakeJsonString(values ...string) []byte {
 	return MakeJsonString(s.keys, values)
 }
 
+// MutateJson use for mutating a json to another json with a scheme.
+func (s *Scheme) MutateJson(json []byte) ([]byte, error) {
+	newJson := []byte(`{}`)
+	var err, err2 error
+	var val string
+	for _, k := range s.keys {
+		val, err = GetString(json, k)
+		val = formatType(val)
+		newJson, err2 = AddKeyValueString(newJson, k, val)
+		if err == nil {
+			if err2 != nil {
+				return nil, err
+			}
+		}
+	}
+	return newJson, nil
+}
+
+// MutateJsonAbs use for mutating a json to another json with a scheme.
+func (s *Scheme) MutateJsonAbs(json []byte) ([]byte, error) {
+	newJson := []byte(`{}`)
+	var err error
+	var val string
+	for _, k := range s.keys {
+		val, err = GetString(json, k)
+		if err != nil {
+			return nil, err
+		}
+		val = formatType(val)
+		newJson, err = AddKeyValueString(newJson, k, val)
+		if err != nil {
+			return nil, err
+		}
+	}
+	return newJson, nil
+}
+
 // Add adds a new key value to the current scheme.
 // If given key is already exists it returns false, otherwise returns true.
 // More information on Type Scheme example.
