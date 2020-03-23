@@ -70,6 +70,40 @@ func (s *Scheme) MutateJsonAbs(json []byte) ([]byte, error) {
 	return newJson, nil
 }
 
+func (s *Scheme) Check(json []byte) bool {
+	for _, k := range s.keys {
+		_, err := Get(json, k)
+		if err != nil {
+			return false
+		}
+	}
+	return true
+}
+
+func (s *Scheme) CheckAbs(json []byte) bool {
+	keys, err := GetKeys(json)
+	if err != nil {
+		return false
+	}
+	if len(keys) != len(s.keys) {
+		return false
+	}
+	for i := 0; i < len(keys); i++ {
+		has := false
+		key := keys[i]
+		for j := 0; j < len(s.keys); j++ {
+			if key == s.keys[j] {
+				has = true
+				break
+			}
+		}
+		if !has {
+			return false
+		}
+	}
+	return true
+}
+
 // Add adds a new key value to the current scheme.
 // If given key is already exists it returns false, otherwise returns true.
 // More information on Type Scheme example.
