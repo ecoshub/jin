@@ -9,6 +9,9 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 	var start int
 	var end int
 	var err error
+	if len(json) < 2 {
+		return json, badJSONError(0)
+	}
 	if len(path) == 0 {
 		for i := 0; i < len(json); i++ {
 			if !space(json[i]) {
