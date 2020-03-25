@@ -587,3 +587,102 @@ func GetKeysValues(json []byte, path ...string) ([]string, []string, error) {
 	}
 	return nil, nil, objectExpectedError()
 }
+
+func GetMap(json []byte, path ...string) (map[string]string, error) {
+	mp := make(map[string]string)
+	if string(json) == "{}" {
+		return nil, generalEmptyError()
+	}
+	var key []byte
+	var start int
+	var err error
+	if len(path) == 0 {
+		for space(json[start]) {
+			if start > len(json)-1 {
+				return nil, badJSONError(start)
+			}
+			start++
+			continue
+		}
+	} else {
+		_, start, _, err = core(json, true, path...)
+		if err != nil {
+			return nil, err
+		}
+	}
+	chars := []byte{34, 44, 58, 91, 93, 123, 125}
+	isJSONChar := make([]bool, 256)
+	for _, v := range chars {
+		isJSONChar[v] = true
+	}
+	if json[start] == 123 {
+		keyStart := 0
+		keyEnd := 0
+		inQuote := false
+		level := 0
+		for i := start; i < len(json); i++ {
+			curr := json[i]
+			if !isJSONChar[curr] {
+				continue
+			}
+			if curr == 34 {
+				if inQuote {
+					for n := i - 1; n > -1; n-- {
+						if json[n] != 92 {
+							if (i-n)%2 != 0 {
+								inQuote = !inQuote
+								break
+							} else {
+								goto cont
+							}
+						}
+						continue
+					}
+				} else {
+					inQuote = !inQuote
+				}
+				if inQuote {
+					keyStart = i
+					continue
+				}
+				keyEnd = i
+			cont:
+				continue
+			}
+			if inQuote {
+				continue
+			} else {
+				if curr == 91 || curr == 123 {
+					level++
+					continue
+				}
+				if curr == 93 || curr == 125 {
+					if level == 1 {
+						value := cleanValueString(string(json[start:i]))
+						mp[string(key)] = value
+						start = i + 1
+						break
+					}
+					level--
+					continue
+				}
+				if curr == 58 {
+					if level == 1 {
+						key = json[keyStart+1 : keyEnd]
+						start = i + 1
+					}
+					continue
+				}
+				if curr == 44 {
+					if level == 1 {
+						value := cleanValueString(string(json[start:i]))
+						mp[string(key)] = value
+						start = i + 1
+					}
+				}
+			}
+		}
+		return mp, nil
+	}
+	return nil, objectExpectedError()
+}
