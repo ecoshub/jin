@@ -17,18 +17,17 @@ const (
 )
 
 var (
-	testFiles         []string
-	testFileDir       string = "test" + sep() + testFileName
-	pathsFileNameDir  string = "test" + sep() + pathsFileName
-	valuesFileNameDir string = "test" + sep() + valuesFileName
-	// tempDir              string =
-	errorSkipPath      error = errors.New("skipped, no paths file found")
-	errorSkipValue     error = errors.New("skipped, no values file found")
-	errorSkipJSON      error = errors.New("skipped, no json file found")
-	errorTriggerFailed error = errors.New("skipped, node trigger failed")
-	errorEmptyPath     error = errors.New("skipped, empty path")
-	errorNullValue     error = errors.New("skipped, null value")
-	errorNullArray     error = errors.New("skipped, null array")
+	testFiles          []string
+	testFileDir        string = "test" + sep() + testFileName
+	pathsFileNameDir   string = "test" + sep() + pathsFileName
+	valuesFileNameDir  string = "test" + sep() + valuesFileName
+	errorSkipPath      error  = errors.New("skipped, no paths file found")
+	errorSkipValue     error  = errors.New("skipped, no values file found")
+	errorSkipJSON      error  = errors.New("skipped, no json file found")
+	errorTriggerFailed error  = errors.New("skipped, node trigger failed")
+	errorEmptyPath     error  = errors.New("skipped, empty path")
+	errorNullValue     error  = errors.New("skipped, null value")
+	errorNullArray     error  = errors.New("skipped, null array")
 )
 
 func init() {
