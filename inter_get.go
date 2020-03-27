@@ -589,10 +589,10 @@ func GetKeysValues(json []byte, path ...string) ([]string, []string, error) {
 }
 
 func GetMap(json []byte, path ...string) (map[string]string, error) {
-	mp := make(map[string]string)
-	if string(json) == "{}" {
+	if len(json) < 2 || string(json) == "{}" {
 		return nil, generalEmptyError()
 	}
+	mp := make(map[string]string)
 	var key []byte
 	var start int
 	var err error
