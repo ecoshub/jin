@@ -308,6 +308,7 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 }
 
 // GetKeys not tested yet
+// Gets all keys that path has pointed.
 func GetKeys(json []byte, path ...string) ([]string, error) {
 	var keys []string
 	if string(json) == "{}" {
@@ -397,6 +398,7 @@ func GetKeys(json []byte, path ...string) ([]string, error) {
 }
 
 // GetValues not tested yet
+// Gets all values that path has pointed.
 func GetValues(json []byte, path ...string) ([]string, error) {
 	var values []string
 	if string(json) == "{}" {
@@ -488,6 +490,7 @@ func GetValues(json []byte, path ...string) ([]string, error) {
 }
 
 // GetKeysValues not tested yet
+// Gets all keys and values that path has pointed.
 func GetKeysValues(json []byte, path ...string) ([]string, []string, error) {
 	var values []string
 	var keys []string
@@ -588,6 +591,8 @@ func GetKeysValues(json []byte, path ...string) ([]string, []string, error) {
 	return nil, nil, objectExpectedError()
 }
 
+// GetKeysValues not tested yet
+// Gets all keys and values pair with string to string map.
 func GetMap(json []byte, path ...string) (map[string]string, error) {
 	if string(json) == "[]" || string(json) == "{}" {
 		return nil, nil
@@ -622,6 +627,8 @@ func GetMap(json []byte, path ...string) (map[string]string, error) {
 	return nil, badJSONError(start)
 }
 
+// GetAll not tested yet
+// GetAll gets all values of path+key has pointed.
 func GetAll(json []byte, keys []string, path ...string) ([]string, error) {
 	var err error
 	var val string
@@ -636,6 +643,8 @@ func GetAll(json []byte, keys []string, path ...string) ([]string, error) {
 	return results, nil
 }
 
+// GetAllMap not tested yet
+// GetAllMap gets all values of path+key has pointed as string to string map.
 func GetAllMap(json []byte, keys []string, path ...string) (map[string]string, error) {
 	var err error
 	var val string
