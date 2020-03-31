@@ -1,5 +1,7 @@
 package jin
 
+// Length function gives the length of any array or object
+// that path has pointed.
 func Length(json []byte, path ...string) (int, error) {
 	if string(json) == "[]" || string(json) == "{}" {
 		return 0, nil
