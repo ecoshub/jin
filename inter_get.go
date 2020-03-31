@@ -602,7 +602,7 @@ func GetMap(json []byte, path ...string) (map[string]string, error) {
 		return nil, err
 	}
 	mainMap := make(map[string]string)
-	if json[start] == 123 && json[end] == 125 {
+	if json[start] == 123 && json[end-1] == 125 {
 		err = IterateKeyValue(json, func(key, val []byte) bool {
 			mainMap[string(key)] = string(val)
 			return true
