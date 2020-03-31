@@ -589,100 +589,63 @@ func GetKeysValues(json []byte, path ...string) ([]string, []string, error) {
 }
 
 func GetMap(json []byte, path ...string) (map[string]string, error) {
-	if len(json) < 2 || string(json) == "{}" {
-		return nil, generalEmptyError()
+	if string(json) == "[]" || string(json) == "{}" {
+		return nil, nil
 	}
-	mp := make(map[string]string)
-	var key []byte
-	var start int
-	var err error
-	if len(path) == 0 {
-		for space(json[start]) {
-			if start > len(json)-1 {
-				return nil, badJSONError(start)
-			}
-			start++
-			continue
-		}
-	} else {
-		_, start, _, err = core(json, true, path...)
+	start, end, err := getStartEnd(json, path...)
+	if err != nil {
+		return nil, err
+	}
+	mainMap := make(map[string]string)
+	if json[start] == 123 && json[end] == 125 {
+		err = IterateKeyValue(json, func(key, val []byte) bool {
+			mainMap[string(key)] = string(val)
+			return true
+		}, path...)
 		if err != nil {
 			return nil, err
 		}
+		return mainMap, nil
 	}
-	chars := []byte{34, 44, 58, 91, 93, 123, 125}
-	isJSONChar := make([]bool, 256)
-	for _, v := range chars {
-		isJSONChar[v] = true
-	}
-	if json[start] == 123 {
-		keyStart := 0
-		keyEnd := 0
-		inQuote := false
-		level := 0
-		for i := start; i < len(json); i++ {
-			curr := json[i]
-			if !isJSONChar[curr] {
-				continue
-			}
-			if curr == 34 {
-				if inQuote {
-					for n := i - 1; n > -1; n-- {
-						if json[n] != 92 {
-							if (i-n)%2 != 0 {
-								inQuote = !inQuote
-								break
-							} else {
-								goto cont
-							}
-						}
-						continue
-					}
-				} else {
-					inQuote = !inQuote
-				}
-				if inQuote {
-					keyStart = i
-					continue
-				}
-				keyEnd = i
-			cont:
-				continue
-			}
-			if inQuote {
-				continue
-			} else {
-				if curr == 91 || curr == 123 {
-					level++
-					continue
-				}
-				if curr == 93 || curr == 125 {
-					if level == 1 {
-						value := cleanValueString(string(json[start:i]))
-						mp[string(key)] = value
-						start = i + 1
-						break
-					}
-					level--
-					continue
-				}
-				if curr == 58 {
-					if level == 1 {
-						key = json[keyStart+1 : keyEnd]
-						start = i + 1
-					}
-					continue
-				}
-				if curr == 44 {
-					if level == 1 {
-						value := cleanValueString(string(json[start:i]))
-						mp[string(key)] = value
-						start = i + 1
-					}
-				}
-			}
+	if json[start] == 91 && json[end-1] == 93 {
+		count := 0
+		err = IterateArray(json, func(val []byte) bool {
+			mainMap[strconv.Itoa(count)] = string(val)
+			count++
+			return true
+		}, path...)
+		if err != nil {
+			return nil, err
 		}
-		return mp, nil
+		return mainMap, nil
 	}
-	return nil, objectExpectedError()
+	return nil, badJSONError(start)
+}
+
+func GetAll(json []byte, keys []string, path ...string) ([]string, error) {
+	var err error
+	var val string
+	results := make([]string, 0, len(keys))
+	for _, k := range keys {
+		val, err = GetString(json, append(path, k)...)
+		if err != nil {
+			return nil, err
+		}
+		results = append(results, val)
+	}
+	return results, nil
+}
+
+func GetAllMap(json []byte, keys []string, path ...string) (map[string]string, error) {
+	var err error
+	var val string
+	results := make(map[string]string)
+	for _, k := range keys {
+		val, err = GetString(json, append(path, k)...)
+		if err != nil {
+			return nil, err
+		}
+		results[k] = val
+	}
+	return results, nil
 }
