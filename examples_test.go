@@ -157,6 +157,82 @@ func ExampleIterateKeyValue() {
 	//value: true
 }
 
+func ExampleGetKeys() {
+	json := []byte(`{"index":42,"user":"eco","language":"go","uuid":"4a1531c25d5ef124295a","active":true}`)
+
+	keys, err := GetKeys(json)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(keys)
+	// Output: [index user language uuid active]
+}
+
+func ExampleGetValues() {
+	json := []byte(`{"index":42,"user":"eco","language":"go","uuid":"4a1531c25d5ef124295a","active":true}`)
+
+	values, err := GetValues(json)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(values)
+	// Output: [42 eco go 4a1531c25d5ef124295a true]
+}
+
+func ExampleGetKeysValues() {
+	json := []byte(`{"index":42,"user":"eco","language":"go","uuid":"4a1531c25d5ef124295a","active":true}`)
+
+	keys, values, err := GetKeysValues(json)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(keys)
+	fmt.Println(values)
+	// Output: [index user language uuid active]
+	//[42 eco go 4a1531c25d5ef124295a true]
+}
+
+func ExampleGetMap() {
+	json := []byte(`{"uuid":"4a1531c25d5ef124295a","personal":{"index":42,"user":"eco","language":"go"}}`)
+
+	personal, err := GetMap(json, "personal")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(personal)
+	// Output: map[index:42 language:go user:eco]
+}
+
+func ExampleGetAll() {
+	json := []byte(`{"uuid":"4a1531c25d5ef124295a","personal":{"index":42,"user":"eco","language":"go"}}`)
+
+	keys := []string{"index", "language"}
+	allINeed, err := GetAll(json, keys, "personal")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(allINeed)
+	// Output: [42 go]
+}
+
+func ExampleGetAllMap() {
+	json := []byte(`{"uuid":"4a1531c25d5ef124295a","personal":{"index":42,"user":"eco","language":"go"}}`)
+
+	keys := []string{"index", "language"}
+	allINeed, err := GetAllMap(json, keys, "personal")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(allINeed)
+	// Output: map[index:42 language:go]
+}
+
 func ExampleMakeArray() {
 	years := MakeArray(2005, 2009, 2013, 2019)
 	// [2005,2009,2013,2019]
