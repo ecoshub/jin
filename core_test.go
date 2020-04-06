@@ -42,7 +42,7 @@ func triggerNode(state string, fileName string) error {
 	writeFile(testFileDir, readFile(testsDir+fileName))
 	str, err := executeNode("node", "test/test-case-creator.js", state)
 	if err != nil {
-		return fmt.Errorf("err:%v inner:%v", errorTriggerFailed, str)
+		return fmt.Errorf("err:%v inner:%v err:%v", errorTriggerFailed, err, str)
 	}
 	return nil
 }
@@ -359,6 +359,27 @@ func TestInterperterIterateKeyValue(t *testing.T) {
 			return nil, errorMessage("IterateKeyValue/" + sticker), "*expected*", sticker
 		}
 		return nil, nil, "", sticker
+	})
+}
+
+func TestInterpreterGetKeys(t *testing.T) {
+	coreTestFunction(t, "keys", func(json []byte, path []string, expected string) ([]byte, error, string, string) {
+		sticker := "Interpreter.GetKeys"
+		keys, err := GetKeys(json, path...)
+		if err != nil {
+			t.Logf("error. %v\n", err)
+			return nil, err, expected, sticker
+		}
+		expKeys := ParseArray(expected)
+		if len(expKeys) != len(keys) {
+			return nil, errors.New("keys length not equal."), expected, sticker
+		}
+		for i, k := range keys {
+			if k != expKeys[i] {
+				return []byte(k), errors.New("not equal."), expKeys[i], sticker
+			}
+		}
+		return []byte(""), nil, "", sticker
 	})
 }
 
