@@ -203,8 +203,12 @@ func ExampleGetMap() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(personal)
-	// Output: map[index:42 language:go user:eco]
+	fmt.Println(personal["index"])
+	fmt.Println(personal["user"])
+	fmt.Println(personal["language"])
+	// Output: 42
+	//eco
+	//go
 }
 
 func ExampleGetAll() {
@@ -229,8 +233,10 @@ func ExampleGetAllMap() {
 		fmt.Println(err)
 		return
 	}
-	fmt.Println(allINeed)
-	// Output: map[index:42 language:go]
+	fmt.Println(allINeed["index"])
+	fmt.Println(allINeed["language"])
+	// Output: 42
+	//go
 }
 
 func ExampleLength() {
