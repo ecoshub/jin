@@ -60,49 +60,56 @@ const addPathAndValue = (path, value) => {
 const createCase = (json, pathType) => {
 	switch (pathType) {
 	case "all":
-		addPathAndValue([], json)
+		addPathAndValue([], json);
 		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
-			addPathAndValue(path, value)
+			addPathAndValue(path, value);
 		});
 		break;
 	case "array":
 		if (getType(json) === 'array'){
-			addPathAndValue([], json)
+			addPathAndValue([], json);
 		}
 		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
 			if (myType === 'array'){
-				addPathAndValue(path, value)
+				addPathAndValue(path, value);
 			}
 		});
 		break;
 	case "object":
 		if (getType(json) === 'object'){
-			addPathAndValue([], json)
+			addPathAndValue([], json);
 		}
 		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
 			if (myType === 'object'){
-				addPathAndValue(path, value)
+				addPathAndValue(path, value);
 			}
 		});
 		break;
 	case "object-values":
 		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
 			if (upType === 'object'){
-				addPathAndValue(path, value)
+				addPathAndValue(path, value);
 			}
 		});
 		break;
 	case "array-values":
 		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
 			if (upType === 'array'){
-				addPathAndValue(path, value)
+				addPathAndValue(path, value);
 			}
 		});
 		break;
 	case "not-value":
 		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
 			if (myType !== 'value'){
-				addPathAndValue(path, value)
+				addPathAndValue(path, value);
+			}
+		});
+		break;
+	case "keys":
+		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
+			if (myType === 'object' && value != null ){
+				addPathAndValue(path, Object.keys(value));
 			}
 		});
 		break;
