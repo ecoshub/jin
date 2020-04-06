@@ -78,3 +78,16 @@ func getCurrentDir() string {
 func sep() string {
 	return string(os.PathSeparator)
 }
+
+// string array comparison function
+func stringArrayEqual(arr1, arr2 []string) bool {
+	if len(arr1) != len(arr2) {
+		return false
+	}
+	for i, e1 := range arr1 {
+		if e1 != arr2[i] {
+			return false
+		}
+	}
+	return true
+}
