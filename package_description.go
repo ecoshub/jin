@@ -31,13 +31,21 @@ For more information please take a look at BENCHMARK section below.
 
 
 WHAT IS NEW?
+
 7 new functions tested and added to package.
+
 - GetMap() get objects as map[string]string structure with key values pairs
+
 - GetAll() get only specific keys values
+
 - GetAllMap() get only specific keys with map[string]stringstructure
+
 - GetKeys() get objects keys as string array
+
 - GetValues() get objects values as string array
+
 - GetKeysValues() get objects keys and values with separate string arrays
+
 - Length() get length of JSON array.
 
 
