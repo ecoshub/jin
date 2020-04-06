@@ -113,6 +113,20 @@ const createCase = (json, pathType) => {
 			}
 		});
 		break;
+	case "values":
+		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
+			if (myType === 'object' && value != null ){
+				addPathAndValue(path, Object.values(value));
+			}
+		});
+		break;
+	case "length":
+		walk(json, [], getType(json), null, (key, value, upType, myType, path) => {
+			if (myType === 'array' && value != null ){
+				addPathAndValue(path, value.length);
+			}
+		});
+		break;
 	}
 	if (pathString.length == 0) {
 		fs.writeFileSync(pathFile, "");
