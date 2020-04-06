@@ -1,4 +1,5 @@
 
+
 ![CircleCI](https://circleci.com/gh/ecoshub/jin.svg?style=svg&circle-token=1dc9234c155730e02bf31bbae184add75920bec2)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ecoshub/jin)](https://goreportcard.com/report/github.com/ecoshub/jin) ![License](https://img.shields.io/dub/l/vibe-d.svg) [![GoDoc](https://godoc.org/github.com/ecoshub/jin?status.svg)](https://godoc.org/github.com/ecoshub/jin)
 
@@ -31,6 +32,7 @@ For more information please take a look at __BENCHMARK__ section below.
 
 ---
 ### What is New?
+
 **7 new** functions **tested** and **added** to package. Examples in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__
 * `GetMap()` get objects as `map[string]string` structure with key values pairs
 * `GetAll()` get only specific keys values
@@ -39,7 +41,7 @@ For more information please take a look at __BENCHMARK__ section below.
 * `GetValues()` get objects values as string array
 * `GetKeysValues()` get objects keys and values with separate string arrays
 * `Length()` get length of JSON array.
-
+##### *06.04.2020*
 ---
 
 ### Installation

@@ -48,6 +48,7 @@ WHAT IS NEW?
 
 - Length() get length of JSON array.
 
+06.04.2020
 
 INSTALLATION
 
