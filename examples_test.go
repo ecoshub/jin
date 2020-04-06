@@ -233,6 +233,18 @@ func ExampleGetAllMap() {
 	// Output: map[index:42 language:go]
 }
 
+func ExampleLength() {
+	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"]}`)
+
+	length, err := Length(json, "languages")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println(length)
+	// Output: 5
+}
+
 func ExampleMakeArray() {
 	years := MakeArray(2005, 2009, 2013, 2019)
 	// [2005,2009,2013,2019]
