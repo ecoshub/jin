@@ -52,6 +52,14 @@ func Length(json []byte, path ...string) (int, error) {
 			length++
 		}
 	}
+	if length == 0 {
+		for i := start + 1; i < end-1; i++ {
+			if !space(json[i]) {
+				return 1, nil
+			}
+		}
+		return 0, nil
+	}
 	return length + 1, nil
 }
 
