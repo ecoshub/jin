@@ -3,7 +3,7 @@ package jin
 // IterateArray is a callback function that can iterate any array and return value as byte slice.
 // It stripes quotation marks from string values befour return.
 // Path value can be left blank for access main JSON.
-func IterateArray(json []byte, callback func([]byte) bool, path ...string) error {
+func IterateArray(json []byte, callback func([]byte) (bool, error), path ...string) error {
 	if string(json) == "[]" {
 		return generalEmptyError()
 	}
@@ -71,8 +71,8 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 				}
 				if curr == 93 {
 					if level == 0 {
-						callback(cleanValue(json[start:i]))
-						return nil
+						_, innerError := callback(cleanValue(json[start:i]))
+						return innerError
 					}
 				}
 				level--
@@ -80,7 +80,11 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 			}
 			if level == 0 {
 				if curr == 44 {
-					if !callback(cleanValue(json[start:i])) {
+					keepGoing, innerError := callback(cleanValue(json[start:i]))
+					if innerError != nil {
+						return innerError
+					}
+					if !keepGoing {
 						return nil
 					}
 					start = i + 1
@@ -95,7 +99,7 @@ func IterateArray(json []byte, callback func([]byte) bool, path ...string) error
 // IterateKeyValue is a callback function that can iterate any object and return key-value pair as byte slices.
 // It stripes quotation marks from string values befour return.
 // Path value can be left blank for access main JSON.
-func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...string) error {
+func IterateKeyValue(json []byte, callback func([]byte, []byte) (bool, error), path ...string) error {
 	if string(json) == "{}" {
 		return generalEmptyError()
 	}
@@ -208,11 +212,19 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) bool, path ...st
 							}
 						}
 						if json[start] == 34 && json[end] == 34 {
-							if !callback(key, json[start+1:end]) {
+							keepGoing, innerError := callback(key, json[start+1:end])
+							if innerError != nil {
+								return innerError
+							}
+							if !keepGoing {
 								return nil
 							}
 						} else {
-							if !callback(key, json[start:end+1]) {
+							keepGoing, innerError := callback(key, json[start:end+1])
+							if innerError != nil {
+								return innerError
+							}
+							if !keepGoing {
 								return nil
 							}
 						}

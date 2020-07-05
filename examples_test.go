@@ -112,11 +112,12 @@ func ExampleInsert() {
 func ExampleIterateArray() {
 	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"]}`)
 
-	err := IterateArray(json, func(value []byte) bool {
+	err := IterateArray(json, func(value []byte) (bool, error) {
 		fmt.Println(string(value))
 		// this return is some kind control mechanism for escape the iteration any time you want.
 		// true means keep iterate. false means stop iteration.
-		return true
+		// inner function returning an error for exporting inner error to outer function
+		return true, nil
 	}, "languages")
 
 	if err != nil {
@@ -133,12 +134,13 @@ func ExampleIterateArray() {
 func ExampleIterateKeyValue() {
 	json := []byte(`{"index":42,"user":"eco","language":"go","uuid":"4a1531c25d5ef124295a","active":true}`)
 
-	err := IterateKeyValue(json, func(key, value []byte) bool {
+	err := IterateKeyValue(json, func(key, value []byte) (bool, error) {
 		fmt.Println("key  :", string(key))
 		fmt.Println("value:", string(value))
 		// this return is some kind control mechanism for escape the iteration any time you want.
 		// true means keep iterate. false means stop iteration.
-		return true
+		// inner function returning an error for exporting inner error to outer function
+		return true, nil
 	})
 
 	if err != nil {
@@ -357,7 +359,7 @@ func ExampleParser_TreeFull() {
 	//	└  code   : "github"
 }
 
-func ExampleScheme_MakeScheme() {
+func ExampleMakeScheme() {
 	// without Scheme
 	json := MakeEmptyJson()
 	json, _ = AddKeyValueString(json, "name", "eco")

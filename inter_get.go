@@ -591,8 +591,7 @@ func GetKeysValues(json []byte, path ...string) ([]string, []string, error) {
 	return nil, nil, objectExpectedError()
 }
 
-// GetKeysValues not tested yet
-// Gets all keys and values pair with string to string map.
+// GetMap Gets all keys and values pair with string to string map.
 func GetMap(json []byte, path ...string) (map[string]string, error) {
 	if string(json) == "[]" || string(json) == "{}" {
 		return nil, nil
@@ -603,9 +602,9 @@ func GetMap(json []byte, path ...string) (map[string]string, error) {
 	}
 	mainMap := make(map[string]string)
 	if json[start] == 123 && json[end-1] == 125 {
-		err = IterateKeyValue(json, func(key, val []byte) bool {
+		err = IterateKeyValue(json, func(key, val []byte) (bool, error) {
 			mainMap[string(key)] = string(val)
-			return true
+			return true, nil
 		}, path...)
 		if err != nil {
 			return nil, err
@@ -614,10 +613,10 @@ func GetMap(json []byte, path ...string) (map[string]string, error) {
 	}
 	if json[start] == 91 && json[end-1] == 93 {
 		count := 0
-		err = IterateArray(json, func(val []byte) bool {
+		err = IterateArray(json, func(val []byte) (bool, error) {
 			mainMap[strconv.Itoa(count)] = string(val)
 			count++
-			return true
+			return true, nil
 		}, path...)
 		if err != nil {
 			return nil, err

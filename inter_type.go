@@ -51,7 +51,6 @@ func GetType(json []byte, path ...string) (string, error) {
 	default:
 		return "value", nil
 	}
-	return "ERROR", nil
 }
 
 // IsEmpty is a control function.

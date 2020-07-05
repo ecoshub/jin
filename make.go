@@ -70,6 +70,7 @@ func (s *Scheme) MutateJsonAbs(json []byte) ([]byte, error) {
 	return newJson, nil
 }
 
+// Check checks the json is fitting the scheme or not
 func (s *Scheme) Check(json []byte) bool {
 	for _, k := range s.keys {
 		_, err := Get(json, k)
@@ -80,6 +81,7 @@ func (s *Scheme) Check(json []byte) bool {
 	return true
 }
 
+// CheckAbs checks the json is absolutely fitting the scheme or not
 func (s *Scheme) CheckAbs(json []byte) bool {
 	keys, err := GetKeys(json)
 	if err != nil {

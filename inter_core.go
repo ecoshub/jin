@@ -78,8 +78,6 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 							}
 							break
 						}
-						// Doesn't have to always find a brace. It can be a value. always break after one non-space char.
-						break
 					}
 				}
 			} else {
@@ -454,7 +452,6 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 				}
 				continue
 			}
-			continue
 		}
 	} else {
 		// If value starts with quote

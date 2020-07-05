@@ -130,13 +130,13 @@ func TestNode(t *testing.T) {
 	str, err := executeNode("node", "test/test-node.js")
 	t.Logf(str)
 	if err != nil {
-		fmt.Errorf("err:%v inner:%v", errorTriggerFailed, str)
+		t.Logf("err:%v inner:%v", errorTriggerFailed, str)
 		return
 	}
 	if str == "node is running well" {
 		t.Logf("node is running well")
 	} else {
-		fmt.Errorf("err:%v inner:%v", errorTriggerFailed, str)
+		t.Logf("err:%v inner:%v", errorTriggerFailed, str)
 		return
 	}
 }
@@ -298,7 +298,7 @@ func TestInterperterIterateArray(t *testing.T) {
 		array := ParseArray(expected)
 		count := 0
 		done := true
-		err := IterateArray(json, func(value []byte) bool {
+		err := IterateArray(json, func(value []byte) (bool, error) {
 			got := formatValue(value)
 			expected := stripQuotes(array[count])
 			if got != expected {
@@ -306,10 +306,10 @@ func TestInterperterIterateArray(t *testing.T) {
 				t.Logf("got:%v\n", got)
 				t.Logf("expected:%v\n", expected)
 				done = false
-				return false
+				return false, nil
 			}
 			count++
-			return true
+			return true, nil
 		}, path...)
 		if count != len(array) {
 			t.Logf("error. iteration count and real arrays count is different.\n")
@@ -334,11 +334,11 @@ func TestInterperterIterateKeyValue(t *testing.T) {
 			return []byte(expected), nil, expected, sticker
 		}
 		done := true
-		err := IterateKeyValue(json, func(key, value []byte) bool {
+		err := IterateKeyValue(json, func(key, value []byte) (bool, error) {
 			value2, err := Get(json, append(path, string(key))...)
 			if err != nil {
 				done = false
-				return false
+				return false, nil
 			}
 			got := formatValue(value)
 			expected := formatValue(value2)
@@ -347,9 +347,9 @@ func TestInterperterIterateKeyValue(t *testing.T) {
 				t.Logf("got:%v\n", got)
 				t.Logf("expected:%v\n", expected)
 				done = false
-				return false
+				return false, nil
 			}
-			return true
+			return true, nil
 		}, path...)
 		if err != nil {
 			t.Logf("error. %v\n", err)
@@ -372,7 +372,7 @@ func TestInterpreterGetKeys(t *testing.T) {
 		}
 		expKeys := ParseArray(expected)
 		if !stringArrayEqual(keys, expKeys) {
-			return []byte("some element"), errors.New("not equal."), "some element", sticker
+			return []byte("some element"), errors.New("not equal"), "some element", sticker
 		}
 		return []byte(""), nil, "", sticker
 	})
@@ -389,7 +389,7 @@ func TestInterpreterGetValues(t *testing.T) {
 		}
 		expValues := ParseArray(expected)
 		if !stringArrayEqual(values, expValues) {
-			return []byte("some element"), errors.New("not equal."), "some element", sticker
+			return []byte("some element"), errors.New("not equal"), "some element", sticker
 		}
 		return []byte(""), nil, "", sticker
 	})
@@ -415,7 +415,7 @@ func TestInterpreterGetKeysValues(t *testing.T) {
 			return nil, err, expected, sticker
 		}
 		if !stringArrayEqual(keys, expKeys) || !stringArrayEqual(values, expValues) {
-			return []byte("some element"), errors.New("not equal."), "some element", sticker
+			return []byte("some element"), errors.New("not equal"), "some element", sticker
 		}
 		return []byte(""), nil, "", sticker
 	})
@@ -430,7 +430,7 @@ func TestInterpreterGetLength(t *testing.T) {
 			return nil, err, expected, sticker
 		}
 		if strconv.Itoa(length) != expected {
-			return []byte(strconv.Itoa(length)), errors.New("not equal."), expected, sticker
+			return []byte(strconv.Itoa(length)), errors.New("not equal"), expected, sticker
 		}
 		return []byte(""), nil, "", sticker
 	})
