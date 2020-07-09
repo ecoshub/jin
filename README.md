@@ -212,14 +212,14 @@ Let's look at `IterateArray()` function.
 	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"]}`)
 
 	// IterateArray() uses a callback function to return elements.
-	err := jin.IterateArray(json, func(value []byte) bool {
+	err := jin.IterateArray(json, func(value []byte) (bool, error) {
 		
 		// printing current element as string.
 		fmt.Println(string(value))
 		
 		// this return is some kind of control mechanism for escape from iteration any time.
 		// true means keep iterate. false means stop the iteration.
-		return true
+		return true, nil
 	// last parameter is path. Its currently pointing at "language" array.
 	}, "languages")
 
