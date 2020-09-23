@@ -1,10 +1,11 @@
 package jin
 
 import (
-	"github.com/buger/jsonparser"
-	"github.com/tidwall/sjson"
-	"github.com/ecoshub/jin"
 	"testing"
+
+	"github.com/buger/jsonparser"
+	"github.com/ecoshub/jin"
+	"github.com/tidwall/sjson"
 )
 
 func BenchmarkSJonSetSmall(b *testing.B) {

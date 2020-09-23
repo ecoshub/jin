@@ -1,11 +1,12 @@
 package jin
 
 import (
-	"github.com/buger/jsonparser"
-	"github.com/json-iterator/go"
-	"github.com/tidwall/gjson"
-	"github.com/ecoshub/jin"
 	"testing"
+
+	"github.com/buger/jsonparser"
+	"github.com/ecoshub/jin"
+	jsoniter "github.com/json-iterator/go"
+	"github.com/tidwall/gjson"
 )
 
 func nop(_ ...interface{}) {}
@@ -87,10 +88,10 @@ func BenchmarkJinGetMedium(b *testing.B) {
 		jin.Get(mediumfixture, "person", "github", "followers")
 		jin.Get(mediumfixture, "company")
 
-		jin.IterateArray(mediumfixture, func(value []byte) bool {
+		jin.IterateArray(mediumfixture, func(value []byte) (bool, error) {
 			jin.Get(value, "url")
 			nop()
-			return true
+			return true, nil
 		}, "person", "gravatar", "avatars")
 	}
 }
@@ -134,15 +135,15 @@ func BenchmarkJsonparserGetLarge(b *testing.B) {
 func BenchmarkJinGetLarge(b *testing.B) {
 	b.ReportAllocs()
 	for i := 0; i < b.N; i++ {
-		jin.IterateArray(largefixture, func(value []byte) bool {
+		jin.IterateArray(largefixture, func(value []byte) (bool, error) {
 			jin.Get(value, "username")
-			return true
+			return true, nil
 		}, "users")
 
-		jin.IterateArray(largefixture, func(value []byte) bool {
+		jin.IterateArray(largefixture, func(value []byte) (bool, error) {
 			jin.Get(value, "id")
 			jin.Get(value, "slug")
-			return true
+			return true, nil
 		}, "topics", "topics")
 	}
 }
@@ -177,9 +178,9 @@ func BenchmarkIterateArrayGetJin(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		jin.IterateArray(fakearray, func(value []byte) bool {
+		jin.IterateArray(fakearray, func(value []byte) (bool, error) {
 			nop(value)
-			return true
+			return true, nil
 		})
 	}
 }
@@ -215,9 +216,9 @@ func BenchmarkIterateObjectGetJin(b *testing.B) {
 	b.ReportAllocs()
 	b.ResetTimer()
 	for i := 0; i < b.N; i++ {
-		jin.IterateKeyValue(fakeobject, func(key []byte, value []byte) bool {
+		jin.IterateKeyValue(fakeobject, func(key []byte, value []byte) (bool, error) {
 			nop(key, value)
-			return true
+			return true, nil
 		})
 	}
 }
