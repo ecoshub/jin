@@ -1,6 +1,8 @@
 package jin
 
-import "strconv"
+import (
+	"strconv"
+)
 
 // Only this function commented, other Get() and Set() functions based on same logic.
 // Do not use with zero length path! no control for that
@@ -212,7 +214,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 					if level != k+1 {
 						continue
 					}
-					// escape char ccontrol algorithm
+					// escape char control algorithm
 					for n := i - 1; n > -1; n-- {
 						if json[n] != 92 {
 							if (i-n)&1 != 0 {
@@ -277,6 +279,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 							// first we need keys
 							// for this purpose skipping values.
 							// Only need value if key is correct
+							innerLevel := level
 							for j := i; j < len(json); j++ {
 								// curr is current byte of reading.
 								curr := json[j]
@@ -287,7 +290,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 								// Quote
 								if curr == 34 {
 									// check before char it might be escape char.
-									// escape char ccontrol algorithm
+									// escape char control algorithm
 									for n := j - 1; n > -1; n-- {
 										if json[n] != 92 {
 											if (j-1-n)%2 == 0 {
@@ -307,20 +310,20 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 									// This brace conditions for level trace
 									// it is necessary to keep level value correct
 									if curr == 91 || curr == 123 {
-										level++
+										innerLevel++
 										continue
 									}
 									if curr == 93 || curr == 125 {
-										if level < k+1 {
+										if innerLevel < k+1 {
 											return -1, -1, -1, keyNotFoundError()
 										}
-										level--
+										innerLevel--
 										continue
 									}
 									// comma
 									if curr == 44 {
 										// level same with path
-										if level == k+1 {
+										if innerLevel == k+1 {
 											// jump i to j
 											i = j
 											break
@@ -355,6 +358,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 							continue
 						}
 					}
+					// open curly brace
 					if curr == 123 {
 						// if found and new brace is curly brace than
 						// next search is key search continue with this loop and
@@ -362,14 +366,11 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 						// close found flag for next search.
 						if found {
 							k++
-							level++
 							currentPath = path[k]
 							found = false
-							continue
-						} else {
-							level++
-							continue
 						}
+						level++
+						continue
 					}
 					// Close brace
 					if curr == 93 || curr == 125 {
@@ -422,7 +423,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 			}
 			if curr == 34 {
 				// check before char it might be escape char.
-				// escape char ccontrol algorithm
+				// escape char control algorithm
 				for n := i - 1; n > -1; n-- {
 					if json[n] != 92 {
 						if (i-n)%2 != 0 {
