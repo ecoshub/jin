@@ -169,15 +169,15 @@ func (n *node) createTree(json []byte, depth int, withValues bool, str *string) 
 		}
 		if withValues {
 			if depth != 0 {
-				*str += fmt.Sprintf("\t%v %-6v : %v\n", tab+string(9492)+" ", d.label, string(d.value))
+				*str += fmt.Sprintf("\t%v %-6v : %v\n", tab+string(rune(9492))+" ", d.label, string(d.value))
 			} else {
-				*str += fmt.Sprintf("%v%v %-6v : %v\n", tab, string(9472), d.label, string(d.value))
+				*str += fmt.Sprintf("%v%v %-6v : %v\n", tab, string(rune(9472)), d.label, string(d.value))
 			}
 		} else {
 			if depth != 0 {
-				*str += fmt.Sprintf("\t%v %v\n", tab+string(9492)+" ", d.label)
+				*str += fmt.Sprintf("\t%v %v\n", tab+string(rune(9492))+" ", d.label)
 			} else {
-				*str += fmt.Sprintf("%v%v %v\n", tab, string(9472), d.label)
+				*str += fmt.Sprintf("%v%v %v\n", tab, string(rune(9472)), d.label)
 			}
 		}
 		if len(d.down) > 0 {
