@@ -1,9 +1,10 @@
 package jin
 
 import (
+	"testing"
+
 	"github.com/buger/jsonparser"
 	"github.com/ecoshub/jin"
-	"testing"
 )
 
 func BenchmarkJsonParserDeleteSmall(b *testing.B) {

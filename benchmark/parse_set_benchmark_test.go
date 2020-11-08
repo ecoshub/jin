@@ -1,9 +1,10 @@
 package jin
 
 import (
-	"github.com/valyala/fastjson"
-	"github.com/ecoshub/jin"
 	"testing"
+
+	"github.com/ecoshub/jin"
+	"github.com/valyala/fastjson"
 )
 
 func BenchmarkFastjsonSetSmall(b *testing.B) {
