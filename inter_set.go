@@ -69,7 +69,7 @@ func SetKey(json []byte, newKey string, path ...string) ([]byte, error) {
 	newPath[len(newPath)-1] = newKey
 	_, _, _, err = core(json, false, newPath...)
 	if err != nil {
-		if err.Error() == keyNotFoundError().Error() {
+		if err.Error() == keyNotFoundError(newKey).Error() {
 			keyStart, start, _, err = core(json, false, path...)
 			if err != nil {
 				return json, err

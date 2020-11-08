@@ -29,17 +29,17 @@ func arrayExpectedError() error {
 func indexOutOfRangeError() error {
 	return errors.New("error: index out of range error_code:07 ")
 }
-func keyNotFoundError() error {
-	return errors.New("error: key not found error_code:08 ")
+func keyNotFoundError(key string) error {
+	return fmt.Errorf("error: key '%v' not found error_code:08 ", key)
 }
 func badJSONError(val int) error {
 	return fmt.Errorf("error: bad json format. at:'%v' error_code:09 ", val)
 }
-func badKeyError() error {
-	return errors.New("error: key value cannot contain quote symbol. error_code:10")
+func badKeyError(key string) error {
+	return fmt.Errorf("error: key ('%v') value cannot contain quote symbol. error_code:10", key)
 }
-func keyAlreadyExistsError() error {
-	return errors.New("error: key already exist error_code:11 ")
+func keyAlreadyExistsError(key string) error {
+	return fmt.Errorf("error: key '%v' already exist error_code:11", key)
 }
 func intParseError(val string) error {
 	return fmt.Errorf("parse error: '%v' cannot be converted to int. error_code:12", val)

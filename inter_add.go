@@ -60,14 +60,14 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 		path = append(path, key)
 		_, _, _, err = core(json, false, path...)
 		if err != nil {
-			if err.Error() == keyNotFoundError().Error() {
+			if err.Error() == keyNotFoundError(key).Error() {
 				val := []byte(`,"` + key + `":` + string(value))
 				json = replace(json, val, end-1, end-1)
 				return json, nil
 			}
 			return json, err
 		}
-		return json, keyAlreadyExistsError()
+		return json, keyAlreadyExistsError(key)
 	}
 	return json, objectExpectedError()
 }

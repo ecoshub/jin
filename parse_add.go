@@ -21,7 +21,7 @@ func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 	if lenp == 0 {
 		for _, d := range curr.down {
 			if d.label == key {
-				return keyAlreadyExistsError()
+				return keyAlreadyExistsError(key)
 			}
 		}
 		if len(json) >= 2 {
@@ -61,7 +61,7 @@ func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 	}
 	for _, d := range curr.up.down {
 		if d.label == key {
-			return keyAlreadyExistsError()
+			return keyAlreadyExistsError(key)
 		}
 	}
 	if len(json) >= 2 {

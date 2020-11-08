@@ -130,7 +130,7 @@ func (n *node) walk(path []string) (*node, error) {
 				goto cont
 			}
 		}
-		return nil, keyNotFoundError()
+		return nil, keyNotFoundError(p)
 	cont:
 		continue
 	}

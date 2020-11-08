@@ -104,7 +104,7 @@ func (p *Parser) SetKey(newKey string, path ...string) error {
 	}
 	for _, d := range curr.up.down {
 		if d.label == newKey {
-			return keyAlreadyExistsError()
+			return keyAlreadyExistsError(newKey)
 		}
 	}
 	curr.label = newKey

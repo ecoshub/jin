@@ -315,7 +315,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 									}
 									if curr == 93 || curr == 125 {
 										if innerLevel < k+1 {
-											return -1, -1, -1, keyNotFoundError()
+											return -1, -1, -1, keyNotFoundError(currentPath)
 										}
 										innerLevel--
 										continue
@@ -375,7 +375,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 					// Close brace
 					if curr == 93 || curr == 125 {
 						if level < k+1 {
-							return -1, -1, -1, keyNotFoundError()
+							return -1, -1, -1, keyNotFoundError(currentPath)
 						}
 						level--
 						continue
@@ -384,7 +384,7 @@ func core(json []byte, justStart bool, path ...string) (int, int, int, error) {
 			}
 			// key not found return error
 			if !found {
-				return -1, -1, -1, keyNotFoundError()
+				return -1, -1, -1, keyNotFoundError(currentPath)
 			}
 			// Include comma character to json chars to restore original.
 			isJSONChar[44] = true
