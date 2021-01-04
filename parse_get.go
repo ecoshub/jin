@@ -60,7 +60,7 @@ func (p *Parser) GetInt(path ...string) (int, error) {
 	}
 	intVal, err := strconv.Atoi(val)
 	if err != nil {
-		return -1, intParseError(val)
+		return -1, ErrIntegerParse(val)
 	}
 	return intVal, nil
 }
@@ -75,7 +75,7 @@ func (p *Parser) GetFloat(path ...string) (float64, error) {
 	}
 	floatVal, err := strconv.ParseFloat(val, 64)
 	if err != nil {
-		return -1, floatParseError(val)
+		return -1, ErrFloatParse(val)
 	}
 	return floatVal, nil
 }
@@ -94,7 +94,7 @@ func (p *Parser) GetBool(path ...string) (bool, error) {
 	if val == "false" {
 		return false, nil
 	}
-	return false, boolParseError(val)
+	return false, ErrBoolParse(val)
 }
 
 // GetStringArray is a variation of Get() func.
@@ -107,16 +107,16 @@ func (p *Parser) GetStringArray(path ...string) ([]string, error) {
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, stringArrayParseError(val)
+		return nil, ErrStringArrayParse(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		arr := ParseArray(val)
 		if arr == nil {
-			return nil, stringArrayParseError(val)
+			return nil, ErrStringArrayParse(val)
 		}
 		return arr, nil
 	}
-	return nil, stringArrayParseError(val)
+	return nil, ErrStringArrayParse(val)
 }
 
 // GetIntArray is a variation of Get() func.
@@ -129,7 +129,7 @@ func (p *Parser) GetIntArray(path ...string) ([]int, error) {
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, intArrayParseError(val)
+		return nil, ErrIntegerArrayParse(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]int, 0, 16)
@@ -159,7 +159,7 @@ func (p *Parser) GetIntArray(path ...string) ([]int, error) {
 							element := val[start:i]
 							num, err := strconv.Atoi(cleanValueString(element))
 							if err != nil {
-								return nil, intParseError(cleanValueString(element))
+								return nil, ErrIntegerParse(cleanValueString(element))
 							}
 							newArray = append(newArray, num)
 							break
@@ -171,7 +171,7 @@ func (p *Parser) GetIntArray(path ...string) ([]int, error) {
 						element := val[start:i]
 						num, err := strconv.Atoi(cleanValueString(element))
 						if err != nil {
-							return nil, intParseError(cleanValueString(element))
+							return nil, ErrIntegerParse(cleanValueString(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -182,7 +182,7 @@ func (p *Parser) GetIntArray(path ...string) ([]int, error) {
 		}
 		return newArray, nil
 	}
-	return nil, intArrayParseError(val)
+	return nil, ErrIntegerArrayParse(val)
 }
 
 // GetFloatArray is a variation of Get() func.
@@ -195,7 +195,7 @@ func (p *Parser) GetFloatArray(path ...string) ([]float64, error) {
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, floatArrayParseError(val)
+		return nil, ErrFloatArrayParse(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]float64, 0, 16)
@@ -225,7 +225,7 @@ func (p *Parser) GetFloatArray(path ...string) ([]float64, error) {
 							element := val[start:i]
 							num, err := strconv.ParseFloat(cleanValueString(element), 64)
 							if err != nil {
-								return nil, floatParseError(cleanValueString(element))
+								return nil, ErrFloatParse(cleanValueString(element))
 							}
 							newArray = append(newArray, num)
 							break
@@ -237,7 +237,7 @@ func (p *Parser) GetFloatArray(path ...string) ([]float64, error) {
 						element := val[start:i]
 						num, err := strconv.ParseFloat(cleanValueString(element), 64)
 						if err != nil {
-							return nil, floatParseError(cleanValueString(element))
+							return nil, ErrFloatParse(cleanValueString(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -248,7 +248,7 @@ func (p *Parser) GetFloatArray(path ...string) ([]float64, error) {
 		}
 		return newArray, nil
 	}
-	return nil, floatArrayParseError(val)
+	return nil, ErrFloatArrayParse(val)
 }
 
 // GetBoolArray is a variation of Get() func.
@@ -261,7 +261,7 @@ func (p *Parser) GetBoolArray(path ...string) ([]bool, error) {
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, boolArrayParseError(val)
+		return nil, ErrBoolArrayParse(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]bool, 0, 16)
@@ -297,7 +297,7 @@ func (p *Parser) GetBoolArray(path ...string) ([]bool, error) {
 									newArray = append(newArray, false)
 								}
 							} else {
-								return nil, boolParseError(cleanValueString(element))
+								return nil, ErrBoolParse(cleanValueString(element))
 							}
 							break
 						}
@@ -314,7 +314,7 @@ func (p *Parser) GetBoolArray(path ...string) ([]bool, error) {
 								newArray = append(newArray, false)
 							}
 						} else {
-							return nil, boolParseError(element)
+							return nil, ErrBoolParse(element)
 						}
 						start = i + 1
 						continue
@@ -324,5 +324,5 @@ func (p *Parser) GetBoolArray(path ...string) ([]bool, error) {
 		}
 		return newArray, nil
 	}
-	return nil, boolArrayParseError(val)
+	return nil, ErrBoolArrayParse(val)
 }

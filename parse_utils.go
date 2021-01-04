@@ -74,7 +74,7 @@ func Parse(json []byte) (*Parser, error) {
 		return nil, err
 	}
 	if core.down == nil {
-		return nil, badJSONError(0)
+		return nil, ErrBadJSON(0)
 	}
 	core = core.down[0]
 	pars := Parser{core: core, json: json}
@@ -89,7 +89,7 @@ func ParseNew(json []byte) (*Parser, error) {
 		return nil, err
 	}
 	if core.down == nil {
-		return nil, badJSONError(0)
+		return nil, ErrBadJSON(0)
 	}
 	core = core.down[0]
 	pars := Parser{core: core}
@@ -100,7 +100,7 @@ func (n *node) insert(up *node, index int) error {
 	lend := len(up.down)
 	if lend != 0 {
 		if lend-1 < index {
-			return indexOutOfRangeError()
+			return ErrIndexOutOfRange()
 		}
 		for i := index; i < lend; i++ {
 			up.down[i].label = strconv.Itoa(i + 1)
@@ -109,7 +109,7 @@ func (n *node) insert(up *node, index int) error {
 		n.up = up
 		return nil
 	}
-	return indexOutOfRangeError()
+	return ErrIndexOutOfRange()
 }
 
 func (n *node) deAttach() {
@@ -130,7 +130,7 @@ func (n *node) walk(path []string) (*node, error) {
 				goto cont
 			}
 		}
-		return nil, keyNotFoundError(p)
+		return nil, ErrKeyNotFound(p)
 	cont:
 		continue
 	}

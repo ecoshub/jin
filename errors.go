@@ -5,66 +5,107 @@ import (
 	"fmt"
 )
 
-func nullPathError() error {
+// ErrNullPath "error: path cannot be null error_code:00 "
+func ErrNullPath() error {
 	return errors.New("error: path cannot be null error_code:00 ")
 }
-func nullNewValueError() error {
+
+// ErrNullNewValue "error: new value cannot be null error_code:01 "
+func ErrNullNewValue() error {
 	return errors.New("error: new value cannot be null error_code:01 ")
 }
-func emptyArrayError() error {
+
+// ErrEmptyArray "error: array is empty error_code:02 "
+func ErrEmptyArray() error {
 	return errors.New("error: array is empty error_code:02 ")
 }
-func indexExpectedError() error {
+
+// ErrIndexExpected "error: index expected, got key value error_code:03 "
+func ErrIndexExpected() error {
 	return errors.New("error: index expected, got key value error_code:03 ")
 }
-func keyExpectedError() error {
+
+// ErrKeyExpected "error: key expected, got index error_code:04 "
+func ErrKeyExpected() error {
 	return errors.New("error: key expected, got index error_code:04 ")
 }
-func objectExpectedError() error {
+
+// ErrObjectExpected "error: last path must be pointed at an object error_code:05 "
+func ErrObjectExpected() error {
 	return errors.New("error: last path must be pointed at an object error_code:05 ")
 }
-func arrayExpectedError() error {
+
+// ErrArrayExpected "error: last path must be pointed at an array error_code:06 "
+func ErrArrayExpected() error {
 	return errors.New("error: last path must be pointed at an array error_code:06 ")
 }
-func indexOutOfRangeError() error {
+
+// ErrIndexOutOfRange "error: index out of range error_code:07 "
+func ErrIndexOutOfRange() error {
 	return errors.New("error: index out of range error_code:07 ")
 }
-func keyNotFoundError(key string) error {
+
+// ErrKeyNotFound "error: key '%v' not found error_code:08 "
+func ErrKeyNotFound(key string) error {
 	return fmt.Errorf("error: key '%v' not found error_code:08 ", key)
 }
-func badJSONError(val int) error {
+
+// ErrBadJSON "error: bad json format. at:'%v' error_code:09 "
+func ErrBadJSON(val int) error {
 	return fmt.Errorf("error: bad json format. at:'%v' error_code:09 ", val)
 }
-func badKeyError(key string) error {
+
+// ErrBadKey "error: key ('%v') value cannot contain quote symbol. error_code:10"
+func ErrBadKey(key string) error {
 	return fmt.Errorf("error: key ('%v') value cannot contain quote symbol. error_code:10", key)
 }
-func keyAlreadyExistsError(key string) error {
+
+// ErrKeyAlreadyExist "error: key '%v' already exist error_code:11"
+func ErrKeyAlreadyExist(key string) error {
 	return fmt.Errorf("error: key '%v' already exist error_code:11", key)
 }
-func intParseError(val string) error {
+
+// ErrIntegerParse "parse error: '%v' cannot be converted to int. error_code:12"
+func ErrIntegerParse(val string) error {
 	return fmt.Errorf("parse error: '%v' cannot be converted to int. error_code:12", val)
 }
-func floatParseError(val string) error {
+
+// ErrFloatParse "parse error: '%v' cannot be converted to float. error_code:13"
+func ErrFloatParse(val string) error {
 	return fmt.Errorf("parse error: '%v' cannot be converted to float. error_code:13", val)
 }
-func boolParseError(val string) error {
+
+// ErrBoolParse "parse error: '%v' cannot be converted to bool. error_code:14"
+func ErrBoolParse(val string) error {
 	return fmt.Errorf("parse error: '%v' cannot be converted to bool. error_code:14", val)
 }
-func stringArrayParseError(val string) error {
+
+// ErrStringArrayParse "parse error: '%v' cannot be converted to []string. error_code:15"
+func ErrStringArrayParse(val string) error {
 	return fmt.Errorf("parse error: '%v' cannot be converted to []string. error_code:15", val)
 }
-func intArrayParseError(val string) error {
+
+// ErrIntegerArrayPars "parse error: '%v' cannot be converted to []int. error_code:16"
+func ErrIntegerArrayParse(val string) error {
 	return fmt.Errorf("parse error: '%v' cannot be converted to []int. error_code:16", val)
 }
-func floatArrayParseError(val string) error {
+
+// ErrFloatArrayParse "parse error: '%v' cannot be converted to []float. error_code:17"
+func ErrFloatArrayParse(val string) error {
 	return fmt.Errorf("parse error: '%v' cannot be converted to []float. error_code:17", val)
 }
-func boolArrayParseError(val string) error {
+
+// ErrBoolArrayParse "parse error: '%v' cannot be converted to []bool. error_code:18"
+func ErrBoolArrayParse(val string) error {
 	return fmt.Errorf("parse error: '%v' cannot be converted to []bool. error_code:18", val)
 }
-func nullKeyError() error {
+
+// ErrNullKey "error: new key cannot be null error_code:19"
+func ErrNullKey() error {
 	return errors.New("error: new key cannot be null error_code:19 ")
 }
-func generalEmptyError() error {
+
+// ErrEmpty "error: Object/Array is empty error_code:20"
+func ErrEmpty() error {
 	return errors.New("error: Object/Array is empty error_code:20 ")
 }

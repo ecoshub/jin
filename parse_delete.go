@@ -8,7 +8,7 @@ func (p *Parser) Delete(path ...string) error {
 	var curr *node
 	lenp := len(path)
 	if lenp == 0 {
-		return nullPathError()
+		return ErrNullPath()
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {

@@ -5,14 +5,14 @@ package jin
 // Path value can be left blank for access main JSON.
 func IterateArray(json []byte, callback func([]byte) (bool, error), path ...string) error {
 	if string(json) == "[]" {
-		return generalEmptyError()
+		return ErrEmpty()
 	}
 	var start int
 	var err error
 	if len(path) == 0 {
 		for space(json[start]) {
 			if start > len(json)-2 {
-				return badJSONError(start)
+				return ErrBadJSON(start)
 			}
 			start++
 			continue
@@ -29,7 +29,7 @@ func IterateArray(json []byte, callback func([]byte) (bool, error), path ...stri
 		isJSONChar[v] = true
 	}
 	if json[start] != 91 {
-		return arrayExpectedError()
+		return ErrArrayExpected()
 	}
 	start++
 	inQuote := false
@@ -93,7 +93,7 @@ func IterateArray(json []byte, callback func([]byte) (bool, error), path ...stri
 			}
 		}
 	}
-	return badJSONError(start)
+	return ErrBadJSON(start)
 }
 
 // IterateKeyValue is a callback function that can iterate any object and return key-value pair as byte slices.
@@ -101,7 +101,7 @@ func IterateArray(json []byte, callback func([]byte) (bool, error), path ...stri
 // Path value can be left blank for access main JSON.
 func IterateKeyValue(json []byte, callback func([]byte, []byte) (bool, error), path ...string) error {
 	if string(json) == "{}" {
-		return generalEmptyError()
+		return ErrEmpty()
 	}
 	var start int
 	var err error
@@ -109,7 +109,7 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) (bool, error), p
 	if len(path) == 0 {
 		for space(json[start]) {
 			if start > len(json)-1 {
-				return badJSONError(start)
+				return ErrBadJSON(start)
 			}
 			start++
 			continue
@@ -240,5 +240,5 @@ func IterateKeyValue(json []byte, callback func([]byte, []byte) (bool, error), p
 		}
 		return nil
 	}
-	return objectExpectedError()
+	return ErrObjectExpected()
 }
