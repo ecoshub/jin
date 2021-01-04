@@ -85,7 +85,7 @@ func ErrStringArrayParse(val string) error {
 	return fmt.Errorf("parse error: '%v' cannot be converted to []string. error_code:15", val)
 }
 
-// ErrIntegerArrayPars "parse error: '%v' cannot be converted to []int. error_code:16"
+// ErrIntegerArrayParse "parse error: '%v' cannot be converted to []int. error_code:16"
 func ErrIntegerArrayParse(val string) error {
 	return fmt.Errorf("parse error: '%v' cannot be converted to []int. error_code:16", val)
 }

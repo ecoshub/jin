@@ -1,24 +1,25 @@
-
-
 ![CircleCI](https://circleci.com/gh/ecoshub/jin.svg?style=svg&circle-token=1dc9234c155730e02bf31bbae184add75920bec2)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ecoshub/jin)](https://goreportcard.com/report/github.com/ecoshub/jin) ![License](https://img.shields.io/dub/l/vibe-d.svg) [![GoDoc](https://godoc.org/github.com/ecoshub/jin?status.svg)](https://godoc.org/github.com/ecoshub/jin)
 
 # Welcome To JIN
+
 <p align="center">
   <img src="mascot.svg" width="640" height="640">
 </p>
 
-#### *"Your wish is my command"*
+#### _"Your wish is my command"_
+
 ## Fast and Easy Way to Deal With JSON
 
-__Jin__ is a comprehensive JSON manipulation tool bundle.
-All functions tested with random data with help of __Node.js__.
-All test-path and test-value creation automated with __Node.js__.
+**Jin** is a comprehensive JSON manipulation tool bundle.
+All functions tested with random data with help of **Node.js**.
+All test-path and test-value creation automated with **Node.js**.
 
-__Jin__ provides `parse`, `interpret`, `build` and `format` tools for JSON.
+**Jin** provides `parse`, `interpret`, `build` and `format` tools for JSON.
 Third-party packages only used for the benchmark. No dependency need for core functions.
 
-We make some benchmark with other packages like __Jin__.
+We make some benchmark with other packages like **Jin**.
+
 ```
     github.com/buger/jsonparser
     github.com/valyala/fastjson
@@ -26,22 +27,81 @@ We make some benchmark with other packages like __Jin__.
     github.com/tidwall/gjson
     github.com/tidwall/sjson
 ```
-In Result, __Jin__ is the fastest (op/ns) and more memory friendly then others (B/op).
 
-For more information please take a look at __BENCHMARK__ section below.
+In Result, **Jin** is the fastest (op/ns) and more memory friendly then others (B/op).
+
+For more information please take a look at **BENCHMARK** section below.
 
 ---
+
 ### What is New?
 
-**7 new** functions **tested** and **added** to package. Examples in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__
-* `GetMap()` get objects as `map[string]string` structure with key values pairs
-* `GetAll()` get only specific keys values
-* `GetAllMap()` get only specific keys with `map[string]string`structure
-* `GetKeys()` get objects keys as string array
-* `GetValues()` get objects values as string array
-* `GetKeysValues()` get objects keys and values with separate string arrays
-* `Length()` get length of JSON array.
-##### *06.04.2020*
+##### _04.01.2021_
+
+**JO (JsonObject)** introduced!! Actually that is a fancy word for []byte type
+
+You can use all interpreter functions with JO. just initialize and go.
+
+`Get()` Example
+
+```go
+	// instead of repeating []byte for all functions.
+	// initialize
+	jsonObject := jin.New(json)
+	// and go
+	serial, err := jsonObject.GetString("info", "serial")
+	if err != nil {
+		return err
+	}
+	pooling, err := jsonObject.GetFloat("info", "polling_time")
+	if err != nil {
+		return err
+	}
+
+	// old declaration
+	serial, err := jin.GetString(json, "info", "serial")
+	if err != nil {
+		return err
+	}
+	pooling, err := jin.GetFloat(json, "info", "polling_time")
+	if err != nil {
+		return err
+	}
+
+```
+
+`Set()` Example
+
+```go
+	// instead of repeating []byte for all functions.
+	// initialize
+	jsonObject := jin.New(json)
+	// and go
+	err := jsonObject.SetString("at-28C02", "info", "serial")
+	if err != nil {
+		return err
+	}
+
+	// old declaration
+	json, err := jin.SetString(json, "at-28C02", "info", "serial")
+	if err != nil {
+		return err
+	}
+
+```
+
+##### _06.04.2020_
+
+**7 new** functions **tested** and **added** to package. Examples in **[GoDoc](https://godoc.org/github.com/ecoshub/jin)**
+
+-   `GetMap()` get objects as `map[string]string` structure with key values pairs
+-   `GetAll()` get only specific keys values
+-   `GetAllMap()` get only specific keys with `map[string]string`structure
+-   `GetKeys()` get objects keys as string array
+-   `GetValues()` get objects values as string array
+-   `GetKeysValues()` get objects keys and values with separate string arrays
+-   `Length()` get length of JSON array.
+
 ---
 
 ### Installation
@@ -49,13 +109,14 @@ For more information please take a look at __BENCHMARK__ section below.
 ```
 	go get github.com/ecoshub/jin
 ```
+
 And you are good to go. Import and start using.
 
 ---
 
 ### Documentation
 
-There is a detailed documentation in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__ with lots of examples.
+There is a detailed documentation in **[GoDoc](https://godoc.org/github.com/ecoshub/jin)** with lots of examples.
 
 ---
 
@@ -71,16 +132,17 @@ With parser, once the parse is complete you can access any data with no time.
 But there is a time cost to parse all data and this cost can increase as data content grows.
 
 If you need to access all keys of a JSON then, we are simply recommend you to use `Parser`.
-But if you need to access some keys of a JSON then we strongly recommend you to use `Interpreter`, it will be much faster and much more memory-friendly than parser. 
+But if you need to access some keys of a JSON then we strongly recommend you to use `Interpreter`, it will be much faster and much more memory-friendly than parser.
 
 #### Interpreter
 
 `Interpreter` is core element of this package, no need to create an Interpreter type, just call which function you want.
 
 First let's look at general function parameters.
+
 ```go
 
-	// All interpreter functions need one JSON as byte slice. 
+	// All interpreter functions need one JSON as byte slice.
 	json := []byte(`{"git":"ecoshub","repo":{"id":233809925,"name":["eco","jin"]}}`)
 
 	// And most of them needs a path value for navigate.
@@ -90,9 +152,11 @@ First let's look at general function parameters.
 	path := []string{"repo", "name", "1"}
 
 ```
+
 We are gonna use `Get()` function to access the value of path has pointed. In this case 'jin'.
+
 ```go
-    
+
 	value, err := jin.Get(json, path...)
 	if err != nil {
 		log.Println(err)
@@ -105,7 +169,9 @@ We are gonna use `Get()` function to access the value of path has pointed. In th
 	// Output: jin
 
 ```
+
 Path value can consist hard coded values.
+
 ```go
 
 	value, err := jin.Get(json, "repo", "name", "1")
@@ -118,9 +184,11 @@ Path value can consist hard coded values.
 	//String Output: jin
 
 ```
+
 `Get()` function return type is `[]byte` but all other variations of return types are implemented with different functions.
 
 For example. If you need "value" as string use `GetString()`.
+
 ```go
 
 	value, err := jin.GetString(json, "repo", "name", "0")
@@ -133,7 +201,24 @@ For example. If you need "value" as string use `GetString()`.
 	//Output: eco
 
 ```
+
+For example. If you need "value" as string use `GetString()`.
+
+```go
+
+	value, err := jin.GetString(json, "repo", "name", "0")
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+
+	fmt.Println(string(value))
+	//Output: eco
+
+```
+
 ---
+
 #### Parser
 
 `Parser` is another alternative for JSON manipulation.
@@ -141,9 +226,10 @@ For example. If you need "value" as string use `GetString()`.
 We recommend to use this structure when you need to access all or most of the keys in the JSON.
 
 Parser constructor need only one parameter.
+
 ```go
 
-	// Parser constructor function jin.Parse() need one JSON as []byte. 
+	// Parser constructor function jin.Parse() need one JSON as []byte.
 	json := []byte(`
 	{
 		"title": "LICENSE",
@@ -155,7 +241,9 @@ Parser constructor need only one parameter.
 	}`)
 
 ```
+
 We can parse it with `Parse()` function.
+
 ```go
 
 	prs, err := jin.Parse(json)
@@ -165,7 +253,9 @@ We can parse it with `Parse()` function.
 	}
 
 ```
+
 Let's look at `Parser.Get()`
+
 ```go
 
 	value, err := prs.Get("repo", "url")
@@ -178,11 +268,13 @@ Let's look at `Parser.Get()`
 	//Output: https://api.github.com/repos/ecoshub/jin
 
 ```
-*About path value look above.* 
+
+_About path value look above._
 
 There is all return type variations of `Parser.Get()` function like `Interpreter`.
 
 For return string use `Parser.GetString()` like this,
+
 ```go
 
 	value, err := prs.GetString("repo", "name")
@@ -194,7 +286,8 @@ For return string use `Parser.GetString()` like this,
 	//String Output: ecoshub/jin
 
 ```
-All functions has own example provided in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
+
+All functions has own example provided in **[GoDoc](https://godoc.org/github.com/ecoshub/jin)**.
 
 **Other usefull functions of Jin.**
 
@@ -207,16 +300,17 @@ All functions has own example provided in __[GoDoc](https://godoc.org/github.com
 Iteration tools provide functions for access each key-value pair or each value of an array
 
 Let's look at `IterateArray()` function.
+
 ```go
 	// JSON that we want to access.
 	json := []byte(`{"user":"eco","languages":["go","java","python","C","Cpp"]}`)
 
 	// IterateArray() uses a callback function to return elements.
 	err := jin.IterateArray(json, func(value []byte) (bool, error) {
-		
+
 		// printing current element as string.
 		fmt.Println(string(value))
-		
+
 		// this return is some kind of control mechanism for escape from iteration any time.
 		// true means keep iterate. false means stop the iteration.
 		return true, nil
@@ -236,7 +330,8 @@ Let's look at `IterateArray()` function.
 	// Cpp
 
 ```
-Another useful function is `IterateKeyValue()`check for example in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
+
+Another useful function is `IterateKeyValue()`check for example in **[GoDoc](https://godoc.org/github.com/ecoshub/jin)**.
 
 ---
 
@@ -248,13 +343,14 @@ There are two formatting functions. `Flatten()` and `Indent()`.
 
 `Indent()` is adds indentation to JSON for nicer visualization and `Flatten()` removes this indentation.
 
-Examples in __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
+Examples in **[GoDoc](https://godoc.org/github.com/ecoshub/jin)**.
 
 #### Control Functions
 
 Control functions are simple and easy way to check value types of any path.
 
 For example. `IsArray()`.
+
 ```go
 
 	json := []byte(`{"repo":{"name":"ecoshub/jin"},"others":["jin","penman"]}`)
@@ -269,7 +365,9 @@ For example. `IsArray()`.
 
 
 ```
+
 Or you can use `GetType()`.
+
 ```go
 
 	json := []byte(`{"git":"ecoshub","repo":["jin","wsftp","penman"]}`)
@@ -279,6 +377,7 @@ Or you can use `GetType()`.
 	// Output: array
 
 ```
+
 #### JSON Build Tools
 
 There are lots of JSON build functions in this package and all of them has its own examples.
@@ -286,6 +385,7 @@ There are lots of JSON build functions in this package and all of them has its o
 We just want to mention a couple of them.
 
 `Scheme` is simple and powerful tool for create JSON schemes.
+
 ```go
 
 	// MakeScheme need keys for construct a JSON scheme.
@@ -300,8 +400,7 @@ We just want to mention a couple of them.
 
 ```
 
-`MakeJson()`, `MakeArray()` functions and other variations are easy to use functions. Go and take a look.  __[GoDoc](https://godoc.org/github.com/ecoshub/jin)__.
-
+`MakeJson()`, `MakeArray()` functions and other variations are easy to use functions. Go and take a look. **[GoDoc](https://godoc.org/github.com/ecoshub/jin)**.
 
 ---
 
@@ -309,31 +408,32 @@ We just want to mention a couple of them.
 
 Testing is very important thing for this type of packages and it shows how reliable it is.
 
-For that reasons we use __Node.js__ for unit testing.
+For that reasons we use **Node.js** for unit testing.
 
-Lets look at folder arrangement and working principle. 
+Lets look at folder arrangement and working principle.
 
-- __test/__ folder:
+-   **test/** folder:
 
-	- __test-json.json__, this is a temporary file for testing. all other test-cases copying here with this name so they can process by __test-case-creator.js__.
+    -   **test-json.json**, this is a temporary file for testing. all other test-cases copying here with this name so they can process by **test-case-creator.js**.
 
-	- __test-case-creator.js__ is core path & value creation mechanism.	When it executed with `executeNode()` function. It reads the __test-json.json__ file and generates the paths and values from this files content. With command line arguments it can generate different paths and values. As a result, two files are created with this process. the first of these files is __test-json-paths.json__ and the second is __test-json-values.json__
+    -   **test-case-creator.js** is core path & value creation mechanism. When it executed with `executeNode()` function. It reads the **test-json.json** file and generates the paths and values from this files content. With command line arguments it can generate different paths and values. As a result, two files are created with this process. the first of these files is **test-json-paths.json** and the second is **test-json-values.json**
 
-	- __test-json-paths.json__ has all the path values.
+    -   **test-json-paths.json** has all the path values.
 
-	- __test-json-values.json__ has all the values that corresponding to path values.
+    -   **test-json-values.json** has all the values that corresponding to path values.
 
-- __tests/__ folder
+-   **tests/** folder
 
-	- All files in this folder is a test-case. But it doesn't mean that you can't change anything, on the contrary, all test-cases are creating automatically based on this folder content. You can add or remove any __.json__ file that you want.
+    -   All files in this folder is a test-case. But it doesn't mean that you can't change anything, on the contrary, all test-cases are creating automatically based on this folder content. You can add or remove any **.json** file that you want.
 
-	- All `GO` side test-case automation functions are in __core_test.go__ file.
+    -   All `GO` side test-case automation functions are in **core_test.go** file.
 
-This package developed with __Node.js__ v13.7.0. please make sure that your machine has a valid version of __Node.js__ before testing.
+This package developed with **Node.js** v13.7.0. please make sure that your machine has a valid version of **Node.js** before testing.
 
-All functions and methods are tested with complicated randomly genereted __.json__ files.
+All functions and methods are tested with complicated randomly genereted **.json** files.
 
 Like this,
+
 ```go
 
 	{
@@ -351,6 +451,7 @@ Like this,
 	}
 
 ```
+
 Most of JSON packages not even run properly with this kind of JSON streams.
 We did't see such packages as competitors to ourselves.
 And that's because we didn't even bother to benchmark against them.
@@ -361,21 +462,20 @@ And that's because we didn't even bother to benchmark against them.
 
 Benchmark results.
 
+-   _Benchmark prefix removed from function names for make room to results._
+-   Benchmark between 'buger/jsonparser' and 'ecoshub/jin' use the same payload (JSON test-cases) that 'buger/jsonparser' package use for benchmark it self.
 
-- *Benchmark prefix removed from function names for make room to results.*
-- Benchmark between 'buger/jsonparser' and 'ecoshub/jin' use the same payload (JSON test-cases) that 'buger/jsonparser' package use for benchmark it self.
+    _github.com/ecoshub/jin -> Jin_
 
-	*github.com/ecoshub/jin			-> Jin*
+    _github.com/buger/jsonparser -> Jsonparser_
 
-	*github.com/buger/jsonparser	-> Jsonparser*
+    _github.com/valyala/fastjson -> Fastjson_
 
-	*github.com/valyala/fastjson	-> Fastjson*
+    _github.com/json-iterator/go -> Jsoniterator_
 
-	*github.com/json-iterator/go	-> Jsoniterator*
+    _github.com/tidwall/gjson -> gjson_
 
-	*github.com/tidwall/gjson		-> gjson*
-
-	*github.com/tidwall/sjson		-> sjon*
+    _github.com/tidwall/sjson -> sjon_
 
 ```go
 
@@ -440,13 +540,13 @@ Benchmark results.
 
 ### Upcoming
 
-We are currently working on, 
+We are currently working on,
 
-- `Marshal()` and `Unmarshal()` functions.
+-   `Marshal()` and `Unmarshal()` functions.
 
-- http.Request parser/interpreter
+-   http.Request parser/interpreter
 
-- Builder functions for http.ResponseWriter
+-   Builder functions for http.ResponseWriter
 
 ---
 
