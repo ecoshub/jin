@@ -1,1 +1,0 @@
-process.stdout.write('node is running well\n')

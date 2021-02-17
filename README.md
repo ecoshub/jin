@@ -1,4 +1,3 @@
-![CircleCI](https://circleci.com/gh/ecoshub/jin.svg?style=svg&circle-token=1dc9234c155730e02bf31bbae184add75920bec2)
 [![Go Report Card](https://goreportcard.com/badge/github.com/ecoshub/jin)](https://goreportcard.com/report/github.com/ecoshub/jin) ![License](https://img.shields.io/dub/l/vibe-d.svg) [![GoDoc](https://godoc.org/github.com/ecoshub/jin?status.svg)](https://godoc.org/github.com/ecoshub/jin)
 
 # Welcome To JIN
