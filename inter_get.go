@@ -601,7 +601,7 @@ func GetMap(json []byte, path ...string) (map[string]string, error) {
 		return nil, err
 	}
 	mainMap := make(map[string]string)
-	if json[start] == 123 && json[end-1] == 125 {
+	if json[start] == 123 && json[end] == 125 {
 		err = IterateKeyValue(json, func(key, val []byte) (bool, error) {
 			mainMap[string(key)] = string(val)
 			return true, nil
@@ -611,7 +611,7 @@ func GetMap(json []byte, path ...string) (map[string]string, error) {
 		}
 		return mainMap, nil
 	}
-	if json[start] == 91 && json[end-1] == 93 {
+	if json[start] == 91 && json[end] == 93 {
 		count := 0
 		err = IterateArray(json, func(val []byte) (bool, error) {
 			mainMap[strconv.Itoa(count)] = string(val)
