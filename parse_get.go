@@ -2,6 +2,11 @@ package jin
 
 import "strconv"
 
+// ToJSON returns underlying json value as byte array
+func (p *Parser) ToJSON() []byte {
+	return p.json
+}
+
 // Get returns the value that path has pointed.
 // It stripes quotation marks from string values.
 // Path can point anything, a key-value pair, a value, an array, an object.
