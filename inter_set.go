@@ -8,7 +8,7 @@ import "strconv"
 // otherwise it will provide an error message.
 func Set(json []byte, newValue []byte, path ...string) ([]byte, error) {
 	if len(path) == 0 {
-		return json, ErrNullPath()
+		return json, errNullPath()
 	}
 	_, start, end, err := core(json, false, path...)
 	if err != nil {
@@ -24,7 +24,7 @@ func Set(json []byte, newValue []byte, path ...string) ([]byte, error) {
 // SetString takes the set value as string.
 func SetString(json []byte, newValue string, path ...string) ([]byte, error) {
 	if len(newValue) == 0 {
-		return nil, ErrNullNewValue()
+		return nil, errNullNewValue()
 	}
 	return Set(json, []byte(formatType(newValue)), path...)
 }
@@ -56,10 +56,10 @@ func SetBool(json []byte, newValue bool, path ...string) ([]byte, error) {
 // Path variable can not be null,
 func SetKey(json []byte, newKey string, path ...string) ([]byte, error) {
 	if len(newKey) == 0 {
-		return json, ErrNullKey()
+		return json, errNullKey()
 	}
 	if len(path) == 0 {
-		return json, ErrNullPath()
+		return json, errNullPath()
 	}
 	var err error
 	var keyStart int
@@ -69,7 +69,7 @@ func SetKey(json []byte, newKey string, path ...string) ([]byte, error) {
 	newPath[len(newPath)-1] = newKey
 	_, _, _, err = core(json, false, newPath...)
 	if err != nil {
-		if err.Error() == ErrKeyNotFound(newKey).Error() {
+		if ErrEqual(err, ErrCodeKeyNotFound) {
 			keyStart, start, _, err = core(json, false, path...)
 			if err != nil {
 				return json, err
@@ -83,9 +83,9 @@ func SetKey(json []byte, newKey string, path ...string) ([]byte, error) {
 					return replace(json, []byte(newKey), keyStart, i), nil
 				}
 			}
-			return json, ErrBadJSON(keyStart)
+			return json, errBadJSON(keyStart)
 		}
 		return json, err
 	}
-	return json, ErrBadJSON(keyStart)
+	return json, errBadJSON(keyStart)
 }

@@ -6,7 +6,7 @@ package jin
 func Delete(json []byte, path ...string) ([]byte, error) {
 	lenp := len(path)
 	if lenp == 0 {
-		return json, ErrNullPath()
+		return json, errNullPath()
 	}
 	ks, s, e, err := core(json, false, path...)
 	if err != nil {
@@ -50,5 +50,5 @@ func Delete(json []byte, path ...string) ([]byte, error) {
 		json = replace(json, []byte{}, startEdge, e)
 		return json, nil
 	}
-	return nil, ErrBadJSON(start)
+	return nil, errBadJSON(start)
 }

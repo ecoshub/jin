@@ -200,7 +200,7 @@ func byteArrayToString(arr []byte) string {
 func getStartEnd(json []byte, path ...string) (int, int, error) {
 	lenj := len(json)
 	if lenj < 2 {
-		return -1, -1, ErrBadJSON(0)
+		return -1, -1, errBadJSON(0)
 	}
 	var err error
 	var start int
@@ -214,7 +214,7 @@ func getStartEnd(json []byte, path ...string) (int, int, error) {
 	} else {
 		for space(json[start]) {
 			if start > len(json)-1 {
-				return -1, -1, ErrBadJSON(start)
+				return -1, -1, errBadJSON(start)
 			}
 			start++
 			continue
@@ -222,7 +222,7 @@ func getStartEnd(json []byte, path ...string) (int, int, error) {
 		end = lenj - 1
 		for space(json[end]) {
 			if end < start {
-				return -1, -1, ErrBadJSON(start)
+				return -1, -1, errBadJSON(start)
 			}
 			end--
 			continue

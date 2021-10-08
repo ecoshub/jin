@@ -10,7 +10,7 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 	var end int
 	var err error
 	if len(json) < 2 {
-		return json, ErrBadJSON(0)
+		return json, errBadJSON(0)
 	}
 	if len(path) == 0 {
 		for i := 0; i < len(json); i++ {
@@ -18,11 +18,11 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 				if json[i] == 123 {
 					start = i
 					if i == len(json)-1 {
-						return json, ErrBadJSON(i)
+						return json, errBadJSON(i)
 					}
 					break
 				} else {
-					return json, ErrObjectExpected()
+					return json, errObjectExpected()
 				}
 			}
 		}
@@ -31,11 +31,11 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 				if json[i] == 125 {
 					end = i + 1
 					if i == 0 {
-						return json, ErrBadJSON(i)
+						return json, errBadJSON(i)
 					}
 					break
 				} else {
-					return json, ErrObjectExpected()
+					return json, errObjectExpected()
 				}
 			}
 		}
@@ -60,16 +60,16 @@ func AddKeyValue(json []byte, key string, value []byte, path ...string) ([]byte,
 		path = append(path, key)
 		_, _, _, err = core(json, false, path...)
 		if err != nil {
-			if err.Error() == ErrKeyNotFound(key).Error() {
+			if ErrEqual(err, ErrCodeKeyNotFound) {
 				val := []byte(`,"` + key + `":` + string(value))
 				json = replace(json, val, end-1, end-1)
 				return json, nil
 			}
 			return json, err
 		}
-		return json, ErrKeyAlreadyExist(key)
+		return json, errKeyAlreadyExist(key)
 	}
-	return json, ErrObjectExpected()
+	return json, errObjectExpected()
 }
 
 // Add adds a value to an array.
@@ -80,7 +80,7 @@ func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 	var end int
 	var err error
 	if len(json) < 2 {
-		return json, ErrBadJSON(0)
+		return json, errBadJSON(0)
 	}
 	if len(path) == 0 {
 		for i := 0; i < len(json); i++ {
@@ -88,11 +88,11 @@ func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 				if json[i] == 91 {
 					start = i
 					if i == len(json)-1 {
-						return json, ErrBadJSON(i)
+						return json, errBadJSON(i)
 					}
 					break
 				} else {
-					return json, ErrArrayExpected()
+					return json, errArrayExpected()
 				}
 			}
 		}
@@ -101,11 +101,11 @@ func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 				if json[i] == 93 {
 					end = i + 1
 					if i == 0 {
-						return json, ErrBadJSON(i)
+						return json, errBadJSON(i)
 					}
 					break
 				} else {
-					return json, ErrArrayExpected()
+					return json, errArrayExpected()
 				}
 			}
 		}
@@ -132,7 +132,7 @@ func Add(json []byte, value []byte, path ...string) ([]byte, error) {
 		json = replace(json, val, end-1, end-1)
 		return json, nil
 	}
-	return json, ErrArrayExpected()
+	return json, errArrayExpected()
 }
 
 // Insert inserts a value to an array.
@@ -148,11 +148,11 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 				if json[i] == 91 {
 					start = i
 					if i == len(json)-1 {
-						return json, ErrBadJSON(i)
+						return json, errBadJSON(i)
 					}
 					break
 				} else {
-					return json, ErrArrayExpected()
+					return json, errArrayExpected()
 				}
 			}
 		}
@@ -161,11 +161,11 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 				if json[i] == 93 {
 					end = i + 1
 					if i == 0 {
-						return json, ErrBadJSON(i)
+						return json, errBadJSON(i)
 					}
 					break
 				} else {
-					return json, ErrArrayExpected()
+					return json, errArrayExpected()
 				}
 			}
 		}
@@ -176,7 +176,7 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 		}
 	}
 	if json[start] != 91 || json[end-1] != 93 {
-		return json, ErrArrayExpected()
+		return json, errArrayExpected()
 	}
 	_, start, end, err = core(json, false, append(path, strconv.Itoa(index))...)
 	if err != nil {
@@ -223,17 +223,17 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 		json = replace(json, val, start-1, start-1)
 		return json, nil
 	}
-	return nil, ErrBadJSON(start)
+	return nil, errBadJSON(start)
 }
 
 // AddKeyValueString is a variation of AddKeyValue() func.
 // Type of new value must be a string.
 func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, error) {
 	if len(value) == 0 {
-		return nil, ErrNullNewValue()
+		return nil, errNullNewValue()
 	}
 	if len(key) == 0 {
-		return nil, ErrNullKey()
+		return nil, errNullKey()
 	}
 	return AddKeyValue(json, key, []byte(formatType(value)), path...)
 }
@@ -242,7 +242,7 @@ func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, 
 // Type of new value must be an integer.
 func AddKeyValueInt(json []byte, key string, value int, path ...string) ([]byte, error) {
 	if len(key) == 0 {
-		return nil, ErrNullKey()
+		return nil, errNullKey()
 	}
 	return AddKeyValue(json, key, []byte(strconv.Itoa(value)), path...)
 }
@@ -251,7 +251,7 @@ func AddKeyValueInt(json []byte, key string, value int, path ...string) ([]byte,
 // Type of new value must be a float64.
 func AddKeyValueFloat(json []byte, key string, value float64, path ...string) ([]byte, error) {
 	if len(key) == 0 {
-		return nil, ErrNullKey()
+		return nil, errNullKey()
 	}
 	return AddKeyValue(json, key, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
@@ -260,7 +260,7 @@ func AddKeyValueFloat(json []byte, key string, value float64, path ...string) ([
 // Type of new value must be a boolean.
 func AddKeyValueBool(json []byte, key string, value bool, path ...string) ([]byte, error) {
 	if len(key) == 0 {
-		return nil, ErrNullKey()
+		return nil, errNullKey()
 	}
 	if value {
 		return AddKeyValue(json, key, []byte("true"), path...)
@@ -272,7 +272,7 @@ func AddKeyValueBool(json []byte, key string, value bool, path ...string) ([]byt
 // Type of new value must be an string.
 func AddString(json []byte, value string, path ...string) ([]byte, error) {
 	if len(value) == 0 {
-		return nil, ErrNullNewValue()
+		return nil, errNullNewValue()
 	}
 	return Add(json, []byte(formatType(value)), path...)
 }
@@ -302,10 +302,10 @@ func AddBool(json []byte, value bool, path ...string) ([]byte, error) {
 // Type of new value must be an string.
 func InsertString(json []byte, index int, value string, path ...string) ([]byte, error) {
 	if len(value) == 0 {
-		return nil, ErrNullNewValue()
+		return nil, errNullNewValue()
 	}
 	if index < 0 {
-		return nil, ErrIndexOutOfRange()
+		return nil, errIndexOutOfRange()
 	}
 	return Insert(json, index, []byte(formatType(value)), path...)
 }
@@ -314,7 +314,7 @@ func InsertString(json []byte, index int, value string, path ...string) ([]byte,
 // Type of new value must be an integer.
 func InsertInt(json []byte, index, value int, path ...string) ([]byte, error) {
 	if index < 0 {
-		return nil, ErrIndexOutOfRange()
+		return nil, errIndexOutOfRange()
 	}
 	return Insert(json, index, []byte(strconv.Itoa(value)), path...)
 }
@@ -323,7 +323,7 @@ func InsertInt(json []byte, index, value int, path ...string) ([]byte, error) {
 // Type of new value must be an float64.
 func InsertFloat(json []byte, index int, value float64, path ...string) ([]byte, error) {
 	if index < 0 {
-		return nil, ErrIndexOutOfRange()
+		return nil, errIndexOutOfRange()
 	}
 	return Insert(json, index, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
@@ -332,7 +332,7 @@ func InsertFloat(json []byte, index int, value float64, path ...string) ([]byte,
 // Type of new value must be an boolean.
 func InsertBool(json []byte, index int, value bool, path ...string) ([]byte, error) {
 	if index < 0 {
-		return nil, ErrIndexOutOfRange()
+		return nil, errIndexOutOfRange()
 	}
 	if value {
 		return Insert(json, index, []byte("true"), path...)
