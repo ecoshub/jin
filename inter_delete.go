@@ -50,5 +50,5 @@ func Delete(json []byte, path ...string) ([]byte, error) {
 		json = replace(json, []byte{}, startEdge, e)
 		return json, nil
 	}
-	return nil, ErrBadJSON(start)
+	return json, ErrBadJSON(start)
 }
