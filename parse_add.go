@@ -1,6 +1,8 @@
 package jin
 
-import "strconv"
+import (
+	"strconv"
+)
 
 // AddKeyValue adds a key-value pair to an object.
 // Path variable must point to an object,
@@ -339,9 +341,6 @@ func (p *Parser) Insert(newIndex int, newVal []byte, path ...string) error {
 // AddKeyValueString is a variation of AddKeyValue() func.
 // Type of new value must be a string.
 func (p *Parser) AddKeyValueString(key, value string, path ...string) error {
-	if len(value) == 0 {
-		return ErrNullNewValue()
-	}
 	if len(key) == 0 {
 		return ErrNullKey()
 	}
@@ -381,9 +380,6 @@ func (p *Parser) AddKeyValueBool(key string, value bool, path ...string) error {
 // AddString is a variation of Add() func.
 // Type of new value must be an string.
 func (p *Parser) AddString(value string, path ...string) error {
-	if len(value) == 0 {
-		return ErrNullNewValue()
-	}
 	return p.Add([]byte(formatType(value)), path...)
 }
 
@@ -411,9 +407,6 @@ func (p *Parser) AddBool(value bool, path ...string) error {
 // InsertString is a variation of Insert() func.
 // Type of new value must be an string.
 func (p *Parser) InsertString(index int, value string, path ...string) error {
-	if len(value) == 0 {
-		return ErrNullNewValue()
-	}
 	if index < 0 {
 		return ErrIndexOutOfRange()
 	}

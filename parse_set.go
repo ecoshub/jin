@@ -14,9 +14,6 @@ func (p *Parser) Set(newVal []byte, path ...string) error {
 	if lenp == 0 {
 		return ErrNullPath()
 	}
-	if lenv == 0 {
-		return ErrNullNewValue()
-	}
 	curr, err = p.core.walk(path)
 	if err != nil {
 		return err

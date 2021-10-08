@@ -23,9 +23,6 @@ func Set(json []byte, newValue []byte, path ...string) ([]byte, error) {
 // SetString is a variation of Set() func.
 // SetString takes the set value as string.
 func SetString(json []byte, newValue string, path ...string) ([]byte, error) {
-	if len(newValue) == 0 {
-		return nil, ErrNullNewValue()
-	}
 	return Set(json, []byte(formatType(newValue)), path...)
 }
 

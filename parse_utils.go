@@ -81,21 +81,6 @@ func Parse(json []byte) (*Parser, error) {
 	return &pars, nil
 }
 
-// ParseNew is constructor method for creating Parsers.
-func ParseNew(json []byte) (*Parser, error) {
-	core := &node{up: nil}
-	err := nCore(json, core)
-	if err != nil {
-		return nil, err
-	}
-	if core.down == nil {
-		return nil, ErrBadJSON(0)
-	}
-	core = core.down[0]
-	pars := Parser{core: core}
-	return &pars, nil
-}
-
 func (n *node) insert(up *node, index int) error {
 	lend := len(up.down)
 	if lend != 0 {

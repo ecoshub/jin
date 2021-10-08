@@ -10,11 +10,6 @@ func ErrNullPath() error {
 	return errors.New("error: path cannot be null error_code:00 ")
 }
 
-// ErrNullNewValue "error: new value cannot be null error_code:01 "
-func ErrNullNewValue() error {
-	return errors.New("error: new value cannot be null error_code:01 ")
-}
-
 // ErrEmptyArray "error: array is empty error_code:02 "
 func ErrEmptyArray() error {
 	return errors.New("error: array is empty error_code:02 ")

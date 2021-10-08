@@ -229,9 +229,6 @@ func Insert(json []byte, index int, value []byte, path ...string) ([]byte, error
 // AddKeyValueString is a variation of AddKeyValue() func.
 // Type of new value must be a string.
 func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, error) {
-	if len(value) == 0 {
-		return nil, ErrNullNewValue()
-	}
 	if len(key) == 0 {
 		return nil, ErrNullKey()
 	}
@@ -271,9 +268,6 @@ func AddKeyValueBool(json []byte, key string, value bool, path ...string) ([]byt
 // AddString is a variation of Add() func.
 // Type of new value must be an string.
 func AddString(json []byte, value string, path ...string) ([]byte, error) {
-	if len(value) == 0 {
-		return nil, ErrNullNewValue()
-	}
 	return Add(json, []byte(formatType(value)), path...)
 }
 
@@ -301,9 +295,6 @@ func AddBool(json []byte, value bool, path ...string) ([]byte, error) {
 // InsertString is a variation of Insert() func.
 // Type of new value must be an string.
 func InsertString(json []byte, index int, value string, path ...string) ([]byte, error) {
-	if len(value) == 0 {
-		return nil, ErrNullNewValue()
-	}
 	if index < 0 {
 		return nil, ErrIndexOutOfRange()
 	}
