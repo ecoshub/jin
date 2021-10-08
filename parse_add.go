@@ -362,7 +362,7 @@ func (p *Parser) AddKeyValueFloat(key string, value float64, path ...string) err
 	if len(key) == 0 {
 		return errNullKey()
 	}
-	return p.AddKeyValue(key, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
+	return p.AddKeyValue(key, []byte(strconv.FormatFloat(value, 'f', -1, 64)), path...)
 }
 
 // AddKeyValueBool is a variation of AddKeyValue() func.
@@ -392,7 +392,7 @@ func (p *Parser) AddInt(value int, path ...string) error {
 // AddFloat is a variation of Add() func.
 // Type of new value must be an float64.
 func (p *Parser) AddFloat(value float64, path ...string) error {
-	return p.Add([]byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
+	return p.Add([]byte(strconv.FormatFloat(value, 'f', -1, 64)), path...)
 }
 
 // AddBool is a variation of Add() func.
@@ -428,7 +428,7 @@ func (p *Parser) InsertFloat(index int, value float64, path ...string) error {
 	if index < 0 {
 		return errIndexOutOfRange()
 	}
-	return p.Insert(index, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
+	return p.Insert(index, []byte(strconv.FormatFloat(value, 'f', -1, 64)), path...)
 }
 
 // InsertBool is a variation of Insert() func.

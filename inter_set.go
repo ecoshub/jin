@@ -1,6 +1,8 @@
 package jin
 
-import "strconv"
+import (
+	"strconv"
+)
 
 // Set sets the value that path has pointed.
 // Path can point anything, a key-value pair, a value, an array, an object.
@@ -35,7 +37,7 @@ func SetInt(json []byte, newValue int, path ...string) ([]byte, error) {
 // SetFloat is a variation of Set() func.
 // SetFloat takes the set value as float64.
 func SetFloat(json []byte, newValue float64, path ...string) ([]byte, error) {
-	return Set(json, []byte(strconv.FormatFloat(newValue, 'e', -1, 64)), path...)
+	return Set(json, []byte(strconv.FormatFloat(newValue, 'f', -1, 64)), path...)
 }
 
 // SetBool is a variation of Set() func.
@@ -85,4 +87,47 @@ func SetKey(json []byte, newKey string, path ...string) ([]byte, error) {
 		return json, err
 	}
 	return json, errBadJSON(keyStart)
+}
+
+// Store sets or adds a new value to the body
+// like a real json store event
+func Store(json []byte, key string, value []byte, path ...string) ([]byte, error) {
+	_, start, end, err := core(json, false, append(path, key)...)
+	if err != nil {
+		if ErrEqual(err, ErrCodeKeyNotFound) {
+			return AddKeyValue(json, key, value, path...)
+		}
+		return json, err
+	}
+	if json[start-1] == 34 && json[end] == 34 {
+		return replace(json, value, start-1, end+1), nil
+	}
+	return replace(json, value, start, end), nil
+}
+
+// StoreString is a variation of Store() func.
+// StoreString takes the Store value as string.
+func StoreString(json []byte, key string, newValue string, path ...string) ([]byte, error) {
+	return Store(json, key, []byte(formatType(newValue)), path...)
+}
+
+// StoreInt is a variation of Store() func.
+// StoreInt takes the Store value as integer.
+func StoreInt(json []byte, key string, newValue int, path ...string) ([]byte, error) {
+	return Store(json, key, []byte(strconv.Itoa(newValue)), path...)
+}
+
+// StoreFloat is a variation of Store() func.
+// StoreFloat takes the Store value as float64.
+func StoreFloat(json []byte, key string, newValue float64, path ...string) ([]byte, error) {
+	return Store(json, key, []byte(strconv.FormatFloat(newValue, 'f', -1, 64)), path...)
+}
+
+// StoreBool is a variation of Store() func.
+// StoreBool takes the Store value as boolean.
+func StoreBool(json []byte, key string, newValue bool, path ...string) ([]byte, error) {
+	if newValue {
+		return Store(json, key, []byte("true"), path...)
+	}
+	return Store(json, key, []byte("false"), path...)
 }

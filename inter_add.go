@@ -250,7 +250,7 @@ func AddKeyValueFloat(json []byte, key string, value float64, path ...string) ([
 	if len(key) == 0 {
 		return json, errNullKey()
 	}
-	return AddKeyValue(json, key, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
+	return AddKeyValue(json, key, []byte(strconv.FormatFloat(value, 'f', -1, 64)), path...)
 }
 
 // AddKeyValueBool is a variation of AddKeyValue() func.
@@ -280,7 +280,7 @@ func AddInt(json []byte, value int, path ...string) ([]byte, error) {
 // AddFloat is a variation of Add() func.
 // Type of new value must be an float64.
 func AddFloat(json []byte, value float64, path ...string) ([]byte, error) {
-	return Add(json, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
+	return Add(json, []byte(strconv.FormatFloat(value, 'f', -1, 64)), path...)
 }
 
 // AddBool is a variation of Add() func.
@@ -316,7 +316,7 @@ func InsertFloat(json []byte, index int, value float64, path ...string) ([]byte,
 	if index < 0 {
 		return json, errIndexOutOfRange()
 	}
-	return Insert(json, index, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
+	return Insert(json, index, []byte(strconv.FormatFloat(value, 'f', -1, 64)), path...)
 }
 
 // InsertBool is a variation of Insert() func.

@@ -251,7 +251,7 @@ func MakeArrayFloat(values []float64) []byte {
 	js := make([]byte, 0, 128)
 	js = append(js, 91)
 	for _, v := range values {
-		num := strconv.FormatFloat(v, 'e', -1, 64)
+		num := strconv.FormatFloat(v, 'f', -1, 64)
 		start := 0
 		for i := 0; i < len(num); i++ {
 			if num[i] == 'e' {

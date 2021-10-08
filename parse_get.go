@@ -2,8 +2,8 @@ package jin
 
 import "strconv"
 
-// ToJSON returns underlying json value as byte array
-func (p *Parser) ToJSON() []byte {
+// JSON returns underlying json value as byte array
+func (p *Parser) JSON() []byte {
 	return p.json
 }
 

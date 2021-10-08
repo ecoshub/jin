@@ -34,6 +34,9 @@ For more information please take a look at **BENCHMARK** section below.
 ---
 
 ### What is New?
+##### _08.10.2021_
+
+**Store** New! store function. store function can set or override a value like a real JSON object.
 
 ##### _04.01.2021_
 

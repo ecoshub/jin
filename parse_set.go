@@ -68,7 +68,7 @@ func (p *Parser) SetInt(newValue int, path ...string) error {
 // SetFloat is a variation of Set() func.
 // SetFloat takes the set value as float64.
 func (p *Parser) SetFloat(newValue float64, path ...string) error {
-	return p.Set([]byte(strconv.FormatFloat(newValue, 'e', -1, 64)), path...)
+	return p.Set([]byte(strconv.FormatFloat(newValue, 'f', -1, 64)), path...)
 }
 
 // SetBool is a variation of Set() func.
