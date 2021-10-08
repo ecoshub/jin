@@ -40,7 +40,7 @@ func GetInt(json []byte, path ...string) (int, error) {
 	}
 	intVal, err := strconv.Atoi(val)
 	if err != nil {
-		return -1, ErrIntegerParse(val)
+		return -1, errIntegerParse(val)
 	}
 	return intVal, nil
 }
@@ -55,7 +55,7 @@ func GetFloat(json []byte, path ...string) (float64, error) {
 	}
 	floatVal, err := strconv.ParseFloat(val, 64)
 	if err != nil {
-		return -1, ErrFloatParse(val)
+		return -1, errFloatParse(val)
 	}
 	return floatVal, nil
 }
@@ -74,7 +74,7 @@ func GetBool(json []byte, path ...string) (bool, error) {
 	if val == "false" {
 		return false, nil
 	}
-	return false, ErrBoolParse(val)
+	return false, errBoolParse(val)
 }
 
 // GetStringArray is a variation of Get() func.
@@ -87,16 +87,16 @@ func GetStringArray(json []byte, path ...string) ([]string, error) {
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, ErrStringArrayParse(val)
+		return nil, errStringArrayParse(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		arr := ParseArray(val)
 		if arr == nil {
-			return nil, ErrStringArrayParse(val)
+			return nil, errStringArrayParse(val)
 		}
 		return arr, nil
 	}
-	return nil, ErrStringArrayParse(val)
+	return nil, errStringArrayParse(val)
 }
 
 // GetIntArray is a variation of Get() func.
@@ -109,7 +109,7 @@ func GetIntArray(json []byte, path ...string) ([]int, error) {
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, ErrIntegerArrayParse(val)
+		return nil, errIntegerArrayParse(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]int, 0, 16)
@@ -139,7 +139,7 @@ func GetIntArray(json []byte, path ...string) ([]int, error) {
 							element := val[start:i]
 							num, err := strconv.Atoi(cleanValueString(element))
 							if err != nil {
-								return nil, ErrIntegerParse(cleanValueString(element))
+								return nil, errIntegerParse(cleanValueString(element))
 							}
 							newArray = append(newArray, num)
 							break
@@ -151,7 +151,7 @@ func GetIntArray(json []byte, path ...string) ([]int, error) {
 						element := val[start:i]
 						num, err := strconv.Atoi(cleanValueString(element))
 						if err != nil {
-							return nil, ErrIntegerParse(cleanValueString(element))
+							return nil, errIntegerParse(cleanValueString(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -162,7 +162,7 @@ func GetIntArray(json []byte, path ...string) ([]int, error) {
 		}
 		return newArray, nil
 	}
-	return nil, ErrIntegerArrayParse(val)
+	return nil, errIntegerArrayParse(val)
 }
 
 // GetFloatArray is a variation of Get() func.
@@ -175,7 +175,7 @@ func GetFloatArray(json []byte, path ...string) ([]float64, error) {
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, ErrFloatArrayParse(val)
+		return nil, errFloatArrayParse(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]float64, 0, 16)
@@ -205,7 +205,7 @@ func GetFloatArray(json []byte, path ...string) ([]float64, error) {
 							element := val[start:i]
 							num, err := strconv.ParseFloat(cleanValueString(element), 64)
 							if err != nil {
-								return nil, ErrFloatParse(cleanValueString(element))
+								return nil, errFloatParse(cleanValueString(element))
 							}
 							newArray = append(newArray, num)
 							break
@@ -217,7 +217,7 @@ func GetFloatArray(json []byte, path ...string) ([]float64, error) {
 						element := val[start:i]
 						num, err := strconv.ParseFloat(cleanValueString(element), 64)
 						if err != nil {
-							return nil, ErrFloatParse(cleanValueString(element))
+							return nil, errFloatParse(cleanValueString(element))
 						}
 						newArray = append(newArray, num)
 						start = i + 1
@@ -228,7 +228,7 @@ func GetFloatArray(json []byte, path ...string) ([]float64, error) {
 		}
 		return newArray, nil
 	}
-	return nil, ErrFloatArrayParse(val)
+	return nil, errFloatArrayParse(val)
 }
 
 // GetBoolArray is a variation of Get() func.
@@ -241,7 +241,7 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 	}
 	lena := len(val)
 	if lena < 2 {
-		return nil, ErrBoolArrayParse(val)
+		return nil, errBoolArrayParse(val)
 	}
 	if val[0] == 91 && val[lena-1] == 93 {
 		newArray := make([]bool, 0, 16)
@@ -277,7 +277,7 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 									newArray = append(newArray, false)
 								}
 							} else {
-								return nil, ErrBoolParse(cleanValueString(element))
+								return nil, errBoolParse(cleanValueString(element))
 							}
 							break
 						}
@@ -294,7 +294,7 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 								newArray = append(newArray, false)
 							}
 						} else {
-							return nil, ErrBoolParse(element)
+							return nil, errBoolParse(element)
 						}
 						start = i + 1
 						continue
@@ -304,7 +304,7 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 		}
 		return newArray, nil
 	}
-	return nil, ErrBoolArrayParse(val)
+	return nil, errBoolArrayParse(val)
 }
 
 // GetKeys not tested yet
@@ -312,14 +312,14 @@ func GetBoolArray(json []byte, path ...string) ([]bool, error) {
 func GetKeys(json []byte, path ...string) ([]string, error) {
 	var keys []string
 	if string(json) == "{}" {
-		return nil, ErrEmpty()
+		return nil, errEmpty()
 	}
 	var start int
 	var err error
 	if len(path) == 0 {
 		for space(json[start]) {
 			if start > len(json)-1 {
-				return nil, ErrBadJSON(start)
+				return nil, errBadJSON(start)
 			}
 			start++
 			continue
@@ -394,7 +394,7 @@ func GetKeys(json []byte, path ...string) ([]string, error) {
 		}
 		return keys, nil
 	}
-	return nil, ErrObjectExpected()
+	return nil, errObjectExpected()
 }
 
 // GetValues not tested yet
@@ -402,14 +402,14 @@ func GetKeys(json []byte, path ...string) ([]string, error) {
 func GetValues(json []byte, path ...string) ([]string, error) {
 	var values []string
 	if string(json) == "{}" {
-		return nil, ErrEmpty()
+		return nil, errEmpty()
 	}
 	var start int
 	var err error
 	if len(path) == 0 {
 		for space(json[start]) {
 			if start > len(json)-1 {
-				return nil, ErrBadJSON(start)
+				return nil, errBadJSON(start)
 			}
 			start++
 			continue
@@ -486,7 +486,7 @@ func GetValues(json []byte, path ...string) ([]string, error) {
 		}
 		return values, nil
 	}
-	return nil, ErrObjectExpected()
+	return nil, errObjectExpected()
 }
 
 // GetKeysValues not tested yet
@@ -495,14 +495,14 @@ func GetKeysValues(json []byte, path ...string) ([]string, []string, error) {
 	var values []string
 	var keys []string
 	if string(json) == "{}" {
-		return nil, nil, ErrEmpty()
+		return nil, nil, errEmpty()
 	}
 	var start int
 	var err error
 	if len(path) == 0 {
 		for space(json[start]) {
 			if start > len(json)-1 {
-				return nil, nil, ErrBadJSON(start)
+				return nil, nil, errBadJSON(start)
 			}
 			start++
 			continue
@@ -588,7 +588,7 @@ func GetKeysValues(json []byte, path ...string) ([]string, []string, error) {
 		}
 		return keys, values, nil
 	}
-	return nil, nil, ErrObjectExpected()
+	return nil, nil, errObjectExpected()
 }
 
 // GetMap Gets all keys and values pair with string to string map.
@@ -623,7 +623,7 @@ func GetMap(json []byte, path ...string) (map[string]string, error) {
 		}
 		return mainMap, nil
 	}
-	return nil, ErrBadJSON(start)
+	return nil, errBadJSON(start)
 }
 
 // GetAll not tested yet

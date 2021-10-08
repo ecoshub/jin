@@ -13,7 +13,7 @@ func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 	var curr *node
 	var err error
 	if lenv == 0 {
-		return ErrNullKey()
+		return errNullKey()
 	}
 	json, err := p.Get(path...)
 	if err != nil {
@@ -23,7 +23,7 @@ func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 	if lenp == 0 {
 		for _, d := range curr.down {
 			if d.label == key {
-				return ErrKeyAlreadyExist(key)
+				return errKeyAlreadyExist(key)
 			}
 		}
 		if len(json) >= 2 {
@@ -53,9 +53,9 @@ func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 				newNode.up = curr
 				return nil
 			}
-			return ErrObjectExpected()
+			return errObjectExpected()
 		}
-		return ErrBadJSON(0)
+		return errBadJSON(0)
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
@@ -63,7 +63,7 @@ func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 	}
 	for _, d := range curr.up.down {
 		if d.label == key {
-			return ErrKeyAlreadyExist(key)
+			return errKeyAlreadyExist(key)
 		}
 	}
 	if len(json) >= 2 {
@@ -108,9 +108,9 @@ func (p *Parser) AddKeyValue(key string, newVal []byte, path ...string) error {
 			}
 			return nil
 		}
-		return ErrObjectExpected()
+		return errObjectExpected()
 	}
-	return ErrBadJSON(0)
+	return errBadJSON(0)
 }
 
 // Add adds a value to an array.
@@ -122,7 +122,7 @@ func (p *Parser) Add(newVal []byte, path ...string) error {
 	var curr *node
 	var err error
 	if lenv == 0 {
-		return ErrNullKey()
+		return errNullKey()
 	}
 	json, err := p.Get(path...)
 	if err != nil {
@@ -162,9 +162,9 @@ func (p *Parser) Add(newVal []byte, path ...string) error {
 				newNode.up = curr
 				return nil
 			}
-			return ErrArrayExpected()
+			return errArrayExpected()
 		}
-		return ErrBadJSON(0)
+		return errBadJSON(0)
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
@@ -214,9 +214,9 @@ func (p *Parser) Add(newVal []byte, path ...string) error {
 			}
 			return nil
 		}
-		return ErrArrayExpected()
+		return errArrayExpected()
 	}
-	return ErrBadJSON(0)
+	return errBadJSON(0)
 }
 
 // Insert inserts a value to an array.
@@ -228,7 +228,7 @@ func (p *Parser) Insert(newIndex int, newVal []byte, path ...string) error {
 	var curr *node
 	var err error
 	if lenv == 0 {
-		return ErrNullKey()
+		return errNullKey()
 	}
 	json, err := p.Get(path...)
 	if err != nil {
@@ -277,9 +277,9 @@ func (p *Parser) Insert(newIndex int, newVal []byte, path ...string) error {
 				newNode.up = curr
 				return nil
 			}
-			return ErrArrayExpected()
+			return errArrayExpected()
 		}
-		return ErrBadJSON(0)
+		return errBadJSON(0)
 	}
 	curr, err = p.core.walk(path)
 	if err != nil {
@@ -333,16 +333,16 @@ func (p *Parser) Insert(newIndex int, newVal []byte, path ...string) error {
 			}
 			return nil
 		}
-		return ErrArrayExpected()
+		return errArrayExpected()
 	}
-	return ErrBadJSON(0)
+	return errBadJSON(0)
 }
 
 // AddKeyValueString is a variation of AddKeyValue() func.
 // Type of new value must be a string.
 func (p *Parser) AddKeyValueString(key, value string, path ...string) error {
 	if len(key) == 0 {
-		return ErrNullKey()
+		return errNullKey()
 	}
 	return p.AddKeyValue(key, []byte(formatType(value)), path...)
 }
@@ -351,7 +351,7 @@ func (p *Parser) AddKeyValueString(key, value string, path ...string) error {
 // Type of new value must be an integer.
 func (p *Parser) AddKeyValueInt(key string, value int, path ...string) error {
 	if len(key) == 0 {
-		return ErrNullKey()
+		return errNullKey()
 	}
 	return p.AddKeyValue(key, []byte(strconv.Itoa(value)), path...)
 }
@@ -360,7 +360,7 @@ func (p *Parser) AddKeyValueInt(key string, value int, path ...string) error {
 // Type of new value must be a float64.
 func (p *Parser) AddKeyValueFloat(key string, value float64, path ...string) error {
 	if len(key) == 0 {
-		return ErrNullKey()
+		return errNullKey()
 	}
 	return p.AddKeyValue(key, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
@@ -369,7 +369,7 @@ func (p *Parser) AddKeyValueFloat(key string, value float64, path ...string) err
 // Type of new value must be a boolean.
 func (p *Parser) AddKeyValueBool(key string, value bool, path ...string) error {
 	if len(key) == 0 {
-		return ErrNullKey()
+		return errNullKey()
 	}
 	if value {
 		return p.AddKeyValue(key, []byte("true"), path...)
@@ -408,7 +408,7 @@ func (p *Parser) AddBool(value bool, path ...string) error {
 // Type of new value must be an string.
 func (p *Parser) InsertString(index int, value string, path ...string) error {
 	if index < 0 {
-		return ErrIndexOutOfRange()
+		return errIndexOutOfRange()
 	}
 	return p.Insert(index, []byte(formatType(value)), path...)
 }
@@ -417,7 +417,7 @@ func (p *Parser) InsertString(index int, value string, path ...string) error {
 // Type of new value must be an integer.
 func (p *Parser) InsertInt(index, value int, path ...string) error {
 	if index < 0 {
-		return ErrIndexOutOfRange()
+		return errIndexOutOfRange()
 	}
 	return p.Insert(index, []byte(strconv.Itoa(value)), path...)
 }
@@ -426,7 +426,7 @@ func (p *Parser) InsertInt(index, value int, path ...string) error {
 // Type of new value must be an float64.
 func (p *Parser) InsertFloat(index int, value float64, path ...string) error {
 	if index < 0 {
-		return ErrIndexOutOfRange()
+		return errIndexOutOfRange()
 	}
 	return p.Insert(index, []byte(strconv.FormatFloat(value, 'e', -1, 64)), path...)
 }
@@ -435,7 +435,7 @@ func (p *Parser) InsertFloat(index int, value float64, path ...string) error {
 // Type of new value must be an boolean.
 func (p *Parser) InsertBool(index int, value bool, path ...string) error {
 	if index < 0 {
-		return ErrIndexOutOfRange()
+		return errIndexOutOfRange()
 	}
 	if value {
 		return p.Insert(index, []byte("true"), path...)
