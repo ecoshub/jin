@@ -1,5 +1,11 @@
 package jin
 
+const (
+	Array  string = "array"
+	Object string = "object"
+	Value  string = "value"
+)
+
 // IsObject is a type control function.
 // If path points to an object it will return true, otherwise it will return false.
 // In this instance 'object' means everything that has starts and ends with curly brace.
@@ -41,15 +47,15 @@ func IsValue(json []byte, path ...string) (bool, error) {
 func GetType(json []byte, path ...string) (string, error) {
 	_, start, err := typeControlCore(json, []byte{}, false, path...)
 	if err != nil {
-		return "ERROR", err
+		return "", err
 	}
 	switch json[start] {
 	case 91:
-		return "array", nil
+		return Array, nil
 	case 123:
-		return "object", nil
+		return Object, nil
 	default:
-		return "value", nil
+		return Value, nil
 	}
 }
 
