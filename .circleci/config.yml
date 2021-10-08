@@ -7,7 +7,7 @@ jobs:
     docker:
     - image: circleci/golang:1.9
     steps:
-    - run: curl -sL https://deb.nodesource.com/setup_13.x | sudo -E bash -
+    - run: curl -fsSL https://deb.nodesource.com/setup_12.x | sudo -E bash -
     - run: sudo apt-get install -y nodejs
     - checkout
     - run: go get -v -t -d
