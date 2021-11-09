@@ -1,9 +1,14 @@
 package jin
 
+import "strconv"
+
 const (
-	Array  string = "array"
-	Object string = "object"
-	Value  string = "value"
+	TypeArray   string = "array"
+	TypeObject  string = "object"
+	TypeString  string = "string"
+	TypeBoolean string = "boolean"
+	TypeNull    string = "null"
+	TypeNumber  string = "number"
 )
 
 // IsObject is a type control function.
@@ -39,24 +44,40 @@ func IsValue(json []byte, path ...string) (bool, error) {
 	return state, nil
 }
 
-// GetType is a type return function.
-// If path points to an value it will return 'value' string.
-// If path points to an array it will return 'array' string.
-// If path points to an object it will return 'object' string.
-// otherwise it will pretn 'ERROR' string.
+// GetType returns the types of value that path has point.
+// possible return types 'array' | 'object' | 'string' | 'boolean' | 'null' | 'number'
 func GetType(json []byte, path ...string) (string, error) {
 	_, start, err := typeControlCore(json, []byte{}, false, path...)
 	if err != nil {
 		return "", err
 	}
 	switch json[start] {
-	case 91:
-		return Array, nil
-	case 123:
-		return Object, nil
-	default:
-		return Value, nil
+	case '[':
+		return TypeArray, nil
+	case '{':
+		return TypeObject, nil
+	case '"':
+		return TypeString, nil
 	}
+	val, err := GetString(json, path...)
+	if err != nil {
+		return "", err
+	}
+	switch val {
+	case "true", "false":
+		return TypeBoolean, nil
+	case "null":
+		return TypeNull, nil
+	}
+	_, err = strconv.ParseInt(val, 10, 64)
+	if err == nil {
+		return TypeNumber, nil
+	}
+	_, err = strconv.ParseFloat(val, 64)
+	if err == nil {
+		return TypeNumber, nil
+	}
+	return TypeString, nil
 }
 
 // IsEmpty is a control function.
