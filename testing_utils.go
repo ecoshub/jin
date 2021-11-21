@@ -51,7 +51,7 @@ func executeNode(first string, args ...string) (string, error) {
 // Please do not change any thing. And do not use them.
 func dir(dir string) []string {
 	files := make([]string, 0, 100)
-	err := filepath.Walk(dir, func(path string, info os.FileInfo, err error) error {
+	err := filepath.Walk(dir, func(path string, _ os.FileInfo, err error) error {
 		if err != nil {
 			return err
 		}

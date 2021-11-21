@@ -13,29 +13,6 @@ func replace(json, newValue []byte, start, end int) []byte {
 	return newJSON
 }
 
-func trimSpace(str string, start, eoe int) string {
-	for space(str[start]) {
-		start++
-	}
-	end := start
-	for !space(str[end]) && end < eoe {
-		end++
-	}
-	return str[start:end]
-}
-
-func compare(json []byte, start, end int, key string) bool {
-	if len(key) != end-start {
-		return false
-	}
-	for i := 0; i < len(key); i++ {
-		if key[i] != json[start+i] {
-			return false
-		}
-	}
-	return true
-}
-
 func space(curr byte) bool {
 	// space
 	if curr == 32 {
@@ -66,15 +43,6 @@ func createTabs(n int) []byte {
 
 // make private after
 func stripQuotes(str string) string {
-	if len(str) > 1 {
-		if str[0] == 34 && str[len(str)-1] == 34 {
-			str = str[1 : len(str)-1]
-		}
-	}
-	return str
-}
-
-func stripQuotesByte(str []byte) []byte {
 	if len(str) > 1 {
 		if str[0] == 34 && str[len(str)-1] == 34 {
 			str = str[1 : len(str)-1]
@@ -116,37 +84,12 @@ func isBool(val string) bool {
 
 func isFloat(val string) bool {
 	_, err := strconv.ParseFloat(val, 64)
-	if err != nil {
-		return false
-	}
-	return true
+	return err == nil
 }
 
 func isInt(val string) bool {
 	_, err := strconv.ParseInt(val, 10, 32)
-	if err != nil {
-		return false
-	}
-	return true
-}
-
-func trim(str []byte) []byte {
-	start := 0
-	lens := len(str) - 1
-	for space(str[start]) {
-		if start > lens {
-			break
-		}
-		start++
-	}
-	end := lens
-	for space(str[end]) {
-		if end < 1 {
-			break
-		}
-		end--
-	}
-	return str[start : end+1]
+	return err == nil
 }
 
 func cleanValueString(str string) string {
@@ -187,10 +130,6 @@ func cleanValue(str []byte) []byte {
 		end--
 	}
 	return str[start : end+1]
-}
-
-func stringToByteArray(str string) []byte {
-	return *(*[]byte)(unsafe.Pointer(&str))
 }
 
 func byteArrayToString(arr []byte) string {
