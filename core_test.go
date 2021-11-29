@@ -13,7 +13,7 @@ const (
 	testFileName   string = "test-json.json"
 	pathsFileName  string = "test-json-paths.json"
 	valuesFileName string = "test-json-values.json"
-	failMessage    string = "test failed trying this function"
+	failMessage    string = "test failed. function: %s"
 )
 
 var (
@@ -31,16 +31,12 @@ var (
 )
 
 func init() {
-	testFiles = dir(getCurrentDir() + sep() + testsDir)
-}
-
-func errorMessage(where string) error {
-	return fmt.Errorf("%v: '%v'", failMessage, where)
+	testFiles = getFileNames(getCurrentDir() + sep() + testsDir)
 }
 
 func triggerNode(state string, fileName string) error {
 	writeFile(testFileDir, readFile(testsDir+fileName))
-	str, err := executeNode("node", "test/test-case-creator.js", state)
+	str, err := executeBin("node", "test/test-case-creator.js", state)
 	if err != nil {
 		return fmt.Errorf("err:%v inner:%v err:%v", errorTriggerFailed, err, str)
 	}
@@ -57,6 +53,7 @@ func getComponents(file string) ([]string, []string, []byte, error) {
 	if pathFile == "" {
 		return nil, nil, nil, errorSkipPath
 	}
+
 	paths := strings.Split(pathFile, "\n")
 
 	valueFile := string(readFile(valuesFileNameDir))
@@ -65,16 +62,6 @@ func getComponents(file string) ([]string, []string, []byte, error) {
 	}
 	values := strings.Split(valueFile, "\n")
 	return paths, values, json, nil
-}
-
-func formatValue(value []byte) string {
-	if len(value) > 1 {
-		if (value[0] == 91 && value[len(value)-1] == 93) ||
-			(value[0] == 123 && value[len(value)-1] == 125) {
-			return string(Flatten(value))
-		}
-	}
-	return string(value)
 }
 
 func coreTestFunction(t *testing.T, state string, mainTest func(json []byte, path []string, expected string) ([]byte, string, string, error)) {
@@ -127,7 +114,7 @@ func coreTestFunction(t *testing.T, state string, mainTest func(json []byte, pat
 }
 
 func TestNode(t *testing.T) {
-	str, err := executeNode("node", "test/test-node.js")
+	str, err := executeBin("node", "test/test-node.js")
 	t.Logf(str)
 	if err != nil {
 		t.Logf("err:%v inner:%v", errorTriggerFailed, str)
@@ -621,4 +608,18 @@ func TestParserDelete(t *testing.T) {
 		}
 		return value, expected, sticker, nil
 	})
+}
+
+func formatValue(value []byte) string {
+	if len(value) > 1 {
+		if (value[0] == 91 && value[len(value)-1] == 93) ||
+			(value[0] == 123 && value[len(value)-1] == 125) {
+			return string(Flatten(value))
+		}
+	}
+	return string(value)
+}
+
+func errorMessage(functionName string) error {
+	return fmt.Errorf(failMessage, functionName)
 }
