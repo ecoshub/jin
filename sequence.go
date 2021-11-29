@@ -34,10 +34,6 @@ func (s *sequance) last() int {
 	return s.list[s.index-1]
 }
 
-func (s *sequance) getlist() []int {
-	return s.list[:s.index]
-}
-
 func (s *sequance) inc() {
 	s.list[s.index-1]++
 }

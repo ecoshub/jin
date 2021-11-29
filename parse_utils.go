@@ -150,7 +150,7 @@ func (n *node) createTree(json []byte, depth int, withValues bool, str *string) 
 	for _, d := range n.down {
 		tab := ""
 		for i := 0; i < depth-1; i++ {
-			tab += fmt.Sprintf("\t")
+			tab += "\t"
 		}
 		if withValues {
 			if depth != 0 {

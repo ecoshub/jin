@@ -9,13 +9,11 @@ const (
 	ErrCodeNullPath          int = 0
 	ErrCodeEmptyArray        int = 2
 	ErrCodeIndexExpected     int = 3
-	ErrCodeKeyExpected       int = 4
 	ErrCodeObjectExpected    int = 5
 	ErrCodeArrayExpected     int = 6
 	ErrCodeIndexOutOfRange   int = 7
 	ErrCodeKeyNotFound       int = 8
 	ErrCodeBadJSON           int = 9
-	ErrCodeBadKey            int = 10
 	ErrCodeKeyAlreadyExist   int = 11
 	ErrCodeIntegerParse      int = 12
 	ErrCodeFloatParse        int = 13
@@ -59,11 +57,6 @@ func errIndexExpected() error {
 	return fmt.Errorf("error: index expected, got key value error_code: %02d", ErrCodeIndexExpected)
 }
 
-// errKeyExpected "error: key expected, got index error_code:04"
-func errKeyExpected() error {
-	return fmt.Errorf("error: key expected, got index error_code: %02d", ErrCodeKeyExpected)
-}
-
 // errObjectExpected "error: last path must be pointed at an object error_code:05"
 func errObjectExpected() error {
 	return fmt.Errorf("error: last path must be pointed at an object error_code: %02d", ErrCodeObjectExpected)
@@ -87,11 +80,6 @@ func errKeyNotFound(key string) error {
 // errBadJSON "error: bad json format. at:'%v' error_code:09"
 func errBadJSON(val int) error {
 	return fmt.Errorf("error: bad json format. at:'%v' error_code: %02d", val, ErrCodeBadJSON)
-}
-
-// errBadKey "error: key ('%v') value cannot contain quote symbol. error_code:10"
-func errBadKey(key string) error {
-	return fmt.Errorf("error: key ('%v') value cannot contain quote symbol. error_code: %02d", key, ErrCodeBadKey)
 }
 
 // errKeyAlreadyExist "error: key '%v' already exist error_code:11"

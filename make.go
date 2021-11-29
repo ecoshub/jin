@@ -228,12 +228,16 @@ func MakeArrayBool(values []bool) []byte {
 	}
 	js := make([]byte, 0, 128)
 	js = append(js, 91)
+	t := []byte("true")
+	f := []byte("false")
 	for _, v := range values {
-		if v == true {
-			js = append(js, []byte("true")...)
+		var val []byte
+		if v {
+			val = t
 		} else {
-			js = append(js, []byte("false")...)
+			val = f
 		}
+		js = append(js, val...)
 		js = append(js, 44)
 	}
 	js = js[:len(js)-1]

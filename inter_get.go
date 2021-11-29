@@ -463,7 +463,6 @@ func GetValues(json []byte, path ...string) ([]string, error) {
 					if level == 1 {
 						value := cleanValueString(string(json[start:i]))
 						values = append(values, value)
-						start = i + 1
 						break
 					}
 					level--
@@ -563,7 +562,6 @@ func GetKeysValues(json []byte, path ...string) ([]string, []string, error) {
 					if level == 1 {
 						value := cleanValueString(string(json[start:i]))
 						values = append(values, value)
-						start = i + 1
 						break
 					}
 					level--
