@@ -6,6 +6,10 @@ type JO struct {
 	body []byte
 }
 
+func NewJSON() *JO {
+	return &JO{body: []byte("{}")}
+}
+
 // New jin_object method for same function name with interpreter
 func New(buffer []byte) *JO {
 	return &JO{body: buffer}
