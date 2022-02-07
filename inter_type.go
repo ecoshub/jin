@@ -85,6 +85,9 @@ func GetType(json []byte, path ...string) (string, error) {
 // If path points to an array that has zero element in it,
 // then it will return true, otherwise it will return false.
 func IsEmpty(json []byte, path ...string) (bool, error) {
+	if len(json) == 0 {
+		return false, errBadJSON(0)
+	}
 	var start int
 	var end int = len(json) - 1
 	var err error
@@ -128,6 +131,9 @@ func IsEmpty(json []byte, path ...string) (bool, error) {
 }
 
 func typeControlCore(json []byte, control []byte, equal bool, path ...string) (bool, int, error) {
+	if len(json) == 0 {
+		return false, -1, errBadJSON(0)
+	}
 	var start int
 	var err error
 	if len(path) == 0 {
