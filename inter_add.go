@@ -232,7 +232,7 @@ func AddKeyValueString(json []byte, key, value string, path ...string) ([]byte, 
 	if len(key) == 0 {
 		return nil, errNullKey()
 	}
-	return AddKeyValue(json, key, []byte(formatType(value)), path...)
+	return AddKeyValue(json, key, []byte(value), path...)
 }
 
 // AddKeyValueInt is a variation of AddKeyValue() func.
