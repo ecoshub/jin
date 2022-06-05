@@ -3,24 +3,6 @@
 All notable changes to this project will be documented in this file.
  
 ## 08.10.2021
- 
-## [Fixes]:
-
-### issue-5: 
--   In case of error All Add* and Insert* function was overriding the original body. now returning original body instead.
-
-### issue-6: 
--   setting null string was impossible. Now Add* and Set* functions can set or add null string. 
-
-### issue-8: 
--   addd new JSON() function to parser.
-
-### issue-10:
--   There was no constant for json type. Now there are three types.'jin.Array', 'jin.Object', 'jin.Value'
-
-### issue-11:
--   error comparisson was not elegant. now all error codes are constant and ErrEqual() func. can validate.
-
 ### float notation change:
 
 -	float notation changed to 'f' from 'e'. '2e10-2' -> '0.02'
