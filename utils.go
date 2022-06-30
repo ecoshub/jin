@@ -110,6 +110,9 @@ func cleanValueString(str string) string {
 }
 
 func cleanValue(str []byte) []byte {
+	if len(str) == 0 {
+		return str
+	}
 	start := 0
 	lens := len(str)
 	end := lens - 1

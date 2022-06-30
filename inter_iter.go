@@ -1,11 +1,17 @@
 package jin
 
 // IterateArray is a callback function that can iterate any array and return value as byte slice.
-// It stripes quotation marks from string values befour return.
+// It stripes quotation marks from string values before return.
 // Path value can be left blank for access main JSON.
 func IterateArray(json []byte, callback func([]byte) (bool, error), path ...string) error {
-	if string(json) == "[]" {
-		return errEmpty()
+	switch len(json) {
+	case 0, 1:
+		return errBadJSON(0)
+	case 2:
+		if string(json) == "[]" {
+			return nil
+		}
+		return errBadJSON(0)
 	}
 	var start int
 	var err error
