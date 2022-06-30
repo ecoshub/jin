@@ -51,7 +51,13 @@ func walk(json []byte, path []string, callback func(k string, v []byte, p []stri
 		if err != nil {
 			return err
 		}
-		callback(key, val, path)
+		keepGoing, err := callback(key, val, path)
+		if err != nil {
+			return err
+		}
+		if !keepGoing {
+			return nil
+		}
 	}
 	return nil
 }
