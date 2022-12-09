@@ -52,30 +52,39 @@ func stripQuotes(str string) string {
 }
 
 func formatType(val string) string {
-	if len(val) > 0 {
-		if isBool(val) {
-			return val
-		}
-		if isInt(val) {
-			if val[0] == 48 && len(val) > 1 {
-				return `"` + val + `"`
-			}
-			return val
-		}
-		if isFloat(val) {
-			return val
-		}
-		if val == "null" {
-			return val
-		}
-		start := val[0]
-		end := val[len(val)-1]
-		if (start == 34 && end == 34) || (start == 91 && end == 93) || (start == 123 && end == 125) {
-			return val
-		}
-		return `"` + val + `"`
+	if len(val) == 0 {
+		return `""`
 	}
-	return `""`
+	if isBool(val) {
+		return val
+	}
+	if isInt(val) {
+		if val[0] == 48 && len(val) > 1 {
+			return `"` + val + `"`
+		}
+		return val
+	}
+	if isFloat(val) {
+		return val
+	}
+	if val == "null" {
+		return val
+	}
+	start := val[0]
+	end := val[len(val)-1]
+	// if its starts with `"` and ends with `"`  return it self
+	if start == 34 && end == 34 {
+		return val
+	}
+	// if its starts with `[` and ends with `]` return it self
+	if start == 91 && end == 93 {
+		return val
+	}
+	// if its starts with `{` and ends with `}` return it self
+	if start == 123 && end == 125 {
+		return val
+	}
+	return `"` + val + `"`
 }
 
 func isBool(val string) bool {
