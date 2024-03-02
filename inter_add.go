@@ -247,6 +247,51 @@ func AddKeyValueInt(json []byte, key string, value int, path ...string) ([]byte,
 	return AddKeyValue(json, key, []byte(strconv.Itoa(value)), path...)
 }
 
+// AddKeyValueUint is a variation of AddKeyValue() func.
+// Type of new value must be an integer.
+func AddKeyValueUint(json []byte, key string, value uint, path ...string) ([]byte, error) {
+	if len(key) == 0 {
+		return json, errNullKey()
+	}
+	return AddKeyValue(json, key, []byte(strconv.FormatUint(uint64(value), 64)), path...)
+}
+
+// AddKeyValueInt32 is a variation of AddKeyValue() func.
+// Type of new value must be an int32.
+func AddKeyValueInt32(json []byte, key string, value int32, path ...string) ([]byte, error) {
+	if len(key) == 0 {
+		return json, errNullKey()
+	}
+	return AddKeyValue(json, key, []byte(strconv.FormatInt(int64(value), 32)), path...)
+}
+
+// AddKeyValueInt64 is a variation of AddKeyValue() func.
+// Type of new value must be an int64.
+func AddKeyValueInt64(json []byte, key string, value int64, path ...string) ([]byte, error) {
+	if len(key) == 0 {
+		return json, errNullKey()
+	}
+	return AddKeyValue(json, key, []byte(strconv.FormatInt(value, 64)), path...)
+}
+
+// AddKeyValueUint32 is a variation of AddKeyValue() func.
+// Type of new value must be an uint32.
+func AddKeyValueUint32(json []byte, key string, value uint32, path ...string) ([]byte, error) {
+	if len(key) == 0 {
+		return json, errNullKey()
+	}
+	return AddKeyValue(json, key, []byte(strconv.FormatUint(uint64(value), 32)), path...)
+}
+
+// AddKeyValueUint64 is a variation of AddKeyValue() func.
+// Type of new value must be an uint64.
+func AddKeyValueUint64(json []byte, key string, value uint64, path ...string) ([]byte, error) {
+	if len(key) == 0 {
+		return json, errNullKey()
+	}
+	return AddKeyValue(json, key, []byte(strconv.FormatUint(value, 64)), path...)
+}
+
 // AddKeyValueFloat is a variation of AddKeyValue() func.
 // Type of new value must be a float64.
 func AddKeyValueFloat(json []byte, key string, value float64, path ...string) ([]byte, error) {
@@ -280,6 +325,36 @@ func AddInt(json []byte, value int, path ...string) ([]byte, error) {
 	return Add(json, []byte(strconv.Itoa(value)), path...)
 }
 
+// AddInt32 is a variation of Add() func.
+// Type of new value must be an integer.
+func AddInt32(json []byte, value int32, path ...string) ([]byte, error) {
+	return Add(json, []byte(strconv.FormatInt(int64(value), 32)), path...)
+}
+
+// AddInt64 is a variation of Add() func.
+// Type of new value must be an integer.
+func AddInt64(json []byte, value int64, path ...string) ([]byte, error) {
+	return Add(json, []byte(strconv.FormatInt(value, 64)), path...)
+}
+
+// AddUint is a variation of Add() func.
+// Type of new value must be an integer.
+func AddUint(json []byte, value uint, path ...string) ([]byte, error) {
+	return Add(json, []byte(strconv.FormatUint(uint64(value), 64)), path...)
+}
+
+// AddUint32 is a variation of Add() func.
+// Type of new value must be an integer.
+func AddUint32(json []byte, value uint32, path ...string) ([]byte, error) {
+	return Add(json, []byte(strconv.FormatUint(uint64(value), 32)), path...)
+}
+
+// AddUint64 is a variation of Add() func.
+// Type of new value must be an integer.
+func AddUint64(json []byte, value uint64, path ...string) ([]byte, error) {
+	return Add(json, []byte(strconv.FormatUint(value, 64)), path...)
+}
+
 // AddFloat is a variation of Add() func.
 // Type of new value must be an float64.
 func AddFloat(json []byte, value float64, path ...string) ([]byte, error) {
@@ -311,6 +386,51 @@ func InsertInt(json []byte, index, value int, path ...string) ([]byte, error) {
 		return json, errIndexOutOfRange()
 	}
 	return Insert(json, index, []byte(strconv.Itoa(value)), path...)
+}
+
+// InsertInt32 is a variation of Insert() func.
+// Type of new value must be an integer.
+func InsertInt32(json []byte, index int, value int32, path ...string) ([]byte, error) {
+	if index < 0 {
+		return json, errIndexOutOfRange()
+	}
+	return Insert(json, index, []byte(strconv.FormatInt(int64(value), 32)), path...)
+}
+
+// InsertInt64 is a variation of Insert() func.
+// Type of new value must be an integer.
+func InsertInt64(json []byte, index int, value int64, path ...string) ([]byte, error) {
+	if index < 0 {
+		return json, errIndexOutOfRange()
+	}
+	return Insert(json, index, []byte(strconv.FormatInt(value, 64)), path...)
+}
+
+// InsertUint is a variation of Insert() func.
+// Type of new value must be an integer.
+func InsertUint(json []byte, index int, value uint, path ...string) ([]byte, error) {
+	if index < 0 {
+		return json, errIndexOutOfRange()
+	}
+	return Insert(json, index, []byte(strconv.FormatUint(uint64(value), 64)), path...)
+}
+
+// InsertUint32 is a variation of Insert() func.
+// Type of new value must be an integer.
+func InsertUint32(json []byte, index int, value uint32, path ...string) ([]byte, error) {
+	if index < 0 {
+		return json, errIndexOutOfRange()
+	}
+	return Insert(json, index, []byte(strconv.FormatUint(uint64(value), 32)), path...)
+}
+
+// InsertUint64 is a variation of Insert() func.
+// Type of new value must be an integer.
+func InsertUint64(json []byte, index int, value uint64, path ...string) ([]byte, error) {
+	if index < 0 {
+		return json, errIndexOutOfRange()
+	}
+	return Insert(json, index, []byte(strconv.FormatUint(value, 64)), path...)
 }
 
 // InsertFloat is a variation of Insert() func.
